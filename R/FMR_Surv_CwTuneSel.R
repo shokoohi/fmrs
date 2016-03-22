@@ -1,0 +1,165 @@
+#' @title  Component-wise Tuning Parameter Selection in Finite Mixture of Accelerated Failure Time Regression Models
+#' and Finite Mixture of Regression Models
+#'
+#' @description  It provides component-wise tuning parameters for Finite Mixture of Accelerated Failure Time Regression Models with Log-Normal or Weibull sub-distributions
+#' and Finite Mixture of Regression Models with Normal sub-distributions.
+#' It also provide Ridge Regression and Elastic Net.
+#' The penalties LASSO, SCAD, MCP, SICA, adaptive LASSO and Hard are implemented.
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
+#' @family lnorm, norm, weibull
+#' @name fmrs.tunsel
+#' @param y Time-to-event observations
+#' @param x Design matrix (covariates)
+#' @param delta Censoring indicator vector
+#' @param nComp Orde (Number of components) of mixture model
+#' @param disFamily Specify sub-distributions family. The options are \code{"norm"} for FMR models,
+#' \code{"lnorm"} for mixture of AFT regression models with Log-Normal sub-distributions,
+#' \code{"weibull"} for mixture of AFT regression models with Weibull sub-distributions,
+#' @param initCoeff Vector of initial values for coefficients including intercepts.
+#' @param initSigma Vector of initial values for standard deviations
+#' @param initPi Vector of initial values for proportion of components
+#' @param penFamily The penalty that used in variable selection method.
+#' The available options are  \code{"lasso"}, \code{"adplasso"}, \code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.
+#' @param lambRidge Lambda for ridge penalty
+#' @param nIterEM Number of iteration for EM algorithm
+#' @param nIterNR Number of iteration for Newton-Raphson algorithm
+#' @param conveps A positive number for avoiding NaN in computing divisions.
+#' @param convepsEM Treshold for convergence of EM algorithm
+#' @param convepsNR Treshold for convergence of Newton-Raphson algorithm
+#' @param porNR Used in pow(0.5, porNR) for tuning the increment in Newton-Raphson algorithm.
+#' @param gamMixPor Proportion of mixing parameters in the penalty. The value must belong to the interval [0,1]. If \code{gamMixPor = 0}, the penalty structure is no longer mixture.
+#' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression
+#' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016) Variable Selection in Mixture of Survival Models
+#' @return Component-wise tuning parameter estimates for mixture of Normal or mixture of Log-Normal AFT models
+#' @examples \dontrun{Tuning Parameter Selection in Ovarian Cancer analysis
+#'
+#' }
+#' @export
+fmrs.tunsel <- function(y,
+                        x,
+                        delta,
+                        nComp,
+                        disFamily = "lnorm",
+                        initCoeff,
+                        initSigma,
+                        initPi,
+                        penFamily = "lasso",
+                        lambRidge = 0,
+                        nIterEM = 2000,
+                        nIterNR = 2,
+                        conveps = 1e-8,
+                        convepsEM = 1e-8,
+                        convepsNR = 1e-8,
+                        porNR = 2,
+                        gamMixPor = 1
+)
+{
+  if(is.null(y))
+    stop("Response vector is not specified.")
+  if(is.null(x))
+    stop("The desing matrix is not specified.")
+  if(is.null(delta) & (disFamily!="norm"))
+    stop("The censoring vector is not specified.")
+  if(is.null(nComp))
+    stop("Number of components of mixture model is not specified.")
+  if(is.null(initCoeff) | is.null(initSigma) | is.null(initPi))
+    stop("Initial values are not specified.")
+  if(length(initCoeff) != nComp*nCov+nComp | length(initPi)!=nComp | length(initSigma)!=nComp)
+    stop("The length of initial values are not correctly specified.")
+  if(!is.matrix(x))
+    stop("Provide a matix for covariates.")
+  nCov = dim(x)[2]
+  n = length(y)
+  if(dim(x)[1]!=n)
+    stop("The length of observations and rows of design matrix does not match.")
+
+  coef0 <- matrix(initCoeff, nrow = nComp, ncol = nCov+1, byrow = T)
+
+  if(penFamily == "lasso") myPenaltyFamily = 1
+  else if (penFamily == "scad") myPenaltyFamily = 2
+  else if (penFamily == "mcp") myPenaltyFamily = 3
+  else if (penFamily == "sica") myPenaltyFamily = 4
+  else if (penFamily == "adplasso") myPenaltyFamily = 5
+  else if (penFamily == "hard") myPenaltyFamily = 6
+  else {print("Penalty is not specified.")  }
+
+  if(disFamily == "norm"){
+    meth = "FMR"
+    delta = rep(1, n)
+
+    res=.C("FMR_Norm_Surv_CwTuneParSel", PACKAGE="fmrs",
+           y = as.double(y),
+           x = as.double(as.vector(unlist(x))),
+           delta = as.double(delta),
+           myPenaltyFamily = as.integer(myPenaltyFamily),
+           Lambda.Ridge = as.double(lambRidge),
+           Num.Comp = as.integer(nComp),
+           Num.Cov = as.integer(nCov),
+           Sample.Size = as.integer(n),
+           Initial.Intercept = as.double(c(coef0[,1])),
+           Initial.Coefficient = as.double(c(t(coef0[,-1]))),
+           Initial.Sigma = as.double(initSigma),
+           Initial.Pi = as.double(initPi),
+           conv.eps = as.double(conveps),
+           conv.eps.em = as.double(convepsEM),
+           GamMixPortion = as.double(gamMixPor),
+           Opt.Lambda = as.double(rep(0,nComp))
+    )
+  }else if(disFamily == "lnorm"){
+    meth = "FMAFTR"
+    logy = log(y)
+    res=.C("FMR_Norm_Surv_CwTuneParSel", PACKAGE="fmrs",
+           y = as.double(logy),
+           x = as.double(as.vector(unlist(x))),
+           delta = as.double(delta),
+           myPenaltyFamily = as.integer(myPenaltyFamily),
+           Lambda.Ridge = as.double(lambRidge),
+           Num.Comp = as.integer(nComp),
+           Num.Cov = as.integer(nCov),
+           Sample.Size = as.integer(n),
+           Initial.Intercept = as.double(c(coef0[,1])),
+           Initial.Coefficient = as.double(c(t(coef0[,-1]))),
+           Initial.Sigma = as.double(initSigma),
+           Initial.Pi = as.double(initPi),
+           conv.eps = as.double(conveps),
+           conv.eps.em = as.double(convepsEM),
+           GamMixPortion = as.double(gamMixPor),
+           Opt.Lambda = as.double(rep(0,nComp))
+    )
+  }else if(disFamily == "weibull"){
+    meth = "FMAFTR"
+    logy = log(y)
+
+    res=.C("FMR_Weibl_Surv_CwTuneParSel", PACKAGE = "fmrs",
+           y = as.double(logy),
+           x = as.double(as.vector(unlist(x))),
+           delta = as.double(delta),
+           myPenaltyFamily = as.integer(myPenaltyFamily),
+           Lambda.Ridge = as.double(lambRidge),
+           Num.Comp = as.integer(nComp),
+           Num.Cov = as.integer(nCov),
+           Sample.Size = as.integer(n),
+           Initial.Intercept = as.double(c(coef0[,1])),
+           Initial.Coefficient = as.double(c(t(coef0[,-1]))),
+           Initial.Sigma = as.double(initSigma),
+           Initial.Pi = as.double(initPi),
+           Num.NRiteration = as.double(nIterNR),
+           Num.PortionNF = as.double(porNR),
+           conv.eps = as.double(convepsNR),
+           GamMixPortion = as.double(gamMixPor),
+           Opt.Lambda = as.double(rep(0,nComp))
+    )
+  }else{
+    stop("The family of sub-distributions is not specified correctly.")
+  }
+
+
+  lambdafit <- list(lamPen = matrix(res$Opt.Lambda, nrow = 1, dimnames = c(list(NULL,c(paste("Comp",1:nComp,sep = "."))))),
+                    disFamily = disFamily,
+                    penFamily = penFamily,
+                    lamRidge = lambRidge,
+                    method = meth
+  )
+  class(lambdafit) <- "fmrs.lambda"
+  return(lambdafit)
+}
