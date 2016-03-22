@@ -1,36 +1,35 @@
 #' @title  Component-wise Tuning Parameter Selection in Finite Mixture of Accelerated Failure Time Regression Models
 #' and Finite Mixture of Regression Models
 #'
-#' @description  It provides component-wise tuning parameters for Finite Mixture of Accelerated Failure Time Regression Models with Log-Normal or Weibull sub-distributions
-#' and Finite Mixture of Regression Models with Normal sub-distributions.
-#' It also provide Ridge Regression and Elastic Net.
-#' The penalties LASSO, SCAD, MCP, SICA, adaptive LASSO and Hard are implemented.
+#' @description  It provides component-wise tuning parameters for Finite Mixture of Accelerated Failure Time Regression Models
+#' and Finite Mixture of Regression Models.
+#' The penalties that are implemented in this package are \code{lasso}, \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
 #' @name fmrs.tunsel
-#' @param y Time-to-event observations
+#' @param y Responses (observations)
 #' @param x Design matrix (covariates)
 #' @param delta Censoring indicator vector
-#' @param nComp Orde (Number of components) of mixture model
+#' @param nComp Order (Number of components) of mixture model
 #' @param disFamily Specify sub-distributions family. The options are \code{"norm"} for FMR models,
 #' \code{"lnorm"} for mixture of AFT regression models with Log-Normal sub-distributions,
 #' \code{"weibull"} for mixture of AFT regression models with Weibull sub-distributions,
-#' @param initCoeff Vector of initial values for coefficients including intercepts.
+#' @param initCoeff Vector of initial values for regression coefficients including intercepts
 #' @param initSigma Vector of initial values for standard deviations
 #' @param initPi Vector of initial values for proportion of components
-#' @param penFamily The penalty that used in variable selection method.
+#' @param penFamily Name of the penalty that is used in variable selection method.
 #' The available options are  \code{"lasso"}, \code{"adplasso"}, \code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.
-#' @param lambRidge Lambda for ridge penalty
-#' @param nIterEM Number of iteration for EM algorithm
-#' @param nIterNR Number of iteration for Newton-Raphson algorithm
-#' @param conveps A positive number for avoiding NaN in computing divisions.
-#' @param convepsEM Treshold for convergence of EM algorithm
-#' @param convepsNR Treshold for convergence of Newton-Raphson algorithm
+#' @param lambRidge A positive value for Lambda in Ridge regression or Elastic Net
+#' @param nIterEM Maximum number of iterations for EM algorithm
+#' @param nIterNR Maximum number of iterations for Newton-Raphson algorithm
+#' @param conveps A positive value for avoiding NaN in computing divisions
+#' @param convepsEM A positive value for treshold of convergence in EM algorithm
+#' @param convepsNR A positive value for treshold of convergence in Newton-Raphson algorithm
 #' @param porNR Used in pow(0.5, porNR) for tuning the increment in Newton-Raphson algorithm.
-#' @param gamMixPor Proportion of mixing parameters in the penalty. The value must belong to the interval [0,1]. If \code{gamMixPor = 0}, the penalty structure is no longer mixture.
+#' @param gamMixPor Proportion of mixing parameters in the penalty. The value must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty structure is no longer mixture.
 #' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016) Variable Selection in Mixture of Survival Models
-#' @return Component-wise tuning parameter estimates for mixture of Normal or mixture of Log-Normal AFT models
+#' @return An \code{\link{fmrs.lambda}} object which includes component-wise tuning parameter estimates to be used in variable selection procedure.
 #' @examples \dontrun{Tuning Parameter Selection in Ovarian Cancer analysis
 #'
 #' }

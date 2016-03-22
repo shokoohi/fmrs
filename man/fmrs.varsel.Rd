@@ -2,8 +2,7 @@
 % Please edit documentation in R/FMR_Surv_VarSel.R
 \name{fmrs.varsel}
 \alias{fmrs.varsel}
-\title{Variable Selection in Finite Mixture of Accelerated Failure Time Regression Models
- and Finite Mixture of Regression Models}
+\title{Variable Selection in Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression Models}
 \usage{
 fmrs.varsel(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initSigma,
   initPi, penFamily = "lasso", lambPen, lambRidge = 0, nIterEM = 2000,
@@ -11,54 +10,51 @@ fmrs.varsel(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initSigma,
   porNR = 2, gamMixPor = 1)
 }
 \arguments{
-\item{y}{Time-to-event observations}
+\item{y}{Responses (observations)}
 
 \item{x}{Design matrix (covariates)}
 
-\item{delta}{Censoring indicator vector}
+\item{delta}{Censoring indicators}
 
-\item{nComp}{Orde (Number of components) of mixture model}
+\item{nComp}{Order (Number of components) of mixture model}
 
-\item{disFamily}{Specify sub-distributions family. The options are \code{"norm"} for FMR models,
+\item{disFamily}{Name of sub-distributions' family. The options are \code{"norm"} for FMR models,
 \code{"lnorm"} for mixture of AFT regression models with Log-Normal sub-distributions,
-\code{"weibull"} for mixture of AFT regression models with Weibull sub-distributions,}
+\code{"weibull"} for mixture of AFT regression models with Weibull sub-distributions}
 
-\item{initCoeff}{Vector of initial values for coefficients including intercepts.}
+\item{initCoeff}{Vector of initial values for regression coefficients including intercepts}
 
 \item{initSigma}{Vector of initial values for standard deviations}
 
 \item{initPi}{Vector of initial values for proportion of components}
 
-\item{penFamily}{The penalty that used in variable selection method.
+\item{penFamily}{Name of the penalty that is used in variable selection method.
 The available options are  \code{"lasso"}, \code{"adplasso"}, \code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.}
 
-\item{lambPen}{A vector of lambda for penaly}
+\item{lambPen}{A vector of positive numbers for tuning parameters}
 
-\item{lambRidge}{Lambda for ridge penalty}
+\item{lambRidge}{A positive value for Lambda in Ridge regression or Elastic Net}
 
-\item{nIterEM}{Number of iteration for EM algorithm}
+\item{nIterEM}{Maximum number of iterations for EM algorithm}
 
-\item{nIterNR}{Number of iteration for Newton-Raphson algorithm}
+\item{nIterNR}{Maximum number of iterations for Newton-Raphson algorithm}
 
-\item{conveps}{A positive number for avoiding NaN in computing divisions.}
+\item{conveps}{A positive value for avoiding NaN in computing divisions}
 
-\item{convepsEM}{Treshold for convergence of EM algorithm}
+\item{convepsEM}{A positive value for treshold of convergence in EM algorithm}
 
-\item{convepsNR}{Treshold for convergence of Newton-Raphson algorithm}
+\item{convepsNR}{A positive value for treshold of convergence in Newton-Raphson algorithm}
 
 \item{porNR}{Used in pow(0.5, porNR) for tuning the increment in Newton-Raphson algorithm.}
 
-\item{gamMixPor}{Proportion of mixing parameters in the penalty. The value must belong to the interval [0,1]. If \code{gamMixPor = 0}, the penalty structure is no longer mixture.}
+\item{gamMixPor}{Proportion of mixing parameters in the penalty. The value must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty structure is no longer mixture.}
 }
 \value{
-Parameter estimates of mixture of Normal or mixture of Log-Normal AFT models
-
-A fitted FMRs model object of class \code{\link{fmrs.fit}}
+An \code{\link{fmrs.fit}} object which includes parameter estimates of an FMRs model
 }
 \description{
-It provides variable selection and parameter estimation for Finite Mixture of Regression Models
-and Finite Mixture of Accelerated Failure Time Regression Models with Log-Normal or Weibull sub-distributions.
-The penalties lasso, scad, mcp, sica, adaptive lasso and hard are implemented. It also provide Ridge Regression and Elastic Net.
+It provides variable selection and parameter estimation for Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models and Finite Mixture of Regression (FMR) Models
+The penalties that are implemented in this package are \code{lasso}, \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}. It also provide Ridge Regression and Elastic Net.
 }
 \examples{
 \dontrun{Variable Selection in Ovarian Cancer analysis

@@ -4,14 +4,14 @@
 \name{fmrs.fit}
 \alias{fmrs.fit}
 \alias{frms.fit}
-\title{An S4 class to represent a fit from an FMRs model.}
+\title{An S4 class to represent a fit of an FMRs model.}
 \description{
-An S4 class to represent a fit form an FMRs model
+fmrs.fit is an S4 class to represent a fit form an FMRs model which is the object returned by MLE or Penalized MLE.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{dims}}{A length-three numeric vector}
+\item{\code{dims}}{A length-three numeric vector reporting number of observations (\code{n}), number of covariates (\code{nCov}) and the order of mixture model (\code{nComp})}
 
 \item{\code{coefficients}}{A dimension-\code{nCov}-\code{nComp} numeric matrix}
 
@@ -33,9 +33,9 @@ An S4 class to represent a fit form an FMRs model
 
 \item{\code{lamRidge}}{A length-one numeric vector}
 
-\item{\code{method}}{A length-one character vecotr}
+\item{\code{method}}{A length-one character vector}
 
-\item{\code{fitted}}{A length-\code{n} numeric vecotr}
+\item{\code{fitted}}{A length-\code{n} numeric vector}
 
 \item{\code{residuals}}{A length-\code{n} numeric vector}
 

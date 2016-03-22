@@ -3,51 +3,50 @@
 \name{fmrs.mle}
 \alias{fmrs.mle}
 \title{Maximum Likelihood Estimation in Finite Mixture of Accelerated Failure Time Regression Models
-and Finite Mixture of Regression Models.}
+and Finite Mixture of Regression Models}
 \usage{
 fmrs.mle(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initSigma,
   initPi, lambRidge = 0, nIterEM = 2000, nIterNR = 2, conveps = 1e-08,
   convepsEM = 1e-08, convepsNR = 1e-08, porNR = 2)
 }
 \arguments{
-\item{y}{Time-to-event observations}
+\item{y}{Responses (observations)}
 
 \item{x}{Design matrix (covariates)}
 
 \item{delta}{Censoring indicator vector}
 
-\item{nComp}{Orde (Number of components) of mixture model}
+\item{nComp}{Order (Number of components) of mixture model}
 
 \item{disFamily}{Specify sub-distributions family. The options are \code{"norm"} for FMR models,
 \code{"lnorm"} for mixture of AFT regression models with Log-Normal sub-distributions,
 \code{"weibull"} for mixture of AFT regression models with Weibull sub-distributions,}
 
-\item{initCoeff}{Vector of initial values for coefficients including intercepts.}
+\item{initCoeff}{Vector of initial values for regression coefficients including intercepts}
 
 \item{initSigma}{Vector of initial values for standard deviations}
 
 \item{initPi}{Vector of initial values for proportion of components}
 
-\item{lambRidge}{Lambda for ridge penalty}
+\item{lambRidge}{A positive value for Lambda in Ridge regression or Elastic Net}
 
-\item{nIterEM}{Number of iteration for EM algorithm}
+\item{nIterEM}{Maximum number of iterations for EM algorithm}
 
-\item{nIterNR}{Number of iteration for Newton-Raphson algorithm}
+\item{nIterNR}{Maximum number of iterations for Newton-Raphson algorithm}
 
-\item{conveps}{A positive number for avoiding NaN in computing divisions.}
+\item{conveps}{A positive value for avoiding NaN in computing divisions}
 
-\item{convepsEM}{Treshold for convergence of EM algorithm}
+\item{convepsEM}{A positive value for treshold of convergence in EM algorithm}
 
-\item{convepsNR}{Treshold for convergence of Newton-Raphson algorithm}
+\item{convepsNR}{A positive value for treshold of convergence in Newton-Raphson algorithm}
 
 \item{porNR}{Used in pow(0.5, porNR) for tuning the increment in Newton-Raphson algorithm.}
 }
 \value{
-A fitted FMRs model object of class \code{\link{fmrs.fit}}
+An \code{\link{fmrs.fit}} object which includes parameter estimates of an FMRs model
 }
 \description{
-It provides parameter estimation for Finite Mixture of Accelerated Failure Time Regression Models
-and Finite Mixture of Regression Models.
+It provides parameter estimation for Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression Models.
 It also provide Ridge Regression.
 }
 \examples{

@@ -2,35 +2,35 @@
 % Please edit documentation in R/FMRsDataGen.R
 \name{fmrs.gen.data}
 \alias{fmrs.gen.data}
-\title{Genrating data from FMRs models}
+\title{Generating data from FMRs models}
 \usage{
 fmrs.gen.data(n, nComp, nCov, coeff, sigma, pi, rho, umax,
   disFamily = "lnorm")
 }
 \arguments{
-\item{n}{The number of samples to be generated}
+\item{n}{A numeric value represents number of observations (sample size)}
 
-\item{nComp}{A numeric value that represents the order (number of components) of an FMRs models}
+\item{nComp}{A numeric value represents the order (number of components) of an FMRs model}
 
-\item{nCov}{A numberic value that represents the number of covariates in desing matrix}
+\item{nCov}{A numberic value represents the number of covariates in design matrix}
 
-\item{coeff}{A vector of all coefficients of covariates including intercepts. It must be a vector of size \code{nComp} by \code{nCov+1}.}
+\item{coeff}{A vector of all regression coefficients including intercepts. It must be a vector of size \code{nComp} by \code{nCov+1}.}
 
-\item{sigma}{A vector of dispersion parameters for sub-distributions in FMRs models}
+\item{sigma}{A vector of positive values for dispersion parameters of sub-distributions in FMRs models}
 
-\item{pi}{A vector of mixing proportins which their sum should be one.}
+\item{pi}{A vector of mixing proportins. The sum of elements must be one.}
 
-\item{rho}{A numeric value between -1 and 1 which represents the correlation between covariates of design matrix}
+\item{rho}{A numeric value between -1 and 1 which represents the correlation between covariates in the design matrix}
 
-\item{umax}{A numeric value that represents the upper bound in Uniform distribution for censoring}
+\item{umax}{A numeric value represents the upper bound in Uniform distribution for censoring}
 
 \item{disFamily}{Specify the family of sub-distributioons. The options are \code{"lnormal"} for Log-Normal, \code{"norm"} for Normal and \code{"weibull"} for Weibull.}
 }
 \value{
-A list of simulated data set including a vector of time-to-event observations, a vector of censoring indicators and a matrix of covariates (design matrix)
+A list including a vector of observations \code{y}, a vector of censoring indicators \code{delta} and a matrix of covariates \code{x}
 }
 \description{
-This function will generate a data set from a Finite Mixture of AFT regression models or Finite Mixture of Regression models.
+This function will generate a data set from Finite Mixture of AFT regression models or Finite Mixture of Regression models.
 }
 \examples{
 \dontrun{ Ovarian Cancer analysis
