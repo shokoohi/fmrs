@@ -53,7 +53,7 @@ The available options are  \code{"lasso"}, \code{"adplasso"}, \code{"mcp"}, \cod
 An \code{\link{fmrs.fit}} object which includes parameter estimates of an FMRs model
 }
 \description{
-It provides variable selection and parameter estimation for Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models and Finite Mixture of Regression (FMR) Models
+It provides variable selection and parameter estimation for Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models and Finite Mixture of Regression (FMR) Models.
 The penalties that are implemented in this package are \code{lasso}, \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}. It also provide Ridge Regression and Elastic Net.
 }
 \examples{

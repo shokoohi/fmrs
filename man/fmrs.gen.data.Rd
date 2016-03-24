@@ -18,9 +18,9 @@ fmrs.gen.data(n, nComp, nCov, coeff, sigma, pi, rho, umax,
 
 \item{sigma}{A vector of positive values for dispersion parameters of sub-distributions in FMRs models}
 
-\item{pi}{A vector of mixing proportins. The sum of elements must be one.}
+\item{pi}{A vector of mixing proportions which their sum must be one}
 
-\item{rho}{A numeric value between -1 and 1 which represents the correlation between covariates in the design matrix}
+\item{rho}{A numeric value in [-1, 1] which represents the correlation between covariates of design matrix}
 
 \item{umax}{A numeric value represents the upper bound in Uniform distribution for censoring}
 

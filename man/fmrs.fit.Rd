@@ -35,9 +35,11 @@ fmrs.fit is an S4 class to represent a fit form an FMRs model which is the objec
 
 \item{\code{method}}{A length-one character vector}
 
-\item{\code{fitted}}{A length-\code{n} numeric vector}
+\item{\code{fitted}}{A length-\code{n}-\code{nComp} numeric matrix}
 
-\item{\code{residuals}}{A length-\code{n} numeric vector}
+\item{\code{residuals}}{A length-\code{n}-\code{nComp} numeric matrix}
+
+\item{\code{weights}}{A length-\code{n}-\code{nComp} numeric matrix}
 
 \item{\code{data}}{A list including \code{y}, \code{x} and \code{delta}}
 }}

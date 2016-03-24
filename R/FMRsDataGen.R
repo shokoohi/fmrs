@@ -11,8 +11,8 @@
 #' @param nCov A numberic value represents the number of covariates in design matrix
 #' @param coeff A vector of all regression coefficients including intercepts. It must be a vector of size \code{nComp} by \code{nCov+1}.
 #' @param sigma A vector of positive values for dispersion parameters of sub-distributions in FMRs models
-#' @param pi A vector of mixing proportins. The sum of elements must be one.
-#' @param rho A numeric value between -1 and 1 which represents the correlation between covariates in the design matrix
+#' @param pi A vector of mixing proportions which their sum must be one
+#' @param rho A numeric value in [-1, 1] which represents the correlation between covariates of design matrix
 #' @param umax A numeric value represents the upper bound in Uniform distribution for censoring
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016) Variable Selection in Mixture of Survival Models
 #' @keywords FMR, AFT, FMRs, Normal, Log-Normal, Weibull

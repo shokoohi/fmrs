@@ -105,7 +105,10 @@ fmrs.mle <- function(y,
            GCV = as.double(0),
            EBIC1 = as.double(0),
            EBIC5 = as.double(0),
-           GIC = as.double(0)
+           GIC = as.double(0),
+           predict = as.double(rep(0,n*nComp)),
+           residual = as.double(rep(0,n*nComp)),
+           tau = as.double(rep(0,n*nComp))
     )
   }else if(disFamily == "lnorm"){
     meth = "FMAFTR"
@@ -136,7 +139,10 @@ fmrs.mle <- function(y,
            GCV = as.double(0),
            EBIC1 = as.double(0),
            EBIC5 = as.double(0),
-           GIC = as.double(0)
+           GIC = as.double(0),
+           predict = as.double(rep(0,n*nComp)),
+           residual = as.double(rep(0,n*nComp)),
+           tau = as.double(rep(0,n*nComp))
     )
 
   }else if(disFamily == "weibull"){
@@ -169,7 +175,10 @@ fmrs.mle <- function(y,
            GCV = as.double(0),
            EBIC1 = as.double(0),
            EBIC5 = as.double(0),
-           GIC = as.double(0)
+           GIC = as.double(0),
+           predict = as.double(rep(0,n*nComp)),
+           residual = as.double(rep(0,n*nComp)),
+           tau = as.double(rep(0,n*nComp))
     )
   }else{
     stop("The family of sub-distributions is not specified correctly.")
@@ -184,7 +193,13 @@ fmrs.mle <- function(y,
               nIterEMconv = res$Max.iterEM.used,
               method = meth,
               disFamily = disFamily,
-              lambRidge = lambRidge
+              lambRidge = lambRidge,
+              fitted = array(matrix(res$predict, nrow = n, byrow = F),
+                             dim = c(n, nComp), dimnames = list(NULL,comnames)),
+              residuals = array(matrix(res$residual, nrow = n, byrow = F),
+                                dim = c(n, nComp), dimnames = list(NULL,comnames)),
+              weights = array(matrix(res$tau, nrow = n, byrow = F),
+                              dim = c(n, nComp), dimnames = list(NULL,comnames))
   )
   class(fit) <- "fmrs.fit"
   return(fit)

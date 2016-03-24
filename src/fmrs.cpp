@@ -238,7 +238,10 @@ extern "C" {
                             double *GCV,
                             double *EBIC1,
                             double *EBIC5,
-                            double *GIC
+                            double *GIC,
+                            double *predict,
+                            double *residual,
+                            double *tau
   )
   {
     int nsize = *mynsize;
@@ -523,6 +526,38 @@ extern "C" {
     *GCV = (loglike1) / (nsize * pow(1 - NCOMP * NCOV / nsize, 2));
     *GIC = loglike1 - 0.5 * (NCOMP * NCOV) * log(nsize);
     *MaxEMiter = niter1;
+
+    /*******The E-step of the EM********/
+
+    for(i = 0; i < nsize; i++){
+      sumi = 0.0;
+      for(k1 = 0; k1 < NCOMP;  k1++){
+        mui = 0.0;
+        for(j = 0; j < NCOV; j++)
+          mui += multX[i][j] * beta0hat[j][k1];
+        mui += alpha0hat[k1];
+        deni = pow(eps +  dnorm(resp[i] - mui, 0, sigma0hat[k1], 0), delta[i]) *  pow(eps + 1 - pnorm(resp[i] - mui, 0, sigma0hat[k1], 1, 0), 1 - delta[i]) ;
+        phi[i][k1] = pi0hat[k1] * deni;
+        sumi += phi[i][k1];
+      }
+      for(k1 = 0; k1 < NCOMP;  k1++){
+        W[i][k1] = phi[i][k1] / sumi;
+      }
+    }
+
+    /**********End of the E-step*******/
+    for(k1 = 0; k1 < NCOMP; k1++){
+      for(i = 0; i < nsize; i++){
+        mui = 0.0;
+        for(j = 0; j < NCOV; j++)
+          mui += multX[i][j] * beta0hat[j][k1];
+        mui += alpha0hat[k1];
+        predict[k1 * nsize + i] = mui;
+        residual[k1 * nsize + i] = resp[i] - mui;
+        tau[k1 * nsize + i] = W[i][k1];
+      }
+    }
+
   }
 #ifdef __cplusplus
 }
@@ -561,7 +596,10 @@ extern "C" {
                                double *GCV,
                                double *EBIC1,
                                double *EBIC5,
-                               double *GIC
+                               double *GIC,
+                               double *predict,
+                               double *residual,
+                               double *tau
   )
   {
     int nsize = *mynsize;
@@ -976,6 +1014,37 @@ extern "C" {
     *GCV = (loglike1) / (nsize * pow(1 - SUM1 / nsize, 2));
     *GIC = loglike1 - 0.5 * (SUM1) * log(nsize);
     *MaxEMiter = niter1;
+    /*******The E-step of the EM********/
+
+    for(i = 0; i < nsize; i++){
+      sumi = 0.0;
+      for(k1 = 0; k1 < NCOMP;  k1++){
+        mui = 0.0;
+        for(j = 0; j < NCOV; j++)
+          mui += multX[i][j] * beta0hat[j][k1];
+        mui += alpha0hat[k1];
+        deni = pow(eps +  dnorm(resp[i] - mui, 0, sigma0hat[k1], 0), delta[i]) *  pow(eps + 1 - pnorm(resp[i] - mui, 0, sigma0hat[k1], 1, 0), 1 - delta[i]) ;
+        phi[i][k1] = pi0hat[k1] * deni;
+        sumi += phi[i][k1];
+      }
+      for(k1 = 0; k1 < NCOMP;  k1++){
+        W[i][k1] = phi[i][k1] / sumi;
+      }
+    }
+
+    /**********End of the E-step*******/
+    for(k1 = 0; k1 < NCOMP; k1++){
+      for(i = 0; i < nsize; i++){
+        mui = 0.0;
+        for(j = 0; j < NCOV; j++)
+          mui += multX[i][j] * beta0hat[j][k1];
+        mui += alpha0hat[k1];
+        predict[k1 * nsize + i] = mui;
+        residual[k1 * nsize + i] = resp[i] - mui;
+        tau[k1 * nsize + i] = W[i][k1];
+      }
+    }
+
   }
 #ifdef __cplusplus
 }
@@ -1317,7 +1386,10 @@ extern "C" {
                              double *GCV,
                              double *EBIC1,
                              double *EBIC5,
-                             double *GIC
+                             double *GIC,
+                             double *predict,
+                             double *residual,
+                             double *tau
   )
   {
     int nsize = *mynsize;
@@ -1670,6 +1742,38 @@ extern "C" {
     *GCV = (loglike1) / (nsize * pow(1 - NCOMP * NCOV / nsize, 2));
     *GIC = loglike1 - 0.5 * (NCOMP * NCOV) * log(nsize);
     *MaxEMiter = niter1;
+
+    /*******The E-step of the EM********/
+
+    for(i = 0; i < nsize; i++){
+      sumi = 0.0;
+      for(k1 = 0; k1 < NCOMP;  k1++){
+        mui = 0.0;
+        for(j = 0; j < NCOV; j++)
+          mui += multX[i][j] * beta0hat[j][k1];
+        mui += alpha0hat[k1];
+        deni = pow((1 / sigma0hat[k1])* exp((resp[i] - mui) / sigma0hat[k1]), delta[i]) * exp(-exp((resp[i] - mui) / sigma0hat[k1])) ;
+        phi[i][k1] = pi0hat[k1] * deni;
+        sumi += phi[i][k1];
+      }
+      for(k1 = 0; k1 < NCOMP;  k1++){
+        W[i][k1] = phi[i][k1] / sumi;
+      }
+    }
+
+    /**********End of the E-step*******/
+    for(k1 = 0; k1 < NCOMP; k1++){
+      for(i = 0; i < nsize; i++){
+        mui = 0.0;
+        for(j = 0; j < NCOV; j++)
+          mui += multX[i][j] * beta0hat[j][k1];
+        mui += alpha0hat[k1];
+        predict[k1 * nsize + i] = mui;
+        residual[k1 * nsize + i] = resp[i] - mui;
+        tau[k1 * nsize + i] = W[i][k1];
+      }
+    }
+
   }
 #ifdef __cplusplus
 }
@@ -1710,7 +1814,10 @@ extern "C" {
                                 double *GCV,
                                 double *EBIC1,
                                 double *EBIC5,
-                                double *GIC
+                                double *GIC,
+                                double *predict,
+                                double *residual,
+                                double *tau
   )
   {
     int nsize = *mynsize;
@@ -2172,6 +2279,37 @@ extern "C" {
     *GCV = (loglike1) / (nsize * pow(1 - SUM1 / nsize, 2));
     *GIC = loglike1 - 0.5 * (SUM1) * log(nsize);
     *MaxEMiter = niter1;
+    /*******The E-step of the EM********/
+
+    for(i = 0; i < nsize; i++){
+      sumi = 0.0;
+      for(k1 = 0; k1 < NCOMP;  k1++){
+        mui = 0.0;
+        for(j = 0; j < NCOV; j++)
+          mui += multX[i][j] * beta0hat[j][k1];
+        mui += alpha0hat[k1];
+        deni = pow((1 / sigma0hat[k1])* exp((resp[i] - mui) / sigma0hat[k1]), delta[i]) * exp(-exp((resp[i] - mui) / sigma0hat[k1])) ;
+        phi[i][k1] = pi0hat[k1] * deni;
+        sumi += phi[i][k1];
+      }
+      for(k1 = 0; k1 < NCOMP;  k1++){
+        W[i][k1] = phi[i][k1] / sumi;
+      }
+    }
+
+    /**********End of the E-step*******/
+    for(k1 = 0; k1 < NCOMP; k1++){
+      for(i = 0; i < nsize; i++){
+        mui = 0.0;
+        for(j = 0; j < NCOV; j++)
+          mui += multX[i][j] * beta0hat[j][k1];
+        mui += alpha0hat[k1];
+        predict[k1 * nsize + i] = mui;
+        residual[k1 * nsize + i] = resp[i] - mui;
+        tau[k1 * nsize + i] = W[i][k1];
+      }
+    }
+
   }
 #ifdef __cplusplus
 }

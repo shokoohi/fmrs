@@ -15,24 +15,28 @@
 #' @slot lambPen A length-\code{nComp} numeric vector
 #' @slot lamRidge A length-one numeric vector
 #' @slot method A length-one character vector
-#' @slot fitted A length-\code{n} numeric vector
-#' @slot residuals A length-\code{n} numeric vector
+#' @slot fitted A length-\code{n}-\code{nComp} numeric matrix
+#' @slot residuals A length-\code{n}-\code{nComp} numeric matrix
+#' @slot weights A length-\code{n}-\code{nComp} numeric matrix
 #' @slot data A list including \code{y}, \code{x} and \code{delta}
 frms.fit <- setClass("fmrs.fit",
-                     slots = list(dims = "numeric",
+                     representation(dims = "vector",
                                   coefficients = "matrix",
-                                  sigma = "numeric",
-                                  pi = "numeric",
+                                  sigma = "vector",
+                                  pi = "vector",
                                   logLik = "numeric",
                                   BIC = "numeric",
                                   nIterEMconv = "numeric",
                                   disFamily = "character",
                                   penFamily = "character",
-                                  lambPen = "numeric",
+                                  lambPen = "vector",
                                   lamRidge = "numeric",
                                   method = "character",
-                                  fitted = "numeric",
-                                  residuals = "numeric",
+                                  fitted = "matrix",
+                                  residuals = "matrix",
+                                  weights = "matrix",
                                   data = "list"
                      )
+
 )
+
