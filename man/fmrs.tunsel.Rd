@@ -2,7 +2,7 @@
 % Please edit documentation in R/FMR_Surv_CwTuneSel.R
 \name{fmrs.tunsel}
 \alias{fmrs.tunsel}
-\title{Component-wise Tuning Parameter Selection in Finite Mixture of Accelerated Failure Time Regression Models
+\title{Component-Wise Tuning Parameter Selection in Finite Mixture of Accelerated Failure Time Regression Models
 and Finite Mixture of Regression Models}
 \usage{
 fmrs.tunsel(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initSigma,
@@ -57,15 +57,21 @@ and Finite Mixture of Regression Models.
 The penalties that are implemented in this package are \code{lasso}, \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}.
 }
 \examples{
-\dontrun{Tuning Parameter Selection in Ovarian Cancer analysis
+\dontrun{Tuning Parameter Selection in generated data, see frms.mle and fmrs.gen.data
+res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
+                       nComp = nComp, disFamily = "lnorm",
+                       initCoeff=c(res.mle$coefficients),
+                       initSigma = res.mle$sigma,
+                       initPi = res.mle$pi, penFamily = "adplasso")
 
+res.lam
 }
 }
 \author{
 Farhad Shokoohi <shokoohi@icloud.com>
 }
 \references{
-Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016) Variable Selection in Mixture of Survival Models
+Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
 }
 \seealso{
 Other lnorm..norm..weibull: \code{\link{fmrs.gen.data}},

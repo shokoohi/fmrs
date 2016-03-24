@@ -11,10 +11,9 @@ The function \code{fmrs.tunsel()} provides component-wise tuning parameters. The
 }
 \section{fmrs functions}{
 
-The fmrs functions are
 \code{fmrs.mle()},
 \code{fmrs.tunsel()},
-\code{fmrs.varsel()}, and
+\code{fmrs.varsel()},
 \code{fmrs.gen.data()}.
 }
 

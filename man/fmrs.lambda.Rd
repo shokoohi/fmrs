@@ -4,9 +4,9 @@
 \name{fmrs.lambda}
 \alias{fmrs.lambda}
 \alias{frms.lambda}
-\title{An S4 class to represent estimated optimal lambdas.}
+\title{An S4 class to represent estimated optimal lambdas}
 \description{
-An S4 class to represent estimated optimal lambdas.
+An S4 class to represent estimated optimal lambdas resulted from runnig \code{\link{fmrs.tunsel}}.
 }
 \section{Slots}{
 
@@ -19,7 +19,7 @@ An S4 class to represent estimated optimal lambdas.
 
 \item{\code{lamRidge}}{A length-one numeric vector}
 
-\item{\code{method}}{A length-one character vecotr}
+\item{\code{method}}{A length-one character vector}
 
 \item{\code{data}}{A list including \code{y}, \code{x} and \code{delta}}
 }}

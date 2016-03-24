@@ -50,16 +50,23 @@ It provides parameter estimation for Finite Mixture of Accelerated Failure Time 
 It also provide Ridge Regression.
 }
 \examples{
-\dontrun{ Ovarian Cancer analysis
+\dontrun{ MLE of the generated data, see fmrs.gen.data
+res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
+                    nComp = nComp, disFamily = "lnorm",
+                    initCoeff = rnorm(nComp*nCov+nComp),
+                    initSigma = rep(1, nComp),
+                    initPi = rep(1/nComp, nComp))
 
-
+res.mle$coefficients
+res.mle$sigma
+res.mle$pi
 }
 }
 \author{
 Farhad Shokoohi <shokoohi@icloud.com>
 }
 \references{
-Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016) Variable Selection in Mixture of Survival Models
+Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
 }
 \seealso{
 Other lnorm..norm..weibull: \code{\link{fmrs.gen.data}},

@@ -57,15 +57,23 @@ It provides variable selection and parameter estimation for Finite Mixture of Ac
 The penalties that are implemented in this package are \code{lasso}, \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}. It also provide Ridge Regression and Elastic Net.
 }
 \examples{
-\dontrun{Variable Selection in Ovarian Cancer analysis
+\dontrun{ Variable Selection in generated data, see fmrs.tunsel, fmrs.mle and fmrs.gen.data
+res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
+                       nComp = nComp, disFamily = "lnorm",
+                       initCoeff = c(res.mle$coefficients),
+                       initSigma = res.mle$sigma,
+                       initPi = res.mle$pi, penFamily = "adplasso",
+                       lambPen = res.lam$lamPen)
 
+beta.est <- coefficients(res.var)[-1,]
+round(beta.est,5)
 }
 }
 \author{
 Farhad Shokoohi <shokoohi@icloud.com>
 }
 \references{
-Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016) Variable Selection in Mixture of Survival Models
+Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
 }
 \seealso{
 Other lnorm..norm..weibull: \code{\link{fmrs.gen.data}},

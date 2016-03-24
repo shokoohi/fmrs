@@ -4,14 +4,14 @@
 \name{fmrs.fit}
 \alias{fmrs.fit}
 \alias{frms.fit}
-\title{An S4 class to represent a fit of an FMRs model.}
+\title{An S4 class to represent a fit of an FMRs model}
 \description{
-fmrs.fit is an S4 class to represent a fit form an FMRs model which is the object returned by MLE or Penalized MLE.
+fmrs.fit is an S4 class to represent a fit of FMRs models resulted from running \code{\link{fmrs.mle}} or \code{\link{fmrs.varsel}}.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{dims}}{A length-three numeric vector reporting number of observations (\code{n}), number of covariates (\code{nCov}) and the order of mixture model (\code{nComp})}
+\item{\code{dims}}{A length-three numeric vector represents number of observations (\code{n}), number of covariates (\code{nCov}) and the order of the mixture model (\code{nComp})}
 
 \item{\code{coefficients}}{A dimension-\code{nCov}-\code{nComp} numeric matrix}
 
@@ -35,11 +35,11 @@ fmrs.fit is an S4 class to represent a fit form an FMRs model which is the objec
 
 \item{\code{method}}{A length-one character vector}
 
-\item{\code{fitted}}{A length-\code{n}-\code{nComp} numeric matrix}
+\item{\code{fitted}}{A dimension-\code{n}-\code{nComp} numeric matrix}
 
-\item{\code{residuals}}{A length-\code{n}-\code{nComp} numeric matrix}
+\item{\code{residuals}}{A dimension-\code{n}-\code{nComp} numeric matrix}
 
-\item{\code{weights}}{A length-\code{n}-\code{nComp} numeric matrix}
+\item{\code{weights}}{A dimension-\code{n}-\code{nComp} numeric matrix}
 
 \item{\code{data}}{A list including \code{y}, \code{x} and \code{delta}}
 }}

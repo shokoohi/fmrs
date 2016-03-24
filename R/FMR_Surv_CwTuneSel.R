@@ -1,4 +1,4 @@
-#' @title  Component-wise Tuning Parameter Selection in Finite Mixture of Accelerated Failure Time Regression Models
+#' @title  Component-Wise Tuning Parameter Selection in Finite Mixture of Accelerated Failure Time Regression Models
 #' and Finite Mixture of Regression Models
 #'
 #' @description  It provides component-wise tuning parameters for Finite Mixture of Accelerated Failure Time Regression Models
@@ -28,10 +28,16 @@
 #' @param porNR Used in pow(0.5, porNR) for tuning the increment in Newton-Raphson algorithm.
 #' @param gamMixPor Proportion of mixing parameters in the penalty. The value must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty structure is no longer mixture.
 #' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression
-#' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016) Variable Selection in Mixture of Survival Models
+#' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
 #' @return An \code{\link{fmrs.lambda}} object which includes component-wise tuning parameter estimates to be used in variable selection procedure.
-#' @examples \dontrun{Tuning Parameter Selection in Ovarian Cancer analysis
+#' @examples \dontrun{Tuning Parameter Selection in generated data, see frms.mle and fmrs.gen.data
+#' res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
+#'                        nComp = nComp, disFamily = "lnorm",
+#'                        initCoeff=c(res.mle$coefficients),
+#'                        initSigma = res.mle$sigma,
+#'                        initPi = res.mle$pi, penFamily = "adplasso")
 #'
+#' res.lam
 #' }
 #' @export
 fmrs.tunsel <- function(y,

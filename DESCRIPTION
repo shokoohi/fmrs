@@ -1,13 +1,13 @@
 Package: fmrs
 Type: Package
 Title: Variable Selection and Model Estimation in Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression Models
-Version: 1.0.0
-Depends: R (>= 3.2.4)
-Imports: methods
-Date: 2016-03-21
+Version: 1.0-1
+Date: 2016-03-24
 Author: Farhad Shokoohi
 Maintainer: Farhad Shokoohi <shokoohi@icloud.com>
-Description: The "fmrs" package provides parameter estimation as well as variable selection in Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression models. It also provides the ridge regression and Elastic Net. Currently Normal, Log-Normal and Weibull distributions are implemented.
+Depends: R (>= 3.2.4)
+Imports: methods
+Description: The 'fmrs' package provides parameter estimation as well as variable selection in Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression models. It also provides the Ridge regression and Elastic Net. Currently Normal, Log-Normal and Weibull distributions are implemented.
 License: GPL (>= 3)
 LazyData: TRUE
 Suggests: knitr

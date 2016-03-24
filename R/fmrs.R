@@ -4,10 +4,9 @@
 #' The function \code{fmrs.tunsel()} provides component-wise tuning parameters. The function \code{fmrs.varsel()} provides variable selection for FMRs models.
 #'
 #' @section fmrs functions:
-#' The fmrs functions are
 #' \code{fmrs.mle()},
 #' \code{fmrs.tunsel()},
-#' \code{fmrs.varsel()}, and
+#' \code{fmrs.varsel()},
 #' \code{fmrs.gen.data()}.
 #'
 #' @docType package

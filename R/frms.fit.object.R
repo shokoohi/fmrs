@@ -1,9 +1,9 @@
-#' @title An S4 class to represent a fit of an FMRs model.
+#' @title An S4 class to represent a fit of an FMRs model
 #'
-#' @description fmrs.fit is an S4 class to represent a fit form an FMRs model which is the object returned by MLE or Penalized MLE.
+#' @description fmrs.fit is an S4 class to represent a fit of FMRs models resulted from running \code{\link{fmrs.mle}} or \code{\link{fmrs.varsel}}.
 #' @name fmrs.fit
 #' @import methods
-#' @slot dims A length-three numeric vector reporting number of observations (\code{n}), number of covariates (\code{nCov}) and the order of mixture model (\code{nComp})
+#' @slot dims A length-three numeric vector represents number of observations (\code{n}), number of covariates (\code{nCov}) and the order of the mixture model (\code{nComp})
 #' @slot coefficients A dimension-\code{nCov}-\code{nComp} numeric matrix
 #' @slot sigma A length-\code{nComp} numeric vector
 #' @slot pi A length-\code{nComp} numeric vector
@@ -15,27 +15,27 @@
 #' @slot lambPen A length-\code{nComp} numeric vector
 #' @slot lamRidge A length-one numeric vector
 #' @slot method A length-one character vector
-#' @slot fitted A length-\code{n}-\code{nComp} numeric matrix
-#' @slot residuals A length-\code{n}-\code{nComp} numeric matrix
-#' @slot weights A length-\code{n}-\code{nComp} numeric matrix
+#' @slot fitted A dimension-\code{n}-\code{nComp} numeric matrix
+#' @slot residuals A dimension-\code{n}-\code{nComp} numeric matrix
+#' @slot weights A dimension-\code{n}-\code{nComp} numeric matrix
 #' @slot data A list including \code{y}, \code{x} and \code{delta}
 frms.fit <- setClass("fmrs.fit",
                      representation(dims = "vector",
-                                  coefficients = "matrix",
-                                  sigma = "vector",
-                                  pi = "vector",
-                                  logLik = "numeric",
-                                  BIC = "numeric",
-                                  nIterEMconv = "numeric",
-                                  disFamily = "character",
-                                  penFamily = "character",
-                                  lambPen = "vector",
-                                  lamRidge = "numeric",
-                                  method = "character",
-                                  fitted = "matrix",
-                                  residuals = "matrix",
-                                  weights = "matrix",
-                                  data = "list"
+                                    coefficients = "matrix",
+                                    sigma = "vector",
+                                    pi = "vector",
+                                    logLik = "numeric",
+                                    BIC = "numeric",
+                                    nIterEMconv = "numeric",
+                                    disFamily = "character",
+                                    penFamily = "character",
+                                    lambPen = "vector",
+                                    lamRidge = "numeric",
+                                    method = "character",
+                                    fitted = "matrix",
+                                    residuals = "matrix",
+                                    weights = "matrix",
+                                    data = "list"
                      )
 
 )

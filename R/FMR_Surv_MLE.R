@@ -24,11 +24,18 @@
 #' @param convepsNR A positive value for treshold of convergence in Newton-Raphson algorithm
 #' @param porNR Used in pow(0.5, porNR) for tuning the increment in Newton-Raphson algorithm.
 #' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression
-#' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016) Variable Selection in Mixture of Survival Models
+#' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
 #' @return An \code{\link{fmrs.fit}} object which includes parameter estimates of an FMRs model
-#' @examples \dontrun{ Ovarian Cancer analysis
+#' @examples \dontrun{ MLE of the generated data, see fmrs.gen.data
+#' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
+#'                     nComp = nComp, disFamily = "lnorm",
+#'                     initCoeff = rnorm(nComp*nCov+nComp),
+#'                     initSigma = rep(1, nComp),
+#'                     initPi = rep(1/nComp, nComp))
 #'
-#'
+#' res.mle$coefficients
+#' res.mle$sigma
+#' res.mle$pi
 #' }
 #' @export
 fmrs.mle <- function(y,
