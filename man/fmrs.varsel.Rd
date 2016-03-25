@@ -57,7 +57,34 @@ It provides variable selection and parameter estimation for Finite Mixture of Ac
 The penalties that are implemented in this package are \code{lasso}, \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}. It also provide Ridge Regression and Elastic Net.
 }
 \examples{
-\dontrun{ Variable Selection in generated data, see fmrs.tunsel, fmrs.mle and fmrs.gen.data
+set.seed(1980)
+nComp = 2
+nCov = 10
+n = 500
+REP = 500
+sigma = c(1, 1)
+pi = c(0.4, 0.6)
+rho = 0.5
+coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
+coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
+umax = 40
+
+dat <- fmrs.gen.data(n = n, nComp = nComp, nCov = nCov,
+                     coeff = c(coeff1, coeff2), sigma = sigma,
+                     pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
+
+res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
+                    nComp = nComp, disFamily = "lnorm",
+                    initCoeff = rnorm(nComp*nCov+nComp),
+                    initSigma = rep(1, nComp),
+                    initPi = rep(1/nComp, nComp))
+
+res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
+                       nComp = nComp, disFamily = "lnorm",
+                       initCoeff=c(res.mle$coefficients),
+                       initSigma = res.mle$sigma,
+                       initPi = res.mle$pi, penFamily = "adplasso")
+
 res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
                        nComp = nComp, disFamily = "lnorm",
                        initCoeff = c(res.mle$coefficients),
@@ -67,7 +94,6 @@ res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
 
 beta.est <- coefficients(res.var)[-1,]
 round(beta.est,5)
-}
 }
 \author{
 Farhad Shokoohi <shokoohi@icloud.com>

@@ -26,7 +26,23 @@
 #' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
 #' @return An \code{\link{fmrs.fit}} object which includes parameter estimates of an FMRs model
-#' @examples \dontrun{ MLE of the generated data, see fmrs.gen.data
+#' @examples
+#' set.seed(1980)
+#' nComp = 2
+#' nCov = 10
+#' n = 500
+#' REP = 500
+#' sigma = c(1, 1)
+#' pi = c(0.4, 0.6)
+#' rho = 0.5
+#' coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
+#' coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
+#' umax = 40
+#'
+#' dat <- fmrs.gen.data(n = n, nComp = nComp, nCov = nCov,
+#'                      coeff = c(coeff1, coeff2), sigma = sigma,
+#'                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
+#'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
 #'                     nComp = nComp, disFamily = "lnorm",
 #'                     initCoeff = rnorm(nComp*nCov+nComp),
@@ -36,7 +52,6 @@
 #' res.mle$coefficients
 #' res.mle$sigma
 #' res.mle$pi
-#' }
 #' @export
 fmrs.mle <- function(y,
                      x,

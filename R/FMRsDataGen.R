@@ -17,7 +17,7 @@
 #' @importFrom stats rexp rnorm runif
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
 #' @keywords FMR, AFT, FMRs, Normal, Log-Normal, Weibull
-#'@examples \dontrun{ Generating data from FMRs models
+#'@examples
 #' set.seed(1980)
 #' nComp = 2
 #' nCov = 10
@@ -33,7 +33,6 @@
 #' dat <- fmrs.gen.data(n = n, nComp = nComp, nCov = nCov,
 #'                      coeff = c(coeff1, coeff2), sigma = sigma,
 #'                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
-#' }
 #' @export
 fmrs.gen.data <- function(n,
                           nComp,

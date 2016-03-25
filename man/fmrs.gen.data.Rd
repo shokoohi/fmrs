@@ -33,7 +33,6 @@ A list including a vector of observations \code{y}, a vector of censoring indica
 This function will generate a data set from Finite Mixture of AFT regression models or Finite Mixture of Regression models.
 }
 \examples{
-\dontrun{ Generating data from FMRs models
 set.seed(1980)
 nComp = 2
 nCov = 10
@@ -49,7 +48,6 @@ umax = 40
 dat <- fmrs.gen.data(n = n, nComp = nComp, nCov = nCov,
                      coeff = c(coeff1, coeff2), sigma = sigma,
                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
-}
 }
 \author{
 Farhad Shokoohi <shokoohi@icloud.com>
