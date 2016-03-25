@@ -1,8 +1,11 @@
 #' @useDynLib fmrs
 
 .onAttach <- function(lib, pkg){
+  fmrsversion <- utils::packageVersion("fmrs")
+  fmrsdate <- utils::packageDescription("fmrs")$Date
+  fmrsdescrip <- utils::packageDescription("fmrs")$Description
   packageStartupMessage(
-    paste(' fmrs package, version 1.0-2, Released 2016-03-24 \n fmrs provides parameter estimation and variable selection in Finite Mixture of Accelerated Failure Time Regression models and Finite Mixture of Regression models')
+    paste('fmrs package, Version ', fmrsversion,', Released ',fmrsdate,' \n',fmrsdescrip, sep = "")
   )
 }
 
