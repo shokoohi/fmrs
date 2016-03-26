@@ -4,7 +4,7 @@
 \alias{fmrs.varsel}
 \title{Variable Selection in Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression Models}
 \usage{
-fmrs.varsel(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initSigma,
+fmrs.varsel(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initDeviance,
   initPi, penFamily = "lasso", lambPen, lambRidge = 0, nIterEM = 2000,
   nIterNR = 2, conveps = 1e-08, convepsEM = 1e-08, convepsNR = 1e-08,
   porNR = 2, gamMixPor = 1)
@@ -24,7 +24,7 @@ fmrs.varsel(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initSigma,
 
 \item{initCoeff}{Vector of initial values for regression coefficients including intercepts}
 
-\item{initSigma}{Vector of initial values for standard deviations}
+\item{initDeviance}{Vector of initial values for standard deviations}
 
 \item{initPi}{Vector of initial values for proportion of components}
 
@@ -50,7 +50,7 @@ The available options are  \code{"lasso"}, \code{"adplasso"}, \code{"mcp"}, \cod
 \item{gamMixPor}{Proportion of mixing parameters in the penalty. The value must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty structure is no longer mixture.}
 }
 \value{
-An \code{\link{fmrs.fit}} object which includes parameter estimates of an FMRs model
+An \code{\link{fmrs.fit-class}} object which includes parameter estimates of an FMRs model
 }
 \description{
 It provides variable selection and parameter estimation for Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models and Finite Mixture of Regression (FMR) Models.
@@ -62,7 +62,7 @@ nComp = 2
 nCov = 10
 n = 500
 REP = 500
-sigma = c(1, 1)
+deviance = c(1, 1)
 pi = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
@@ -70,25 +70,25 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gen.data(n = n, nComp = nComp, nCov = nCov,
-                     coeff = c(coeff1, coeff2), sigma = sigma,
+                     coeff = c(coeff1, coeff2), deviance = deviance,
                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                     nComp = nComp, disFamily = "lnorm",
                     initCoeff = rnorm(nComp*nCov+nComp),
-                    initSigma = rep(1, nComp),
+                    initDeviance = rep(1, nComp),
                     initPi = rep(1/nComp, nComp))
 
 res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
                        nComp = nComp, disFamily = "lnorm",
                        initCoeff=c(res.mle$coefficients),
-                       initSigma = res.mle$sigma,
+                       initDeviance = res.mle$deviance,
                        initPi = res.mle$pi, penFamily = "adplasso")
 
 res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
                        nComp = nComp, disFamily = "lnorm",
                        initCoeff = c(res.mle$coefficients),
-                       initSigma = res.mle$sigma,
+                       initDeviance = res.mle$deviance,
                        initPi = res.mle$pi, penFamily = "adplasso",
                        lambPen = res.lam$lamPen)
 
@@ -104,6 +104,9 @@ Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable S
 \seealso{
 Other lnorm..norm..weibull: \code{\link{fmrs.gen.data}},
   \code{\link{fmrs.mle}}, \code{\link{fmrs.tunsel}}
+}
+\concept{
+fmr, aft, lasso, adplasso, mcp, scad, sica, ridge
 }
 \keyword{AFT,}
 \keyword{Algorithm,}

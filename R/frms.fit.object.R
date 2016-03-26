@@ -1,11 +1,11 @@
 #' @title An S4 class to represent a fit of an FMRs model
 #'
 #' @description fmrs.fit is an S4 class to represent a fit of FMRs models resulted from running \code{\link{fmrs.mle}} or \code{\link{fmrs.varsel}}.
-#' @name fmrs.fit
+#' @name fmrs.fit-class
 #' @import methods
 #' @slot dims A length-three numeric vector represents number of observations (\code{n}), number of covariates (\code{nCov}) and the order of the mixture model (\code{nComp})
 #' @slot coefficients A dimension-\code{nCov}-\code{nComp} numeric matrix
-#' @slot sigma A length-\code{nComp} numeric vector
+#' @slot deviance A length-\code{nComp} numeric vector
 #' @slot pi A length-\code{nComp} numeric vector
 #' @slot logLik A length-one numeric vector
 #' @slot BIC A length-one numeric vector
@@ -19,10 +19,12 @@
 #' @slot residuals A dimension-\code{n}-\code{nComp} numeric matrix
 #' @slot weights A dimension-\code{n}-\code{nComp} numeric matrix
 #' @slot data A list including \code{y}, \code{x} and \code{delta}
+#' @docType class
+#' @exportClass fmrs.fit
 frms.fit <- setClass("fmrs.fit",
                      representation(dims = "vector",
                                     coefficients = "matrix",
-                                    sigma = "vector",
+                                    deviance = "vector",
                                     pi = "vector",
                                     logLik = "numeric",
                                     BIC = "numeric",

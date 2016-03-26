@@ -1,17 +1,23 @@
 Package: fmrs
 Type: Package
-Title: Variable Selection and Model Estimation in Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression Models
+Title: Variable Selection and Model Estimation in Finite Mixture of Accelerated
+    Failure Time Regression Models and Finite Mixture of Regression Models
 Version: 1.0-3
 Date: 2016-03-25
-Author: Farhad Shokoohi
+Author: Farhad Shokoohi <shokoohi@icloud.com>
 Maintainer: Farhad Shokoohi <shokoohi@icloud.com>
-Depends: R (>= 3.2.4)
-Imports: methods, stats
-Description: The 'fmrs' package provides parameter estimation as well as variable selection in Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression models. It also provides the Ridge regression and Elastic Net. Currently Normal, Log-Normal and Weibull distributions are implemented.
-biocViews: Survival, AFT, FMR
+Depends:
+    R (>= 3.2.4)
+Imports:
+    methods,
+    stats
+Description: The 'fmrs' package provides parameter estimation as well as variable selection in Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression models. It also provides the Ridge regression and Elastic Net.
+biocViews: AFT
 License: GPL (>= 3)
 LazyData: TRUE
-Suggests: knitr, utils
+Suggests:
+    knitr,
+    utils
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
 BugReports: https://github.com/shokoohi/fmrs/issues

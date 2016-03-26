@@ -5,7 +5,7 @@
 \title{Maximum Likelihood Estimation in Finite Mixture of Accelerated Failure Time Regression Models
 and Finite Mixture of Regression Models}
 \usage{
-fmrs.mle(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initSigma,
+fmrs.mle(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initDeviance,
   initPi, lambRidge = 0, nIterEM = 2000, nIterNR = 2, conveps = 1e-08,
   convepsEM = 1e-08, convepsNR = 1e-08, porNR = 2)
 }
@@ -24,7 +24,7 @@ fmrs.mle(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initSigma,
 
 \item{initCoeff}{Vector of initial values for regression coefficients including intercepts}
 
-\item{initSigma}{Vector of initial values for standard deviations}
+\item{initDeviance}{Vector of initial values for standard deviations}
 
 \item{initPi}{Vector of initial values for proportion of components}
 
@@ -43,11 +43,28 @@ fmrs.mle(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initSigma,
 \item{porNR}{Used in pow(0.5, porNR) for tuning the increment in Newton-Raphson algorithm.}
 }
 \value{
-An \code{\link{fmrs.fit}} object which includes parameter estimates of an FMRs model
+An \code{\link{fmrs.fit-class}} object which includes parameter estimates of an FMRs model
 }
 \description{
 It provides parameter estimation for Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression Models.
 It also provide Ridge Regression.
+}
+\details{
+Finite mixture of AFT regression models are represented as follows.
+Let \eqn{X} be the survival time with non-negative values, and \eqn{\boldsymbol{z} =(z_{1}, \ldots, z_{d})^{\top}}
+be a \eqn{d}-dimensional vector of covariates that may have an effect on \eqn{X}.
+If the survival time is subject to right censoring, then the observed response time is \eqn{T=\min \{Y, C\}},
+where \eqn{Y=\log X}, \eqn{C} is  logarithm of  the censoring time and \eqn{\delta=I_{\{y<c\}}} is the censoring indicator.
+We say that \eqn{V=(T,\delta,\boldsymbol z)} follows a finite mixture of AFT regression models of order \eqn{K}
+if the conditional density of \eqn{(T,\delta)} given \eqn{\boldsymbol z} has the form
+\deqn{f(t,\delta;\boldsymbol{z},\boldsymbol\Psi)=\sum\limits_{k=1}^{K}\pi_{k}[f_Y(t;\theta_{k}(\boldsymbol z),
+\sigma_{k})]^{\delta}[S_Y(t;\theta_{k}(\boldsymbol z),\sigma_{k})]^{1-\delta}[f_{C}(t)]^{1-\delta}[S_{C}(t)]^{\delta}}
+where \eqn{f_Y(.)} and \eqn{S_Y(.)} are respectively the density and survival functions of \eqn{Y},
+\eqn{f_C(.)} and \eqn{S_C(.)} are respectively the density and survival functions of \eqn{C};
+and \eqn{{\theta}_{k}(\boldsymbol{z})=h(\beta_{0k}+\boldsymbol{z}^{\top}\boldsymbol\beta_{k})}
+for a known link function \eqn{h(.)},  \eqn{\boldsymbol\Psi=(\pi_{1},\ldots,\pi_{K},\beta_{01},\ldots,
+\beta_{0K}, \boldsymbol\beta_{1},\ldots,\boldsymbol\beta_{K},\sigma_{1},\ldots,\sigma_{K})^{\top}}
+with \eqn{\boldsymbol\beta_{k}=(\beta_{k1},\beta_{k2},\ldots,\beta_{kd})^{\top}} and \eqn{0<\pi_{k}<1} with \eqn{\sum_{k=1}^{K}\pi_{k}=1}.
 }
 \examples{
 set.seed(1980)
@@ -55,7 +72,7 @@ nComp = 2
 nCov = 10
 n = 500
 REP = 500
-sigma = c(1, 1)
+deviance = c(1, 1)
 pi = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
@@ -63,17 +80,17 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gen.data(n = n, nComp = nComp, nCov = nCov,
-                     coeff = c(coeff1, coeff2), sigma = sigma,
+                     coeff = c(coeff1, coeff2), deviance = deviance,
                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                     nComp = nComp, disFamily = "lnorm",
                     initCoeff = rnorm(nComp*nCov+nComp),
-                    initSigma = rep(1, nComp),
+                    initDeviance = rep(1, nComp),
                     initPi = rep(1/nComp, nComp))
 
 res.mle$coefficients
-res.mle$sigma
+res.mle$deviance
 res.mle$pi
 }
 \author{
@@ -85,6 +102,9 @@ Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable S
 \seealso{
 Other lnorm..norm..weibull: \code{\link{fmrs.gen.data}},
   \code{\link{fmrs.tunsel}}, \code{\link{fmrs.varsel}}
+}
+\concept{
+fmr, aft, lasso, adplasso, mcp, scad, sica, ridge
 }
 \keyword{AFT,}
 \keyword{Algorithm,}

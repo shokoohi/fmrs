@@ -4,7 +4,7 @@
 \alias{fmrs.gen.data}
 \title{Generating data from FMRs models}
 \usage{
-fmrs.gen.data(n, nComp, nCov, coeff, sigma, pi, rho, umax,
+fmrs.gen.data(n, nComp, nCov, coeff, deviance, pi, rho, umax,
   disFamily = "lnorm")
 }
 \arguments{
@@ -16,7 +16,7 @@ fmrs.gen.data(n, nComp, nCov, coeff, sigma, pi, rho, umax,
 
 \item{coeff}{A vector of all regression coefficients including intercepts. It must be a vector of size \code{nComp} by \code{nCov+1}.}
 
-\item{sigma}{A vector of positive values for dispersion parameters of sub-distributions in FMRs models}
+\item{deviance}{A vector of positive values for dispersion parameters of sub-distributions in FMRs models}
 
 \item{pi}{A vector of mixing proportions which their sum must be one}
 
@@ -38,7 +38,7 @@ nComp = 2
 nCov = 10
 n = 500
 REP = 500
-sigma = c(1, 1)
+deviance = c(1, 1)
 pi = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
@@ -46,7 +46,7 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gen.data(n = n, nComp = nComp, nCov = nCov,
-                     coeff = c(coeff1, coeff2), sigma = sigma,
+                     coeff = c(coeff1, coeff2), deviance = deviance,
                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
 }
 \author{
@@ -58,6 +58,9 @@ Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable S
 \seealso{
 Other lnorm..norm..weibull: \code{\link{fmrs.mle}},
   \code{\link{fmrs.tunsel}}, \code{\link{fmrs.varsel}}
+}
+\concept{
+fmr, aft
 }
 \keyword{AFT,}
 \keyword{FMR,}

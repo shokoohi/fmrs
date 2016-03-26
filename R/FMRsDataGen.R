@@ -10,20 +10,21 @@
 #' @param nComp A numeric value represents the order (number of components) of an FMRs model
 #' @param nCov A numberic value represents the number of covariates in design matrix
 #' @param coeff A vector of all regression coefficients including intercepts. It must be a vector of size \code{nComp} by \code{nCov+1}.
-#' @param sigma A vector of positive values for dispersion parameters of sub-distributions in FMRs models
+#' @param deviance A vector of positive values for dispersion parameters of sub-distributions in FMRs models
 #' @param pi A vector of mixing proportions which their sum must be one
 #' @param rho A numeric value in [-1, 1] which represents the correlation between covariates of design matrix
 #' @param umax A numeric value represents the upper bound in Uniform distribution for censoring
 #' @import stats
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
 #' @keywords FMR, AFT, FMRs, Normal, Log-Normal, Weibull
+#' @concept fmr, aft
 #'@examples
 #' set.seed(1980)
 #' nComp = 2
 #' nCov = 10
 #' n = 500
 #' REP = 500
-#' sigma = c(1, 1)
+#' deviance = c(1, 1)
 #' pi = c(0.4, 0.6)
 #' rho = 0.5
 #' coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
@@ -31,14 +32,14 @@
 #' umax = 40
 #'
 #' dat <- fmrs.gen.data(n = n, nComp = nComp, nCov = nCov,
-#'                      coeff = c(coeff1, coeff2), sigma = sigma,
+#'                      coeff = c(coeff1, coeff2), deviance = deviance,
 #'                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
 #' @export
 fmrs.gen.data <- function(n,
                           nComp,
                           nCov,
                           coeff,
-                          sigma,
+                          deviance,
                           pi,
                           rho,
                           umax,
@@ -47,7 +48,7 @@ fmrs.gen.data <- function(n,
 {
   if(sum(pi) != 1)
     stop("The sum of mixing proportions must be 1.")
-  if(sum(sigma <= 0) != 0)
+  if(sum(deviance <= 0) != 0)
     stop("Dispersion parameters cannot be zero or negative.")
   if(rho > 1 | rho < -1)
     stop("The correlation cannot be less than -1 or greater thatn 1.")
@@ -92,7 +93,7 @@ fmrs.gen.data <- function(n,
       u1 <- runif(1)
       k = length(which(pi0<=u1)) + 1
       u[i] = k
-      yobs[i] <- coef0[k,1] + coef0[k,-1] %*% cX[i,] + sigma[k] * epss
+      yobs[i] <- coef0[k,1] + coef0[k,-1] %*% cX[i,] + deviance[k] * epss
 
       c[i] <- log(runif(1, 0, umax))
       tobs[i] <- exp(min(yobs[i],c[i]))
@@ -104,7 +105,7 @@ fmrs.gen.data <- function(n,
       u1 <- runif(1)
       k = length(which(pi0<=u1)) + 1
       u[i] = k
-      yobs[i] <- coef0[k,1] + coef0[k,-1] %*% cX[i,] + sigma[k] * epss
+      yobs[i] <- coef0[k,1] + coef0[k,-1] %*% cX[i,] + deviance[k] * epss
       tobs[i] <- yobs[i]
       dlt[i] <- 1
     }
@@ -113,7 +114,7 @@ fmrs.gen.data <- function(n,
       ext <- log(rexp(1))
       u1 <- runif(1)
       k = length(which(pi0<=u1)) + 1
-      yobs[i] <- coef0[k,1] + coef0[k,-1] %*% cX[i,] + sigma[k] * ext
+      yobs[i] <- coef0[k,1] + coef0[k,-1] %*% cX[i,] + deviance[k] * ext
 
       c[i]<- log(runif(1, 0, umax))
       tobs[i] <- exp(min(yobs[i],c[i]))

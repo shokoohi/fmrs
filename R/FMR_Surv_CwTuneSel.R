@@ -15,7 +15,7 @@
 #' \code{"lnorm"} for mixture of AFT regression models with Log-Normal sub-distributions,
 #' \code{"weibull"} for mixture of AFT regression models with Weibull sub-distributions,
 #' @param initCoeff Vector of initial values for regression coefficients including intercepts
-#' @param initSigma Vector of initial values for standard deviations
+#' @param initDeviance Vector of initial values for standard deviations
 #' @param initPi Vector of initial values for proportion of components
 #' @param penFamily Name of the penalty that is used in variable selection method.
 #' The available options are  \code{"lasso"}, \code{"adplasso"}, \code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.
@@ -28,15 +28,16 @@
 #' @param porNR Used in pow(0.5, porNR) for tuning the increment in Newton-Raphson algorithm.
 #' @param gamMixPor Proportion of mixing parameters in the penalty. The value must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty structure is no longer mixture.
 #' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression
+#' @concept fmr, aft, lasso, adplasso, mcp, scad, sica, ridge
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
-#' @return An \code{\link{fmrs.lambda}} object which includes component-wise tuning parameter estimates to be used in variable selection procedure.
+#' @return An \code{\link{fmrs.lambda-class}} object which includes component-wise tuning parameter estimates to be used in variable selection procedure.
 #' @examples
 #' set.seed(1980)
 #' nComp = 2
 #' nCov = 10
 #' n = 500
 #' REP = 500
-#' sigma = c(1, 1)
+#' deviance = c(1, 1)
 #' pi = c(0.4, 0.6)
 #' rho = 0.5
 #' coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
@@ -44,19 +45,19 @@
 #' umax = 40
 #'
 #' dat <- fmrs.gen.data(n = n, nComp = nComp, nCov = nCov,
-#'                      coeff = c(coeff1, coeff2), sigma = sigma,
+#'                      coeff = c(coeff1, coeff2), deviance = deviance,
 #'                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
 #'                     nComp = nComp, disFamily = "lnorm",
 #'                     initCoeff = rnorm(nComp*nCov+nComp),
-#'                     initSigma = rep(1, nComp),
+#'                     initDeviance = rep(1, nComp),
 #'                     initPi = rep(1/nComp, nComp))
 #'
 #' res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
 #'                        nComp = nComp, disFamily = "lnorm",
 #'                        initCoeff=c(res.mle$coefficients),
-#'                        initSigma = res.mle$sigma,
+#'                        initDeviance = res.mle$deviance,
 #'                        initPi = res.mle$pi, penFamily = "adplasso")
 #'
 #' res.lam
@@ -67,7 +68,7 @@ fmrs.tunsel <- function(y,
                         nComp,
                         disFamily = "lnorm",
                         initCoeff,
-                        initSigma,
+                        initDeviance,
                         initPi,
                         penFamily = "lasso",
                         lambRidge = 0,
@@ -88,9 +89,9 @@ fmrs.tunsel <- function(y,
     stop("The censoring vector is not specified.")
   if(is.null(nComp))
     stop("Number of components of mixture model is not specified.")
-  if(is.null(initCoeff) | is.null(initSigma) | is.null(initPi))
+  if(is.null(initCoeff) | is.null(initDeviance) | is.null(initPi))
     stop("Initial values are not specified.")
-  if(length(initCoeff) != nComp*nCov+nComp | length(initPi)!=nComp | length(initSigma)!=nComp)
+  if(length(initCoeff) != nComp*nCov+nComp | length(initPi)!=nComp | length(initDeviance)!=nComp)
     stop("The length of initial values are not correctly specified.")
   if(!is.matrix(x))
     stop("Provide a matix for covariates.")
@@ -124,7 +125,7 @@ fmrs.tunsel <- function(y,
            Sample.Size = as.integer(n),
            Initial.Intercept = as.double(c(coef0[,1])),
            Initial.Coefficient = as.double(c(t(coef0[,-1]))),
-           Initial.Sigma = as.double(initSigma),
+           Initial.Deviance = as.double(initDeviance),
            Initial.Pi = as.double(initPi),
            conv.eps = as.double(conveps),
            conv.eps.em = as.double(convepsEM),
@@ -145,7 +146,7 @@ fmrs.tunsel <- function(y,
            Sample.Size = as.integer(n),
            Initial.Intercept = as.double(c(coef0[,1])),
            Initial.Coefficient = as.double(c(t(coef0[,-1]))),
-           Initial.Sigma = as.double(initSigma),
+           Initial.Deviance = as.double(initDeviance),
            Initial.Pi = as.double(initPi),
            conv.eps = as.double(conveps),
            conv.eps.em = as.double(convepsEM),
@@ -167,7 +168,7 @@ fmrs.tunsel <- function(y,
            Sample.Size = as.integer(n),
            Initial.Intercept = as.double(c(coef0[,1])),
            Initial.Coefficient = as.double(c(t(coef0[,-1]))),
-           Initial.Sigma = as.double(initSigma),
+           Initial.Deviance = as.double(initDeviance),
            Initial.Pi = as.double(initPi),
            Num.NRiteration = as.double(nIterNR),
            Num.PortionNF = as.double(porNR),
