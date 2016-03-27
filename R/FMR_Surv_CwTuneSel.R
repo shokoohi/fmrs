@@ -9,7 +9,7 @@
 #'     \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
-#' @name fmrs.tunsel
+#' @name fmrstunsel
 #' @param y Responses (observations)
 #' @param x Design matrix (covariates)
 #' @param delta Censoring indicator vector
@@ -58,7 +58,7 @@
 #'     maximize the penallized Log-Likelihood.
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
 #'     (2016 submitted) Variable Selection in Mixture of Survival Models
-#' @return An \code{\link{fmrs.lambda-class}} object includes component-wise
+#' @return An \code{\link{tunepar-class}} object includes component-wise
 #'     tuning parameter estimates to be used in variable selection procedure.
 #' @examples
 #' set.seed(1980)
@@ -73,17 +73,17 @@
 #' coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 #' umax = 40
 #'
-#' dat <- fmrs.gen.data(n = n, nComp = nComp, nCov = nCov,
+#' dat <- fmrsgendata(n = n, nComp = nComp, nCov = nCov,
 #'                      coeff = c(coeff1, coeff2), deviance = deviance,
 #'                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
 #'
-#' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
+#' res.mle <- fmrsmle(y = dat$y, x = dat$x, delta = dat$delta,
 #'                     nComp = nComp, disFamily = "lnorm",
 #'                     initCoeff = rnorm(nComp*nCov+nComp),
 #'                     initDeviance = rep(1, nComp),
 #'                     initPi = rep(1/nComp, nComp))
 #'
-#' res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
+#' res.lam <- fmrstunsel(y = dat$y, x = dat$x, delta = dat$delta,
 #'                        nComp = nComp, disFamily = "lnorm",
 #'                        initCoeff=c(res.mle$coefficients),
 #'                        initDeviance = res.mle$deviance,
@@ -91,7 +91,7 @@
 #'
 #' res.lam
 #' @export
-fmrs.tunsel <- function(y,
+fmrstunsel <- function(y,
                         x,
                         delta,
                         nComp,
@@ -221,6 +221,6 @@ fmrs.tunsel <- function(y,
                     lamRidge = lambRidge,
                     method = meth
   )
-  class(lambdafit) <- "fmrs.lambda"
+  class(lambdafit) <- "tunepar"
   return(lambdafit)
 }

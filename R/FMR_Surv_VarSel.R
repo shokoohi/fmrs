@@ -9,7 +9,7 @@
 #'     It also provide Ridge Regression and Elastic Net.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
-#' @name fmrs.varsel
+#' @name fmrsvarsel
 #' @param y Responses (observations)
 #' @param x Design matrix (covariates)
 #' @param delta Censoring indicators
@@ -97,7 +97,7 @@
 #'     at \eqn{\tilde{\boldsymbol\Psi}_k^{(m)}}.
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
 #' (2016 submitted) Variable Selection in Mixture of Survival Models
-#' @return An \code{\link{fmrs.fit-class}} object which includes parameter
+#' @return An \code{\link{fmrs-class}} object which includes parameter
 #'     estimates of an FMRs model
 #' @examples
 #' set.seed(1980)
@@ -112,23 +112,23 @@
 #' coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 #' umax = 40
 #'
-#' dat <- fmrs.gen.data(n = n, nComp = nComp, nCov = nCov,
+#' dat <- fmrsgendata(n = n, nComp = nComp, nCov = nCov,
 #'                      coeff = c(coeff1, coeff2), deviance = deviance,
 #'                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
 #'
-#' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
+#' res.mle <- fmrsmle(y = dat$y, x = dat$x, delta = dat$delta,
 #'                     nComp = nComp, disFamily = "lnorm",
 #'                     initCoeff = rnorm(nComp*nCov+nComp),
 #'                     initDeviance = rep(1, nComp),
 #'                     initPi = rep(1/nComp, nComp))
 #'
-#' res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
+#' res.lam <- fmrstunsel(y = dat$y, x = dat$x, delta = dat$delta,
 #'                        nComp = nComp, disFamily = "lnorm",
 #'                        initCoeff=c(res.mle$coefficients),
 #'                        initDeviance = res.mle$deviance,
 #'                        initPi = res.mle$pi, penFamily = "adplasso")
 #'
-#' res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
+#' res.var <- fmrsvarsel(y = dat$y, x = dat$x, delta = dat$delta,
 #'                        nComp = nComp, disFamily = "lnorm",
 #'                        initCoeff = c(res.mle$coefficients),
 #'                        initDeviance = res.mle$deviance,
@@ -138,7 +138,7 @@
 #' beta.est <- coefficients(res.var)[-1,]
 #' round(beta.est,5)
 #' @export
-fmrs.varsel <- function(y,
+fmrsvarsel <- function(y,
                         x,
                         delta,
                         nComp,
@@ -344,6 +344,6 @@ fmrs.varsel <- function(y,
                               dim = c(n, nComp), dimnames =
                                 list(NULL,comnames))
   )
-  class(fit) <- "fmrs.fit"
+  class(fit) <- "fmrs"
   return(fit)
 }

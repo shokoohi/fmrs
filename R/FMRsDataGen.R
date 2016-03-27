@@ -1,6 +1,6 @@
 #' @title Generating data from FMRs models
 #'
-#' @name fmrs.gen.data
+#' @name fmrsgendata
 #' @description This function will generate a data set from Finite Mixture of
 #'     AFT regression models or Finite Mixture of Regression models.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
@@ -42,11 +42,11 @@
 #' coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 #' umax = 40
 #'
-#' dat <- fmrs.gen.data(n = n, nComp = nComp, nCov = nCov,
+#' dat <- fmrsgendata(n = n, nComp = nComp, nCov = nCov,
 #'                      coeff = c(coeff1, coeff2), deviance = deviance,
 #'                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
 #' @export
-fmrs.gen.data <- function(n,
+fmrsgendata <- function(n,
                           nComp,
                           nCov,
                           coeff,

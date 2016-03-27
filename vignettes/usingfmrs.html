@@ -11,7 +11,7 @@
 
 <meta name="author" content="Farhad Shokoohi" />
 
-<meta name="date" content="2016-03-26" />
+<meta name="date" content="2016-03-27" />
 
 <title>Using fmrs package</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title">Using fmrs package</h1>
 <h4 class="author"><em>Farhad Shokoohi</em></h4>
-<h4 class="date"><em>2016-03-26</em></h4>
+<h4 class="date"><em>2016-03-27</em></h4>
 
 </div>
 
@@ -79,30 +79,30 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1>fmrs package in action</h1>
 <div id="data-generation" class="section level2">
 <h2>Data generation</h2>
-<p>The function <code>fmrs.gen.data</code> generates a data set from an FMRs model. It has the form</p>
-<pre><code>fmrs.gen.data(n, nComp, nCov, coeff, deviance, pi, rho, umax, disFamily)</code></pre>
-<p>where <code>n</code> is the sample size, <code>nComp</code> is the order of FMRs model, <code>nCov</code> is the the number of regression covariates,<code>coeff</code>, <code>deviance</code> and <code>pi</code> are the parameters of regression models, i.e. regression coefficients, dispersion of errors (sub-distributions) and the mixing proportions, respectively, and <code>rho</code> is the used in the variance-covariance matrix for simulating the design matrix <code>x</code>, and <code>umax</code> is the upper bound for Uniform distribution for generating censoring times.</p>
-<p>Depending on the choice of <code>disFamily</code>, the function <code>fmrs.gen.data</code> generates a simulated data from FMRs models. For instance, if we choose <code>disFamily = &quot;norm&quot;</code>, the function ignores the censoring parameter <code>umax</code> and generates a data set from an FMR model with Normal sub-distributions. However, if we choose <code>disFamily = &quot;lnorm&quot;</code> or <code>disFamily = &quot;weibull&quot;</code>, the function generates data under a finite mixture of AFT regression model with Log-Normal or Weibull sub-distributions.</p>
-<p>The <code>fmrs.gen.data</code> function returns a list which includes a vector of responses <code>$y</code>, a matrix of covariates <code>$x</code> and a vector of censoring indicators <code>$delta</code> as well as the name of sub-distribution of the mixture model.</p>
+<p>The function <code>fmrsgendata</code> generates a data set from an FMRs model. It has the form</p>
+<pre><code>fmrsgendata(n, nComp, nCov, coeff, deviance, pi, rho, umax, disFamily)</code></pre>
+<p>where <code>n</code> is the sample size, <code>nComp</code> is the order of FMRs model, <code>nCov</code> is the the number of regression covariates, <code>coeff</code>, <code>deviance</code> and <code>pi</code> are the parameters of regression models, i.e. regression coefficients, dispersion of errors (sub-distributions) and the mixing proportions, respectively, and <code>rho</code> is the used in the variance-covariance matrix for simulating the design matrix <code>x</code>, and <code>umax</code> is the upper bound for Uniform distribution for generating censoring times.</p>
+<p>Depending on the choice of <code>disFamily</code>, the function <code>fmrsgendata</code> generates a simulated data from FMRs models. For instance, if we choose <code>disFamily = &quot;norm&quot;</code>, the function ignores the censoring parameter <code>umax</code> and generates a data set from an FMR model with Normal sub-distributions. However, if we choose <code>disFamily = &quot;lnorm&quot;</code> or <code>disFamily = &quot;weibull&quot;</code>, the function generates data under a finite mixture of AFT regression model with Log-Normal or Weibull sub-distributions.</p>
+<p>The <code>fmrsgendata</code> function returns a list which includes a vector of responses <code>$y</code>, a matrix of covariates <code>$x</code> and a vector of censoring indicators <code>$delta</code> as well as the name of sub-distribution of the mixture model.</p>
 </div>
 <div id="mle-of-fmrs-models" class="section level2">
 <h2>MLE of FMRs models</h2>
-<p>The function <code>fmrs.mle</code> in fmrs package provides maximum likelihood estimation for the parameters of an FMRs model. The function has the following form,</p>
-<pre><code>fmrs.mle(y, x, delta, nComp, disFamily, initCoeff, initDeviance, initPi, ... )</code></pre>
+<p>The function <code>fmrsmle</code> in fmrs package provides maximum likelihood estimation for the parameters of an FMRs model. The function has the following form,</p>
+<pre><code>fmrsmle(y, x, delta, nComp, disFamily, initCoeff, initDeviance, initPi, ... )</code></pre>
 <p>where <code>y</code>, <code>x</code> and <code>delta</code> are observations, covariates and censoring indicators respectively, and <code>nComp</code> is the order of FMRs, <code>initCoeff</code>, <code>initDeviance</code> and <code>initPi</code> are initial values for EM and NR algorithms, and the rest of arguments of the function are controlling parameres. The function returns a fitted FMRs model with estimates of regression parameters, standard deviations and mixing proportions of the mixture model. It also returns the log-likelihood and BIC under the estimated model, the maximum number of iterations used in EM algorithm and the type of the fitted model.</p>
 <p>Note that one can do ridge regression by setting a value for tuning parameter of the ridge penalty other than zero in the argument <code>lambRidge</code>.</p>
 </div>
 <div id="variable-selection-in-fmrs-models" class="section level2">
 <h2>Variable selection in FMRs models</h2>
-<p>To do the variable selection we provided the function <code>fmrs.varsel</code> with the form</p>
-<pre><code>fmrs.varsel(y, x, delta, nComp, disFamily, ..., penFamily, lambPen, ...)</code></pre>
-<p>where <code>penFamily</code> is the penalty including <code>&quot;adplasso&quot;</code>, <code>&quot;lasso&quot;</code>, <code>&quot;mcp&quot;</code>, <code>&quot;scad&quot;</code>, <code>&quot;sica&quot;</code> and <code>&quot;hard&quot;</code>, and <code>lambPen</code> is the set of tuning parameters for components of penalty. We can run the function <code>fmrs.lme</code> first and use the parameter estimates as initial values for the function <code>fmrs.varsel</code>.</p>
+<p>To do the variable selection we provided the function <code>fmrsvarsel</code> with the form</p>
+<pre><code>fmrsvarsel(y, x, delta, nComp, disFamily, ..., penFamily, lambPen, ...)</code></pre>
+<p>where <code>penFamily</code> is the penalty including <code>&quot;adplasso&quot;</code>, <code>&quot;lasso&quot;</code>, <code>&quot;mcp&quot;</code>, <code>&quot;scad&quot;</code>, <code>&quot;sica&quot;</code> and <code>&quot;hard&quot;</code>, and <code>lambPen</code> is the set of tuning parameters for components of penalty. We can run the function <code>fmrslme</code> first and use the parameter estimates as initial values for the function <code>fmrsvarsel</code>.</p>
 <div id="choice-of-tuning-parameter" class="section level3">
 <h3>Choice of tuning parameter</h3>
-<p>There are two approaches for specifying tuning parameters: Common and Component-wise tuning parameters. If we consider choosing common tuning parameter, we can use the BIC criteria to search through the a set of candidate values in the interval <span class="math inline">\((0,\lambda_M)\)</span>, where <span class="math inline">\(\lambda_M\)</span> is a prespecified number. The BIC is provided by the function <code>fmrs.varsel</code> for each candidate point and we choose the optimal <span class="math inline">\(\hat\lambda\)</span>, the one that maximizes BIC. This approach will be good for the situations with enough samples sizes. It also reduces the computational burden.</p>
+<p>There are two approaches for specifying tuning parameters: Common and Component-wise tuning parameters. If we consider choosing common tuning parameter, we can use the BIC criteria to search through the a set of candidate values in the interval <span class="math inline">\((0,\lambda_M)\)</span>, where <span class="math inline">\(\lambda_M\)</span> is a prespecified number. The BIC is provided by the function <code>fmrsvarsel</code> for each candidate point and we choose the optimal <span class="math inline">\(\hat\lambda\)</span>, the one that maximizes BIC. This approach will be good for the situations with enough samples sizes. It also reduces the computational burden.</p>
 <p>On the other hand, if we consider choosing component-wise tuning parameters we use the following function to search for optimal <span class="math inline">\((\lambda_1, \ldots, \lambda_K)\)</span> from the set of candidate values in <span class="math inline">\((0, \lambda_M)\)</span>. The function is</p>
-<pre><code>fmrs.tunsel(y, x, delta, nComp, disFamily, ..., penFamily, ...)</code></pre>
-<p>It is a good practice run the function <code>fmrs.mle</code> first and use the parameter estimates as initial values in the function <code>fmrs.tunsel</code>. The function <code>fmrs.mle</code> then returns a set optimal tuning parameters of size <code>nComp</code> to be used in variable selection function. Note that this approach still is under theoretical study and is not proved to give optimal values in general.</p>
+<pre><code>fmrstunsel(y, x, delta, nComp, disFamily, ..., penFamily, ...)</code></pre>
+<p>It is a good practice run the function <code>fmrsmle</code> first and use the parameter estimates as initial values in the function <code>fmrstunsel</code>. The function <code>fmrsmle</code> then returns a set optimal tuning parameters of size <code>nComp</code> to be used in variable selection function. Note that this approach still is under theoretical study and is not proved to give optimal values in general.</p>
 </div>
 </div>
 <div id="example-finite-mixture-of-aft-regression-model-log-normal" class="section level2">
@@ -121,12 +121,12 @@ rho =<span class="st"> </span><span class="fl">0.5</span>
 coeff1 =<span class="st"> </span><span class="kw">c</span>( <span class="dv">2</span>,  <span class="dv">2</span>, -<span class="dv">1</span>, -<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">0</span>,  <span class="dv">0</span>, <span class="dv">0</span>,  <span class="dv">0</span>)
 coeff2 =<span class="st"> </span><span class="kw">c</span>(-<span class="dv">1</span>, -<span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, -<span class="dv">1</span>, <span class="dv">2</span>, -<span class="dv">2</span>)
 umax =<span class="st"> </span><span class="dv">40</span></code></pre></div>
-<p>Using the function <code>fmrs.gen.data</code>, we generate a data set from a finite mixture of accelerated failure time regression models with above settings as follow.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span><span class="kw">fmrs.gen.data</span>(<span class="dt">n =</span> n, <span class="dt">nComp =</span> nComp, <span class="dt">nCov =</span> nCov,
+<p>Using the function <code>fmrsgendata</code>, we generate a data set from a finite mixture of accelerated failure time regression models with above settings as follow.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span><span class="kw">fmrsgendata</span>(<span class="dt">n =</span> n, <span class="dt">nComp =</span> nComp, <span class="dt">nCov =</span> nCov,
                      <span class="dt">coeff =</span> <span class="kw">c</span>(coeff1, coeff2), <span class="dt">deviance =</span> deviance,
                      <span class="dt">pi =</span> pi, <span class="dt">rho =</span> rho, <span class="dt">umax =</span> umax, <span class="dt">disFamily =</span> <span class="st">&quot;lnorm&quot;</span>)</code></pre></div>
 <p>Now we assume that the generated data are actually real data. We find MLE of the parameters of the assumed model using following code. Note that almost all mixture of regression models depends on initial values. Here we generate the initial values form a Normal distribution with</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res.mle &lt;-<span class="st"> </span><span class="kw">fmrs.mle</span>(<span class="dt">y =</span> dat$y, <span class="dt">x =</span> dat$x, <span class="dt">delta =</span> dat$delta,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res.mle &lt;-<span class="st"> </span><span class="kw">fmrsmle</span>(<span class="dt">y =</span> dat$y, <span class="dt">x =</span> dat$x, <span class="dt">delta =</span> dat$delta,
                     <span class="dt">nComp =</span> nComp, <span class="dt">disFamily =</span> <span class="st">&quot;lnorm&quot;</span>,
                     <span class="dt">initCoeff =</span> <span class="kw">rnorm</span>(nComp*nCov+nComp),
                     <span class="dt">initDeviance =</span> <span class="kw">rep</span>(<span class="dv">1</span>, nComp),
@@ -152,7 +152,7 @@ res.mle$coefficients</code></pre></div>
 <pre><code>##         Comp.1    Comp.2
 ## [1,] 0.5831731 0.4168269</code></pre>
 <p>As we see the ML estimates of regression coefficients are not zero. Therefore MLE cannot provide a sparse solution. In order to provide a sparse solution, we use the variable selection methods developed by Shokoohi et. ale. (2016). First we need to find a good set of tuning parameters. It can be done by using component-wise tuning parameter selection function implemented in <code>fmrs</code> as follows. In some settings, however, it is better to investigate if common tuning parameter performs better.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res.lam &lt;-<span class="st"> </span><span class="kw">fmrs.tunsel</span>(<span class="dt">y =</span> dat$y, <span class="dt">x =</span> dat$x, <span class="dt">delta =</span> dat$delta,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res.lam &lt;-<span class="st"> </span><span class="kw">fmrstunsel</span>(<span class="dt">y =</span> dat$y, <span class="dt">x =</span> dat$x, <span class="dt">delta =</span> dat$delta,
                        <span class="dt">nComp =</span> nComp, <span class="dt">disFamily =</span> <span class="st">&quot;lnorm&quot;</span>,
                        <span class="dt">initCoeff=</span><span class="kw">c</span>(res.mle$coefficients),
                        <span class="dt">initDeviance =</span> res.mle$deviance,
@@ -175,9 +175,9 @@ res.lam</code></pre></div>
 ## [1] &quot;FMAFTR&quot;
 ## 
 ## attr(,&quot;class&quot;)
-## [1] &quot;fmrs.lambda&quot;</code></pre>
+## [1] &quot;fmrslamb&quot;</code></pre>
 <p>We have used MLE estimates as initial values for estimating the tuning parameters. Now we used the same set of values to do variable selection with adaptive lasso penalty as follows.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res.var &lt;-<span class="st"> </span><span class="kw">fmrs.varsel</span>(<span class="dt">y =</span> dat$y, <span class="dt">x =</span> dat$x, <span class="dt">delta =</span> dat$delta,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res.var &lt;-<span class="st"> </span><span class="kw">fmrsvarsel</span>(<span class="dt">y =</span> dat$y, <span class="dt">x =</span> dat$x, <span class="dt">delta =</span> dat$delta,
                        <span class="dt">nComp =</span> nComp, <span class="dt">disFamily =</span> <span class="st">&quot;lnorm&quot;</span>,
                        <span class="dt">initCoeff =</span> <span class="kw">c</span>(res.mle$coefficients),
                        <span class="dt">initDeviance =</span> res.mle$deviance,
