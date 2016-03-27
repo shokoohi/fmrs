@@ -1,7 +1,12 @@
-#' @title Variable Selection in Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression Models
+#' @title Variable Selection in Finite Mixture of Accelerated Failure Time
+#'     Regression Models and Finite Mixture of Regression Models
 #'
-#' @description It provides variable selection and parameter estimation for Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models and Finite Mixture of Regression (FMR) Models.
-#' The penalties that are implemented in this package are \code{lasso}, \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}. It also provide Ridge Regression and Elastic Net.
+#' @description It provides variable selection and parameter estimation for
+#'     Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models
+#'     and Finite Mixture of Regression (FMR) Models.
+#'     The penalties that are implemented in this package are \code{lasso},
+#' \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}.
+#'     It also provide Ridge Regression and Elastic Net.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
 #' @name fmrs.varsel
@@ -9,27 +14,91 @@
 #' @param x Design matrix (covariates)
 #' @param delta Censoring indicators
 #' @param nComp Order (Number of components) of mixture model
-#' @param disFamily Name of sub-distributions' family. The options are \code{"norm"} for FMR models,
-#' \code{"lnorm"} for mixture of AFT regression models with Log-Normal sub-distributions,
-#' \code{"weibull"} for mixture of AFT regression models with Weibull sub-distributions
-#' @param initCoeff Vector of initial values for regression coefficients including intercepts
+#' @param disFamily Name of sub-distributions' family. The options
+#'     are \code{"norm"} for FMR models, \code{"lnorm"} for mixture of AFT
+#'     regression models with Log-Normal sub-distributions, \code{"weibull"}
+#'     for mixture of AFT regression models with Weibull sub-distributions
+#' @param initCoeff Vector of initial values for regression coefficients
+#'     including intercepts
 #' @param initDeviance Vector of initial values for standard deviations
 #' @param initPi Vector of initial values for proportion of components
-#' @param penFamily Name of the penalty that is used in variable selection method.
-#' The available options are  \code{"lasso"}, \code{"adplasso"}, \code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.
+#' @param penFamily Penalty name that is used in variable selection method
+#'     The available options are  \code{"lasso"}, \code{"adplasso"},
+#'     \code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.
 #' @param lambPen A vector of positive numbers for tuning parameters
-#' @param lambRidge A positive value for Lambda in Ridge regression or Elastic Net
+#' @param lambRidge A positive value for tuning parameter in Ridge regression
+#'     or Elastic Net
 #' @param nIterEM Maximum number of iterations for EM algorithm
 #' @param nIterNR Maximum number of iterations for Newton-Raphson algorithm
 #' @param conveps A positive value for avoiding NaN in computing divisions
-#' @param convepsEM A positive value for treshold of convergence in EM algorithm
-#' @param convepsNR A positive value for treshold of convergence in Newton-Raphson algorithm
-#' @param porNR Used in pow(0.5, porNR) for tuning the increment in Newton-Raphson algorithm.
-#' @param gamMixPor Proportion of mixing parameters in the penalty. The value must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty structure is no longer mixture.
+#' @param convepsEM A positive value for treshold of convergence in
+#'     EM algorithm
+#' @param convepsNR A positive value for treshold of convergence in
+#'     NR algorithm
+#' @param porNR Used in pow(0.5, porNR) for tuning the increment in
+#'     NR algorithm
+#' @param gamMixPor Proportion of mixing parameters in the penalty. The value
+#'     must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty
+#'     structure is no longer mixture.
 #' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression
 #' @concept fmr, aft, lasso, adplasso, mcp, scad, sica, ridge
-#' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
-#' @return An \code{\link{fmrs.fit-class}} object which includes parameter estimates of an FMRs model
+#' @details The penalized likelihood of a finite mixture of AFT regression
+#'     models is written as \deqn{\tilde\ell_{n}(\boldsymbol\Psi)
+#'     =\ell_{n}(\boldsymbol\Psi) -
+#'     \mathbf{p}_{\boldsymbol\lambda_{n}}(\boldsymbol\Psi)}
+#'     where \deqn{\mathbf{p}_{\boldsymbol\lambda_{n}}(\boldsymbol\Psi) =
+#'     \sum\limits_{k=1}^{K}\pi_{k}^\alpha\left\{
+#'     \sum\limits_{j=1}^{d}p_{\lambda_{n,k}}(\beta_{kj}) \right\}.}
+#'     In the M step of EM algorithm the
+#'     function \deqn{\tilde{Q}(\boldsymbol\Psi,\boldsymbol\Psi^{(m)})
+#'     =\sum\limits_{k=1}^{K} \tilde{Q}_{k}(\boldsymbol\Psi_k,
+#'     \boldsymbol\Psi^{(m)}_k) =
+#'     \sum\limits_{k=1}^{K} \left[{Q}_{k}(\boldsymbol\Psi_k,
+#'     \boldsymbol\Psi^{(m)}_k) - \pi_{k}^\alpha\left\{
+#'     \sum\limits_{j=1}^{d}p_{\lambda_{n,k}}(\beta_{kj}) \right\}\right]}
+#'     is maximized. Since the penalty function is singular at origin, we use
+#'     a local quadratic approximation (LQA) for the penalty as
+#'     follows, \deqn{\mathbf{p}^\ast_{k,\boldsymbol\lambda_{n}}
+#'     (\boldsymbol\beta,\boldsymbol\beta^{(m)})
+#'     =(\pi_{k}^{(m)})^{\alpha}\sum\limits_{j=1}^{d}\left\{
+#'     p_{\lambda_{n,k}}(\beta_{kj}^{(m)}) + { p^{\prime}_{\lambda_{n,k}}
+#'     (\beta_{kj}^{(m)})  \over 2\beta_{kj}^{(m)}}(\beta_{kj}^{2} -
+#'     {\beta_{kj}^{(m)}}^{2}) \right\}.} Therefore maximizing \eqn{Q} is
+#'     equivalent to maximizing the
+#'     function \deqn{ {Q}^\ast(\boldsymbol\Psi,\boldsymbol\Psi^{(m)})
+#'     =\sum\limits_{k=1}^{K} {Q}^\ast_{k}(\boldsymbol\Psi_k,
+#'     \boldsymbol\Psi^{(m)}_k) = \sum\limits_{k=1}^{K}
+#'     \left[{Q}_{k}(\boldsymbol\Psi_k,\boldsymbol\Psi^{(m)}_k)-
+#'     \mathbf{p}^\ast_{k,\boldsymbol\lambda_{n}}(\boldsymbol\beta,
+#'     \boldsymbol\beta^{(m)})\right].}
+#'     In case of Log-Normal sub-distributions, the maximizers of \eqn{Q_k}
+#'     functions are as follows. Given the data and current estimates of
+#'     parameters, the maximizers are \deqn{{\boldsymbol\beta}^{(m+1)}_{k}
+#'     =({\boldsymbol z}^{\prime}\boldsymbol\tau^{(m)}_{k}{\boldsymbol z}+
+#'     \varpi_{k}(\boldsymbol\beta_{kj}^{(m)}))^{-1}{\boldsymbol z}^{\prime}
+#'     \boldsymbol\tau^{(m)}_{k}T^{(m)}_{k},}
+#'     where \eqn{\varpi_{k}(\boldsymbol\beta_{kj}^{(m)})={diag}
+#'     \left(\left(\pi_{k}^{(m+1)}\right)^\alpha
+#'     \frac{{p}^{\prime}_{\lambda_{n},k}(\boldsymbol\beta_{kj}^{(m)})}
+#'     {\boldsymbol\beta_{kj}^{(m)}}\right)}
+#'     and \eqn{\sigma_{k}^{(m+1)}} is equal to \deqn{\sigma_{k}^{(m+1)}
+#'     =\sqrt{\frac{\sum\limits_{i=1}^{n}\tau^{(m)}_{ik} (t^{(m)}_{ik}
+#'     -{\boldsymbol z}_{i}\boldsymbol\beta^{(m)}_{k})^{2}}
+#'     {\sum\limits_{i=1}^{n}\tau^{(m)}_{ik} {\left[\delta_{i}
+#'     +(1-\delta_{i})\{A(w^{(m)}_{ik})[A(w^{(m)}_{ik})-
+#'     w^{(m)}_{ik}]\}\right]}}}.}
+#'     For the Weibull distribution, on the other hand,  we have
+#'     \eqn{\tilde{\boldsymbol\Psi}^{(m+1)}_k=\tilde{\boldsymbol\Psi}^{(m)}_k
+#'     - 0.5^{\kappa}\left[{H_{k}^{p,(m)}}\right]^{-1}I_{k}^{p,(m)}},
+#'     where \eqn{H^p_{k}=H_k+h(\boldsymbol\Psi_k)}
+#'     is the penalized version of hessian matrix
+#'     and \eqn{I^p_{k}=I_k+h(\boldsymbol\Psi_k)\boldsymbol\Psi_k}
+#'     is the penalized version of vector of first derivatives evaluated
+#'     at \eqn{\tilde{\boldsymbol\Psi}_k^{(m)}}.
+#' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
+#' (2016 submitted) Variable Selection in Mixture of Survival Models
+#' @return An \code{\link{fmrs.fit-class}} object which includes parameter
+#'     estimates of an FMRs model
 #' @examples
 #' set.seed(1980)
 #' nComp = 2
@@ -99,16 +168,18 @@ fmrs.varsel <- function(y,
     stop("Number of components of mixture model is not specified.")
   if(is.null(initCoeff) | is.null(initDeviance) | is.null(initPi))
     stop("Initial values are not specified.")
-  if(length(initCoeff) != nComp*nCov+nComp | length(initPi)!=nComp | length(initDeviance)!=nComp)
+  if(length(initCoeff) != nComp*nCov+nComp | length(initPi)!=nComp |
+     length(initDeviance)!=nComp)
     stop("The length of initial values are not correctly specified.")
   if(!is.matrix(x))
     stop("Provide a matix for covariates.")
   nCov = dim(x)[2]
   n = length(y)
   if(dim(x)[1]!=n)
-    stop("The length of observations and rows of design matrix does not match.")
+    stop("The length of observations and rows of design matrix
+         does not match.")
 
-  coef0 <- matrix(initCoeff, nrow = nComp, ncol = nCov+1, byrow = T)
+  coef0 <- matrix(initCoeff, nrow = nComp, ncol = nCov+1, byrow = TRUE)
 
   if(is.null(colnames(x))){
     xnames <- c("Intercept",c(paste("Cov",1:nCov,sep=".")))
@@ -246,10 +317,16 @@ fmrs.varsel <- function(y,
     stop("The family of sub-distributions is not specified correctly.")
   }
 
-  fit <- list(coefficients = array(rbind(res$Intecept.Hat, matrix(res$Coefficient.Hat, nrow = nCov, byrow = F)),
-                                   dim = c(nCov+1, nComp), dimnames = list(xnames,comnames)),
-              deviance = array(res$Deviance.Hat, dim = c(1,nComp),dimnames = list(NULL,comnames)),
-              pi = array(res$Pi.Hat, dim = c(1,nComp),dimnames = list(NULL,comnames)),
+  fit <- list(coefficients =
+                array(rbind(res$Intecept.Hat,
+                            matrix(res$Coefficient.Hat,
+                                   nrow = nCov, byrow = FALSE)),
+                                   dim = c(nCov+1, nComp), dimnames =
+                        list(xnames,comnames)),
+              deviance = array(res$Deviance.Hat, dim = c(1,nComp),dimnames =
+                                 list(NULL,comnames)),
+              pi = array(res$Pi.Hat, dim = c(1,nComp),dimnames =
+                           list(NULL,comnames)),
               logLik = res$LogLikelihood,
               BIC = res$BIC,
               nIterEMconv = res$Max.iterEM.used,
@@ -257,12 +334,15 @@ fmrs.varsel <- function(y,
               disFamily = disFamily,
               penFamily = penFamily,
               lamPen = lambPen,
-              fitted = array(matrix(res$predict, nrow = n, byrow = F),
-                             dim = c(n, nComp), dimnames = list(NULL,comnames)),
-              residuals = array(matrix(res$residual, nrow = n, byrow = F),
-                                dim = c(n, nComp), dimnames = list(NULL,comnames)),
-              weights = array(matrix(res$tau, nrow = n, byrow = F),
-                              dim = c(n, nComp), dimnames = list(NULL,comnames))
+              fitted = array(matrix(res$predict, nrow = n, byrow = FALSE),
+                             dim = c(n, nComp), dimnames =
+                               list(NULL,comnames)),
+              residuals = array(matrix(res$residual, nrow = n, byrow = FALSE),
+                                dim = c(n, nComp), dimnames =
+                                  list(NULL,comnames)),
+              weights = array(matrix(res$tau, nrow = n, byrow = FALSE),
+                              dim = c(n, nComp), dimnames =
+                                list(NULL,comnames))
   )
   class(fit) <- "fmrs.fit"
   return(fit)

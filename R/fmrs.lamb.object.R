@@ -1,6 +1,7 @@
 #' @title An S4 class to represent estimated optimal lambdas
 #'
-#' @description An S4 class to represent estimated optimal lambdas resulted from runnig \code{\link{fmrs.tunsel}}.
+#' @description An S4 class to represent estimated optimal lambdas resulted
+#'     from runnig \code{\link{fmrs.tunsel}}.
 #' @name fmrs.lambda-class
 #' @docType class
 #' @exportClass fmrs.lambda

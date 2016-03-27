@@ -6,12 +6,16 @@
 \alias{frms.fit}
 \title{An S4 class to represent a fit of an FMRs model}
 \description{
-fmrs.fit is an S4 class to represent a fit of FMRs models resulted from running \code{\link{fmrs.mle}} or \code{\link{fmrs.varsel}}.
+fmrs.fit is an S4 class represents a fit of FMRs models
+    resulted from running \code{\link{fmrs.mle}}
+    or \code{\link{fmrs.varsel}}
 }
 \section{Slots}{
 
 \describe{
-\item{\code{dims}}{A length-three numeric vector represents number of observations (\code{n}), number of covariates (\code{nCov}) and the order of the mixture model (\code{nComp})}
+\item{\code{dims}}{A length-three numeric vector represents number of observations
+(\code{n}), number of covariates (\code{nCov}) and the order of the
+mixture model (\code{nComp})}
 
 \item{\code{coefficients}}{A dimension-\code{nCov}-\code{nComp} numeric matrix}
 

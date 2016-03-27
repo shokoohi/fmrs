@@ -2,7 +2,8 @@
 % Please edit documentation in R/FMR_Surv_VarSel.R
 \name{fmrs.varsel}
 \alias{fmrs.varsel}
-\title{Variable Selection in Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression Models}
+\title{Variable Selection in Finite Mixture of Accelerated Failure Time
+    Regression Models and Finite Mixture of Regression Models}
 \usage{
 fmrs.varsel(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initDeviance,
   initPi, penFamily = "lasso", lambPen, lambRidge = 0, nIterEM = 2000,
@@ -18,22 +19,26 @@ fmrs.varsel(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initDeviance,
 
 \item{nComp}{Order (Number of components) of mixture model}
 
-\item{disFamily}{Name of sub-distributions' family. The options are \code{"norm"} for FMR models,
-\code{"lnorm"} for mixture of AFT regression models with Log-Normal sub-distributions,
-\code{"weibull"} for mixture of AFT regression models with Weibull sub-distributions}
+\item{disFamily}{Name of sub-distributions' family. The options
+are \code{"norm"} for FMR models, \code{"lnorm"} for mixture of AFT
+regression models with Log-Normal sub-distributions, \code{"weibull"}
+for mixture of AFT regression models with Weibull sub-distributions}
 
-\item{initCoeff}{Vector of initial values for regression coefficients including intercepts}
+\item{initCoeff}{Vector of initial values for regression coefficients
+including intercepts}
 
 \item{initDeviance}{Vector of initial values for standard deviations}
 
 \item{initPi}{Vector of initial values for proportion of components}
 
-\item{penFamily}{Name of the penalty that is used in variable selection method.
-The available options are  \code{"lasso"}, \code{"adplasso"}, \code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.}
+\item{penFamily}{Penalty name that is used in variable selection method
+The available options are  \code{"lasso"}, \code{"adplasso"},
+\code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.}
 
 \item{lambPen}{A vector of positive numbers for tuning parameters}
 
-\item{lambRidge}{A positive value for Lambda in Ridge regression or Elastic Net}
+\item{lambRidge}{A positive value for tuning parameter in Ridge regression
+or Elastic Net}
 
 \item{nIterEM}{Maximum number of iterations for EM algorithm}
 
@@ -41,20 +46,85 @@ The available options are  \code{"lasso"}, \code{"adplasso"}, \code{"mcp"}, \cod
 
 \item{conveps}{A positive value for avoiding NaN in computing divisions}
 
-\item{convepsEM}{A positive value for treshold of convergence in EM algorithm}
+\item{convepsEM}{A positive value for treshold of convergence in
+EM algorithm}
 
-\item{convepsNR}{A positive value for treshold of convergence in Newton-Raphson algorithm}
+\item{convepsNR}{A positive value for treshold of convergence in
+NR algorithm}
 
-\item{porNR}{Used in pow(0.5, porNR) for tuning the increment in Newton-Raphson algorithm.}
+\item{porNR}{Used in pow(0.5, porNR) for tuning the increment in
+NR algorithm}
 
-\item{gamMixPor}{Proportion of mixing parameters in the penalty. The value must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty structure is no longer mixture.}
+\item{gamMixPor}{Proportion of mixing parameters in the penalty. The value
+must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty
+structure is no longer mixture.}
 }
 \value{
-An \code{\link{fmrs.fit-class}} object which includes parameter estimates of an FMRs model
+An \code{\link{fmrs.fit-class}} object which includes parameter
+    estimates of an FMRs model
 }
 \description{
-It provides variable selection and parameter estimation for Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models and Finite Mixture of Regression (FMR) Models.
-The penalties that are implemented in this package are \code{lasso}, \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}. It also provide Ridge Regression and Elastic Net.
+It provides variable selection and parameter estimation for
+    Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models
+    and Finite Mixture of Regression (FMR) Models.
+    The penalties that are implemented in this package are \code{lasso},
+\code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}.
+    It also provide Ridge Regression and Elastic Net.
+}
+\details{
+The penalized likelihood of a finite mixture of AFT regression
+    models is written as \deqn{\tilde\ell_{n}(\boldsymbol\Psi)
+    =\ell_{n}(\boldsymbol\Psi) -
+    \mathbf{p}_{\boldsymbol\lambda_{n}}(\boldsymbol\Psi)}
+    where \deqn{\mathbf{p}_{\boldsymbol\lambda_{n}}(\boldsymbol\Psi) =
+    \sum\limits_{k=1}^{K}\pi_{k}^\alpha\left\{
+    \sum\limits_{j=1}^{d}p_{\lambda_{n,k}}(\beta_{kj}) \right\}.}
+    In the M step of EM algorithm the
+    function \deqn{\tilde{Q}(\boldsymbol\Psi,\boldsymbol\Psi^{(m)})
+    =\sum\limits_{k=1}^{K} \tilde{Q}_{k}(\boldsymbol\Psi_k,
+    \boldsymbol\Psi^{(m)}_k) =
+    \sum\limits_{k=1}^{K} \left[{Q}_{k}(\boldsymbol\Psi_k,
+    \boldsymbol\Psi^{(m)}_k) - \pi_{k}^\alpha\left\{
+    \sum\limits_{j=1}^{d}p_{\lambda_{n,k}}(\beta_{kj}) \right\}\right]}
+    is maximized. Since the penalty function is singular at origin, we use
+    a local quadratic approximation (LQA) for the penalty as
+    follows, \deqn{\mathbf{p}^\ast_{k,\boldsymbol\lambda_{n}}
+    (\boldsymbol\beta,\boldsymbol\beta^{(m)})
+    =(\pi_{k}^{(m)})^{\alpha}\sum\limits_{j=1}^{d}\left\{
+    p_{\lambda_{n,k}}(\beta_{kj}^{(m)}) + { p^{\prime}_{\lambda_{n,k}}
+    (\beta_{kj}^{(m)})  \over 2\beta_{kj}^{(m)}}(\beta_{kj}^{2} -
+    {\beta_{kj}^{(m)}}^{2}) \right\}.} Therefore maximizing \eqn{Q} is
+    equivalent to maximizing the
+    function \deqn{ {Q}^\ast(\boldsymbol\Psi,\boldsymbol\Psi^{(m)})
+    =\sum\limits_{k=1}^{K} {Q}^\ast_{k}(\boldsymbol\Psi_k,
+    \boldsymbol\Psi^{(m)}_k) = \sum\limits_{k=1}^{K}
+    \left[{Q}_{k}(\boldsymbol\Psi_k,\boldsymbol\Psi^{(m)}_k)-
+    \mathbf{p}^\ast_{k,\boldsymbol\lambda_{n}}(\boldsymbol\beta,
+    \boldsymbol\beta^{(m)})\right].}
+    In case of Log-Normal sub-distributions, the maximizers of \eqn{Q_k}
+    functions are as follows. Given the data and current estimates of
+    parameters, the maximizers are \deqn{{\boldsymbol\beta}^{(m+1)}_{k}
+    =({\boldsymbol z}^{\prime}\boldsymbol\tau^{(m)}_{k}{\boldsymbol z}+
+    \varpi_{k}(\boldsymbol\beta_{kj}^{(m)}))^{-1}{\boldsymbol z}^{\prime}
+    \boldsymbol\tau^{(m)}_{k}T^{(m)}_{k},}
+    where \eqn{\varpi_{k}(\boldsymbol\beta_{kj}^{(m)})={diag}
+    \left(\left(\pi_{k}^{(m+1)}\right)^\alpha
+    \frac{{p}^{\prime}_{\lambda_{n},k}(\boldsymbol\beta_{kj}^{(m)})}
+    {\boldsymbol\beta_{kj}^{(m)}}\right)}
+    and \eqn{\sigma_{k}^{(m+1)}} is equal to \deqn{\sigma_{k}^{(m+1)}
+    =\sqrt{\frac{\sum\limits_{i=1}^{n}\tau^{(m)}_{ik} (t^{(m)}_{ik}
+    -{\boldsymbol z}_{i}\boldsymbol\beta^{(m)}_{k})^{2}}
+    {\sum\limits_{i=1}^{n}\tau^{(m)}_{ik} {\left[\delta_{i}
+    +(1-\delta_{i})\{A(w^{(m)}_{ik})[A(w^{(m)}_{ik})-
+    w^{(m)}_{ik}]\}\right]}}}.}
+    For the Weibull distribution, on the other hand,  we have
+    \eqn{\tilde{\boldsymbol\Psi}^{(m+1)}_k=\tilde{\boldsymbol\Psi}^{(m)}_k
+    - 0.5^{\kappa}\left[{H_{k}^{p,(m)}}\right]^{-1}I_{k}^{p,(m)}},
+    where \eqn{H^p_{k}=H_k+h(\boldsymbol\Psi_k)}
+    is the penalized version of hessian matrix
+    and \eqn{I^p_{k}=I_k+h(\boldsymbol\Psi_k)\boldsymbol\Psi_k}
+    is the penalized version of vector of first derivatives evaluated
+    at \eqn{\tilde{\boldsymbol\Psi}_k^{(m)}}.
 }
 \examples{
 set.seed(1980)
@@ -99,7 +169,8 @@ round(beta.est,5)
 Farhad Shokoohi <shokoohi@icloud.com>
 }
 \references{
-Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
+Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
+(2016 submitted) Variable Selection in Mixture of Survival Models
 }
 \seealso{
 Other lnorm..norm..weibull: \code{\link{fmrs.gen.data}},

@@ -1,7 +1,10 @@
-#' @title fmrs: Variable Selection in Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression Models
+#' @title fmrs: Variable Selection in Finite Mixture of AFT Regression and FMR
 #'
-#' @description The fmrs package provides several useful functions. The function \code{\link{fmrs.mle}} provides Maximum Likelihood estimation for FMRs models.
-#' The function \code{\link{fmrs.tunsel}} provides component-wise tuning parameters. The function \code{\link{fmrs.varsel}} provides variable selection for FMRs models.
+#' @description The fmrs package provides several useful functions. The
+#'     function \code{\link{fmrs.mle}} provides Maximum Likelihood estimation
+#'     for FMRs models. The function \code{\link{fmrs.tunsel}} provides
+#'     component-wise tuning parameters. The function
+#'     \code{\link{fmrs.varsel}} provides variable selection for FMRs models.
 #'
 #' @section \code{fmrs} functions:
 #' \code{\link{fmrs.mle}},

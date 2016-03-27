@@ -5,7 +5,8 @@
   fmrsdate <- utils::packageDescription("fmrs")$Date
   fmrsdescrip <- utils::packageDescription("fmrs")$Description
   packageStartupMessage(
-    paste('fmrs package, Version ', fmrsversion,', Released ',fmrsdate,' \n',fmrsdescrip, sep = "")
+    paste('fmrs package, Version ', fmrsversion,', Released ',fmrsdate,' \n',
+          fmrsdescrip, sep = "")
   )
 }
 

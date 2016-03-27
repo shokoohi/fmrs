@@ -2,8 +2,9 @@
 % Please edit documentation in R/FMR_Surv_CwTuneSel.R
 \name{fmrs.tunsel}
 \alias{fmrs.tunsel}
-\title{Component-Wise Tuning Parameter Selection in Finite Mixture of Accelerated Failure Time Regression Models
-and Finite Mixture of Regression Models}
+\title{Component-Wise Tuning Parameter Selection in Finite Mixture of
+    Accelerated Failure Time Regression Models
+    and Finite Mixture of Regression Models}
 \usage{
 fmrs.tunsel(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initDeviance,
   initPi, penFamily = "lasso", lambRidge = 0, nIterEM = 2000,
@@ -19,20 +20,25 @@ fmrs.tunsel(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initDeviance,
 
 \item{nComp}{Order (Number of components) of mixture model}
 
-\item{disFamily}{Specify sub-distributions family. The options are \code{"norm"} for FMR models,
-\code{"lnorm"} for mixture of AFT regression models with Log-Normal sub-distributions,
-\code{"weibull"} for mixture of AFT regression models with Weibull sub-distributions,}
+\item{disFamily}{Specify sub-distributions family. The options
+are \code{"norm"} for FMR models,
+\code{"lnorm"} for mixture of AFT regression models with Log-Normal
+sub-distributions, \code{"weibull"} for mixture of AFT regression models
+with Weibull sub-distributions,}
 
-\item{initCoeff}{Vector of initial values for regression coefficients including intercepts}
+\item{initCoeff}{Vector of initial values for regression coefficients
+including intercepts}
 
 \item{initDeviance}{Vector of initial values for standard deviations}
 
 \item{initPi}{Vector of initial values for proportion of components}
 
-\item{penFamily}{Name of the penalty that is used in variable selection method.
-The available options are  \code{"lasso"}, \code{"adplasso"}, \code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.}
+\item{penFamily}{Penalty name that is used in variable selection method.
+The available options are  \code{"lasso"}, \code{"adplasso"},
+\code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.}
 
-\item{lambRidge}{A positive value for Lambda in Ridge regression or Elastic Net}
+\item{lambRidge}{A positive value for tuniing parameter in Ridge regression
+or Elastic Net}
 
 \item{nIterEM}{Maximum number of iterations for EM algorithm}
 
@@ -40,21 +46,45 @@ The available options are  \code{"lasso"}, \code{"adplasso"}, \code{"mcp"}, \cod
 
 \item{conveps}{A positive value for avoiding NaN in computing divisions}
 
-\item{convepsEM}{A positive value for treshold of convergence in EM algorithm}
+\item{convepsEM}{A positive value for treshold of convergence in
+EM algorithm}
 
-\item{convepsNR}{A positive value for treshold of convergence in Newton-Raphson algorithm}
+\item{convepsNR}{A positive value for treshold of convergence in
+NR algorithm}
 
-\item{porNR}{Used in pow(0.5, porNR) for tuning the increment in Newton-Raphson algorithm.}
+\item{porNR}{Used in pow(0.5, porNR) for tuning the increment in
+NR algorithm}
 
-\item{gamMixPor}{Proportion of mixing parameters in the penalty. The value must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty structure is no longer mixture.}
+\item{gamMixPor}{Proportion of mixing parameters in the penalty. The value
+must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty
+structure is no longer mixture.}
 }
 \value{
-An \code{\link{fmrs.lambda-class}} object which includes component-wise tuning parameter estimates to be used in variable selection procedure.
+An \code{\link{fmrs.lambda-class}} object includes component-wise
+    tuning parameter estimates to be used in variable selection procedure.
 }
 \description{
-It provides component-wise tuning parameters for Finite Mixture of Accelerated Failure Time Regression Models
-and Finite Mixture of Regression Models.
-The penalties that are implemented in this package are \code{lasso}, \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}.
+It provides component-wise tuning parameters for Finite
+    Mixture of Accelerated Failure Time Regression Models
+    and Finite Mixture of Regression Models.
+    The penalties that are implemented in this package are \code{lasso},
+    \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}.
+}
+\details{
+The maximizer of penalized Log-Likelihood depends on selecting a
+    set of good tuning parameters which is a rather thorny issue. We choose
+    a value in an equally spaced set of values in \eqn{(0, \lambda_{max})}
+    for a pre-specified \eqn{\lambda_{max}} that maximize the component-wise
+    BIC, \deqn{\hat\lambda_{k} ={argmax}_{\lambda_{k}}BIC_k(\lambda_{k}) =
+    {argmax}_{\lambda_{k}}\left\{\ell^{c}_{k, n}
+    (\hat{\boldsymbol\Psi}_{\lambda_{k}, k}) -
+    |d_{\lambda_{k},k}| \log (n)\right\},}
+    where \eqn{d_{\lambda_{k},k}=\{j:\hat{\beta}_{\lambda_{k},kj}\neq 0,
+    j=1,\ldots,d\}}
+    is the active set  excluding the intercept and \eqn{|d_{\lambda_{k},k}|}
+    is its size. This approach is much faster than using an \code{nComp}
+    by \code{nComp} grid to select the set \eqn{\boldsymbol\lambda} to
+    maximize the penallized Log-Likelihood.
 }
 \examples{
 set.seed(1980)
@@ -91,7 +121,8 @@ res.lam
 Farhad Shokoohi <shokoohi@icloud.com>
 }
 \references{
-Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
+Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
+    (2016 submitted) Variable Selection in Mixture of Survival Models
 }
 \seealso{
 Other lnorm..norm..weibull: \code{\link{fmrs.gen.data}},

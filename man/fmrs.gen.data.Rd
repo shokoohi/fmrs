@@ -10,27 +10,37 @@ fmrs.gen.data(n, nComp, nCov, coeff, deviance, pi, rho, umax,
 \arguments{
 \item{n}{A numeric value represents number of observations (sample size)}
 
-\item{nComp}{A numeric value represents the order (number of components) of an FMRs model}
+\item{nComp}{A numeric value represents the order (number of components) of
+an FMRs model}
 
-\item{nCov}{A numberic value represents the number of covariates in design matrix}
+\item{nCov}{A numberic value represents the number of covariates in design
+matrix}
 
-\item{coeff}{A vector of all regression coefficients including intercepts. It must be a vector of size \code{nComp} by \code{nCov+1}.}
+\item{coeff}{A vector of all regression coefficients including intercepts.
+It must be a vector of size \code{nComp} by \code{nCov+1}.}
 
-\item{deviance}{A vector of positive values for dispersion parameters of sub-distributions in FMRs models}
+\item{deviance}{A vector of positive values for dispersion parameters of
+sub-distributions in FMRs models}
 
 \item{pi}{A vector of mixing proportions which their sum must be one}
 
-\item{rho}{A numeric value in [-1, 1] which represents the correlation between covariates of design matrix}
+\item{rho}{A numeric value in [-1, 1] which represents the correlation
+between covariates of design matrix}
 
-\item{umax}{A numeric value represents the upper bound in Uniform distribution for censoring}
+\item{umax}{A numeric value represents the upper bound in Uniform
+distribution for censoring}
 
-\item{disFamily}{Specify the family of sub-distributioons. The options are \code{"lnormal"} for Log-Normal, \code{"norm"} for Normal and \code{"weibull"} for Weibull.}
+\item{disFamily}{Specify the family of sub-distributioons. The options are
+\code{"lnormal"} for Log-Normal, \code{"norm"} for Normal and
+\code{"weibull"} for Weibull.}
 }
 \value{
-A list including a vector of observations \code{y}, a vector of censoring indicators \code{delta} and a matrix of covariates \code{x}
+A list including a vector of observations \code{y}, a vector of
+    censoring indicators \code{delta} and a matrix of covariates \code{x}
 }
 \description{
-This function will generate a data set from Finite Mixture of AFT regression models or Finite Mixture of Regression models.
+This function will generate a data set from Finite Mixture of
+    AFT regression models or Finite Mixture of Regression models.
 }
 \examples{
 set.seed(1980)
@@ -53,7 +63,8 @@ dat <- fmrs.gen.data(n = n, nComp = nComp, nCov = nCov,
 Farhad Shokoohi <shokoohi@icloud.com>
 }
 \references{
-Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
+Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
+     (2016 submitted) Variable Selection in Mixture of Survival Models
 }
 \seealso{
 Other lnorm..norm..weibull: \code{\link{fmrs.mle}},

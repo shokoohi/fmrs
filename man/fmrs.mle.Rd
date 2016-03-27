@@ -2,8 +2,8 @@
 % Please edit documentation in R/FMR_Surv_MLE.R
 \name{fmrs.mle}
 \alias{fmrs.mle}
-\title{Maximum Likelihood Estimation in Finite Mixture of Accelerated Failure Time Regression Models
-and Finite Mixture of Regression Models}
+\title{Maximum Likelihood Estimation in Finite Mixture of Accelerated
+    Failure Time Regression Models and Finite Mixture of Regression Models}
 \usage{
 fmrs.mle(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initDeviance,
   initPi, lambRidge = 0, nIterEM = 2000, nIterNR = 2, conveps = 1e-08,
@@ -18,17 +18,20 @@ fmrs.mle(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initDeviance,
 
 \item{nComp}{Order (Number of components) of mixture model}
 
-\item{disFamily}{Specify sub-distributions family. The options are \code{"norm"} for FMR models,
-\code{"lnorm"} for mixture of AFT regression models with Log-Normal sub-distributions,
-\code{"weibull"} for mixture of AFT regression models with Weibull sub-distributions,}
+\item{disFamily}{Specify sub-distributions family. The options
+are \code{"norm"} for FMR models, \code{"lnorm"} for mixture of AFT
+regression models with Log-Normal sub-distributions,\code{"weibull"} for
+mixture of AFT regression models with Weibull sub-distributions,}
 
-\item{initCoeff}{Vector of initial values for regression coefficients including intercepts}
+\item{initCoeff}{Vector of initial values for regression coefficients
+including intercepts}
 
 \item{initDeviance}{Vector of initial values for standard deviations}
 
 \item{initPi}{Vector of initial values for proportion of components}
 
-\item{lambRidge}{A positive value for Lambda in Ridge regression or Elastic Net}
+\item{lambRidge}{A positive value for tuning parameter in Ridge regression
+or Elastic Net}
 
 \item{nIterEM}{Maximum number of iterations for EM algorithm}
 
@@ -36,35 +39,61 @@ fmrs.mle(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initDeviance,
 
 \item{conveps}{A positive value for avoiding NaN in computing divisions}
 
-\item{convepsEM}{A positive value for treshold of convergence in EM algorithm}
+\item{convepsEM}{A positive value for treshold of convergence in
+EM algorithm}
 
-\item{convepsNR}{A positive value for treshold of convergence in Newton-Raphson algorithm}
+\item{convepsNR}{A positive value for treshold of convergence in
+NR algorithm}
 
-\item{porNR}{Used in pow(0.5, porNR) for tuning the increment in Newton-Raphson algorithm.}
+\item{porNR}{Used in pow(0.5, porNR) for tuning the increment in
+NR algorithm}
 }
 \value{
-An \code{\link{fmrs.fit-class}} object which includes parameter estimates of an FMRs model
+An \code{\link{fmrs.fit-class}} object which includes parameter
+    estimates of an FMRs model
 }
 \description{
-It provides parameter estimation for Finite Mixture of Accelerated Failure Time Regression Models and Finite Mixture of Regression Models.
-It also provide Ridge Regression.
+Provides parameter estimation for Finite Mixture of Accelerated
+    Failure Time Regression Models and Finite Mixture of Regression Models.
+    It also provide Ridge Regression.
 }
 \details{
 Finite mixture of AFT regression models are represented as follows.
-Let \eqn{X} be the survival time with non-negative values, and \eqn{\boldsymbol{z} =(z_{1}, \ldots, z_{d})^{\top}}
-be a \eqn{d}-dimensional vector of covariates that may have an effect on \eqn{X}.
-If the survival time is subject to right censoring, then the observed response time is \eqn{T=\min \{Y, C\}},
-where \eqn{Y=\log X}, \eqn{C} is  logarithm of  the censoring time and \eqn{\delta=I_{\{y<c\}}} is the censoring indicator.
-We say that \eqn{V=(T,\delta,\boldsymbol z)} follows a finite mixture of AFT regression models of order \eqn{K}
-if the conditional density of \eqn{(T,\delta)} given \eqn{\boldsymbol z} has the form
-\deqn{f(t,\delta;\boldsymbol{z},\boldsymbol\Psi)=\sum\limits_{k=1}^{K}\pi_{k}[f_Y(t;\theta_{k}(\boldsymbol z),
-\sigma_{k})]^{\delta}[S_Y(t;\theta_{k}(\boldsymbol z),\sigma_{k})]^{1-\delta}[f_{C}(t)]^{1-\delta}[S_{C}(t)]^{\delta}}
-where \eqn{f_Y(.)} and \eqn{S_Y(.)} are respectively the density and survival functions of \eqn{Y},
-\eqn{f_C(.)} and \eqn{S_C(.)} are respectively the density and survival functions of \eqn{C};
-and \eqn{{\theta}_{k}(\boldsymbol{z})=h(\beta_{0k}+\boldsymbol{z}^{\top}\boldsymbol\beta_{k})}
-for a known link function \eqn{h(.)},  \eqn{\boldsymbol\Psi=(\pi_{1},\ldots,\pi_{K},\beta_{01},\ldots,
-\beta_{0K}, \boldsymbol\beta_{1},\ldots,\boldsymbol\beta_{K},\sigma_{1},\ldots,\sigma_{K})^{\top}}
-with \eqn{\boldsymbol\beta_{k}=(\beta_{k1},\beta_{k2},\ldots,\beta_{kd})^{\top}} and \eqn{0<\pi_{k}<1} with \eqn{\sum_{k=1}^{K}\pi_{k}=1}.
+    Let \eqn{X} be the survival time with non-negative values,
+    and \eqn{\boldsymbol{z} =(z_{1}, \ldots, z_{d})^{\top}}
+    be a \eqn{d}-dimensional vector of covariates that may have an effect
+    on \eqn{X}.
+    If the survival time is subject to right censoring, then the observed
+    response time is \eqn{T=\min \{Y, C\}},
+    where \eqn{Y=\log X}, \eqn{C} is  logarithm of  the censoring time
+    and \eqn{\delta=I_{\{y<c\}}} is the censoring indicator.
+    We say that \eqn{V=(T,\delta,\boldsymbol z)} follows a finite mixture of
+    AFT regression models of order \eqn{K}
+    if the conditional density of \eqn{(T,\delta)} given \eqn{\boldsymbol z}
+    has the form \deqn{f(t,\delta;\boldsymbol{z},\boldsymbol\Psi)
+    =\sum\limits_{k=1}^{K}\pi_{k}[f_Y(t;\theta_{k}(\boldsymbol z),
+    \sigma_{k})]^{\delta}[S_Y(t;\theta_{k}(\boldsymbol z)
+    ,\sigma_{k})]^{1-\delta}[f_{C}(t)]^{1-\delta}[S_{C}(t)]^{\delta}}
+    where \eqn{f_Y(.)} and \eqn{S_Y(.)} are respectively the density and
+    survival functions of \eqn{Y}, \eqn{f_C(.)} and \eqn{S_C(.)} are
+    respectively the density and survival functions of \eqn{C}; and
+    \eqn{{\theta}_{k}(\boldsymbol{z})=h(\beta_{0k}+\boldsymbol{z}^{\top}
+    \boldsymbol\beta_{k})} for a known link function \eqn{h(.)},
+    \eqn{\boldsymbol\Psi=(\pi_{1},\ldots,\pi_{K},\beta_{01},\ldots,
+    \beta_{0K}, \boldsymbol\beta_{1},\ldots,\boldsymbol\beta_{K},\sigma_{1},
+    \ldots,\sigma_{K})^{\top}} with \eqn{\boldsymbol\beta_{k}=
+    (\beta_{k1},\beta_{k2},\ldots,\beta_{kd})^{\top}} and \eqn{0<\pi_{k}<1}
+    with \eqn{\sum_{k=1}^{K}\pi_{k}=1}.
+    The log-likelihood of a sample of size $n$ is formed
+    as \deqn{\ell_{n}(\boldsymbol\Psi) =
+    \sum\limits_{i=1}^{n}\log\sum\limits_{k=1}^{K}\pi_{k}\left[f_Y(t_{i},
+    \theta_{k}({\boldsymbol z}_{i}),\sigma_{k})  \right]^{\delta_{i}}
+    \left[S_Y(t_{i},\theta_{k}({\boldsymbol z}_{i}),
+    \sigma_{k})\right]^{1-\delta_{i}}.}
+    Note that we assume the censoring distribution is non-informative and
+    hence won't play any role in the estimation process. We use EM and
+    Newton-Raphson algorithms in our method to find the maximizer of above
+    Log-Likelihood.
 }
 \examples{
 set.seed(1980)
@@ -97,7 +126,8 @@ res.mle$pi
 Farhad Shokoohi <shokoohi@icloud.com>
 }
 \references{
-Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
+Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
+    (2016 submitted) Variable Selection in Mixture of Survival Models
 }
 \seealso{
 Other lnorm..norm..weibull: \code{\link{fmrs.gen.data}},

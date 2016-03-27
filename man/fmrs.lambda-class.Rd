@@ -6,7 +6,8 @@
 \alias{frms.lambda}
 \title{An S4 class to represent estimated optimal lambdas}
 \description{
-An S4 class to represent estimated optimal lambdas resulted from runnig \code{\link{fmrs.tunsel}}.
+An S4 class to represent estimated optimal lambdas resulted
+    from runnig \code{\link{fmrs.tunsel}}.
 }
 \section{Slots}{
 

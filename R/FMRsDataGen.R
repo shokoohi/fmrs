@@ -1,21 +1,32 @@
 #' @title Generating data from FMRs models
 #'
 #' @name fmrs.gen.data
-#' @description This function will generate a data set from Finite Mixture of AFT regression models or Finite Mixture of Regression models.
+#' @description This function will generate a data set from Finite Mixture of
+#'     AFT regression models or Finite Mixture of Regression models.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
-#' @return A list including a vector of observations \code{y}, a vector of censoring indicators \code{delta} and a matrix of covariates \code{x}
-#' @param disFamily Specify the family of sub-distributioons. The options are \code{"lnormal"} for Log-Normal, \code{"norm"} for Normal and \code{"weibull"} for Weibull.
+#' @return A list including a vector of observations \code{y}, a vector of
+#'     censoring indicators \code{delta} and a matrix of covariates \code{x}
+#' @param disFamily Specify the family of sub-distributioons. The options are
+#'     \code{"lnormal"} for Log-Normal, \code{"norm"} for Normal and
+#'     \code{"weibull"} for Weibull.
 #' @param n A numeric value represents number of observations (sample size)
-#' @param nComp A numeric value represents the order (number of components) of an FMRs model
-#' @param nCov A numberic value represents the number of covariates in design matrix
-#' @param coeff A vector of all regression coefficients including intercepts. It must be a vector of size \code{nComp} by \code{nCov+1}.
-#' @param deviance A vector of positive values for dispersion parameters of sub-distributions in FMRs models
+#' @param nComp A numeric value represents the order (number of components) of
+#'     an FMRs model
+#' @param nCov A numberic value represents the number of covariates in design
+#'     matrix
+#' @param coeff A vector of all regression coefficients including intercepts.
+#'     It must be a vector of size \code{nComp} by \code{nCov+1}.
+#' @param deviance A vector of positive values for dispersion parameters of
+#'     sub-distributions in FMRs models
 #' @param pi A vector of mixing proportions which their sum must be one
-#' @param rho A numeric value in [-1, 1] which represents the correlation between covariates of design matrix
-#' @param umax A numeric value represents the upper bound in Uniform distribution for censoring
+#' @param rho A numeric value in [-1, 1] which represents the correlation
+#'     between covariates of design matrix
+#' @param umax A numeric value represents the upper bound in Uniform
+#'      distribution for censoring
 #' @import stats
-#' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S. (2016 submitted) Variable Selection in Mixture of Survival Models
+#' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
+#'      (2016 submitted) Variable Selection in Mixture of Survival Models
 #' @keywords FMR, AFT, FMRs, Normal, Log-Normal, Weibull
 #' @concept fmr, aft
 #'@examples
@@ -78,7 +89,7 @@ fmrs.gen.data <- function(n,
   cX <- scale(cX)
   colnames(cX) <-  paste("X", 1:nCov,sep = ".")
 
-  coef0 <- matrix(coeff, nrow = nComp, ncol = nCov+1, byrow = T)
+  coef0 <- matrix(coeff, nrow = nComp, ncol = nCov+1, byrow = TRUE)
   pi0 <- cumsum(pi)
 
   yobs <-c()
