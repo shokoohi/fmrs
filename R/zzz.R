@@ -6,7 +6,7 @@
   fmrsdescrip <- utils::packageDescription("fmrs")$Description
   fmrsBugReports <- utils::packageDescription("fmrs")$BugReports
   packageStartupMessage(
-    paste('fmrs package, Version ', fmrsversion,', Released ',fmrsdate,' \n',
+    paste('fmrs package, Version ',fmrsversion,', Released ',fmrsdate,' \n',
           fmrsdescrip, '\nBugReports: ',fmrsBugReports , sep = "")
   )
 }

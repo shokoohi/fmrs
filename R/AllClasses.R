@@ -1,72 +1,110 @@
+#' @title An S4 class to represent estimated optimal lambdas
+#'
+#' @description An S4 class to represent estimated optimal lambdas resulted
+#'     from runnig \code{\link{fmrstunsel}}.
+#' @name fmrstunpar-class
+#' @docType class
+#' @exportClass fmrstunpar
+#' @import methods
+#' @slot ncomp A length-one numeric vector
+#' @slot lambPen A dimension-one-\code{ncomp} numeric array
+#' @slot disFamily A length-one character vector
+#' @slot penFamily A length-one character vector
+#' @slot lambRidge A length-one numeric vector
+#' @slot model A length-one character vector
+#' @rdname fmrstunpar-class
+#' @export
+fmrstunpar <- setClass("fmrstunpar",
+                       representation(ncomp = "numeric",
+                                      lambPen = "array",
+                                      lambRidge = "numeric",
+                                      disFamily = "character",
+                                      penFamily = "character",
+                                      model = "character"
+                       ),
+                       prototype (ncomp = numeric(length = 1L),
+                                  lambPen = array(),
+                                  lambRidge = numeric(length = 1L),
+                                  disFamily = character(),
+                                  penFamily = character(),
+                                  model = character()
+                       )
+)
+
 #' @title An S4 class to represent a fit of an FMRs model
 #'
-#' @description fmrs is an S4 class represents a fit of FMRs models
+#' @description fmrsfit is an S4 class represents a fit of FMRs models
 #'     resulted from running \code{\link{fmrsmle}}
 #'     or \code{\link{fmrsvarsel}}
-#' @name fmrs-class
+#' @name fmrsfit-class
 #' @import methods
-#' @slot dims A length-three numeric vector represents number of observations
-#'     (\code{n}), number of covariates (\code{nCov}) and the order of the
-#'     mixture model (\code{nComp})
-#' @slot coefficients A dimension-\code{nCov}-\code{nComp} numeric matrix
-#' @slot deviance A length-\code{nComp} numeric vector
-#' @slot pi A length-\code{nComp} numeric vector
+#' @slot y A length-\code{nobs} numeric vector
+#' @slot delta A length-\code{nobs} numeric vector
+#' @slot x A dimension-\code{nobs}-\code{ncov} numeric matrix
+#' @slot nobs A length-one numeric vector
+#' @slot ncov A length-one numeric vector
+#' @slot ncomp A length-one numeric vector
+#' @slot coefficients A length-\code{ncov+1}*\code{ncomp} numeric matrix
+#' @slot deviance A length-\code{ncomp} numeric vector
+#' @slot mixProp A length-\code{ncomp} numeric vector
 #' @slot logLik A length-one numeric vector
 #' @slot BIC A length-one numeric vector
 #' @slot nIterEMconv A length-one numeric vector
 #' @slot disFamily A length-one character vector
 #' @slot penFamily A length-one character vector
-#' @slot lambPen A length-\code{nComp} numeric vector
-#' @slot lamRidge A length-one numeric vector
-#' @slot method A length-one character vector
-#' @slot fitted A dimension-\code{n}-\code{nComp} numeric matrix
-#' @slot residuals A dimension-\code{n}-\code{nComp} numeric matrix
-#' @slot weights A dimension-\code{n}-\code{nComp} numeric matrix
-#' @slot data A list including \code{y}, \code{x} and \code{delta}
+#' @slot lambPen A length-\code{ncomp} numeric vector
+#' @slot lambRidge A length-one numeric vector
+#' @slot model A length-one character vector
+#' @slot fitted A dimension-\code{n}-\code{ncomp} numeric matrix
+#' @slot residuals A dimension-\code{n}-\code{ncomp} numeric matrix
+#' @slot weights A dimension-\code{n}-\code{ncomp} numeric matrix
 #' @docType class
-#' @exportClass fmrs
-frms <- setClass("fmrs",
-                     representation(dims = "vector",
-                                    coefficients = "matrix",
-                                    deviance = "vector",
-                                    pi = "vector",
-                                    logLik = "numeric",
-                                    BIC = "numeric",
-                                    nIterEMconv = "numeric",
-                                    disFamily = "character",
-                                    penFamily = "character",
-                                    lambPen = "vector",
-                                    lamRidge = "numeric",
-                                    method = "character",
-                                    fitted = "matrix",
-                                    residuals = "matrix",
-                                    weights = "matrix",
-                                    data = "list"
-                     )
-
+#' @rdname fmrsfit-class
+#' @exportClass fmrsfit
+frmsfit <- setClass("fmrsfit",
+                    representation(y = "vector",
+                                   delta = "vector",
+                                   x = "matrix",
+                                   nobs = "numeric",
+                                   ncov = "numeric",
+                                   ncomp = "numeric",
+                                   coefficients = "matrix",
+                                   deviance = "array",
+                                   mixProp = "array",
+                                   logLik = "numeric",
+                                   BIC = "numeric",
+                                   nIterEMconv = "numeric",
+                                   disFamily = "character",
+                                   penFamily = "character",
+                                   lambPen = "array",
+                                   lambRidge = "numeric",
+                                   model = "character",
+                                   fitted = "matrix",
+                                   residuals = "matrix",
+                                   weights = "matrix"
+                    ),
+                    prototype (y = vector(),
+                               delta = vector(),
+                               x = matrix(),
+                               nobs = numeric(length = 1L),
+                               ncov = numeric(length = 1L),
+                               ncomp = numeric(length = 1L),
+                               coefficients = matrix(),
+                               deviance = array(),
+                               mixProp = array(),
+                               logLik = numeric(length = 1L),
+                               BIC = numeric(length = 1L),
+                               nIterEMconv = numeric(length = 1L),
+                               disFamily = character(),
+                               penFamily = character(),
+                               lambPen = array(),
+                               lambRidge = numeric(length = 1L),
+                               model = character(),
+                               fitted = matrix(),
+                               residuals = matrix(),
+                               weights = matrix()
+                    ),
+                    contains = "fmrstunpar"
 )
 
-#' @title An S4 class to represent estimated optimal lambdas
-#'
-#' @description An S4 class to represent estimated optimal lambdas resulted
-#'     from runnig \code{\link{fmrstunsel}}.
-#' @name tunepar-class
-#' @docType class
-#' @exportClass tunepar
-#' @import methods
-#' @slot lamPen A length-\code{nComp} numeric vector
-#' @slot disFamily A length-one character vector
-#' @slot penFamily A length-one character vector
-#' @slot lamRidge A length-one numeric vector
-#' @slot method A length-one character vector
-#' @slot data A list including \code{y}, \code{x} and \code{delta}
-#' @export
-tunepar <- setClass("tunepar",
-                        representation(lamPen = "vector",
-                                       disFamily = "character",
-                                       penFamily = "character",
-                                       lamRidge = "numeric",
-                                       method = "character",
-                                       data = "list"
-                        )
-)
+

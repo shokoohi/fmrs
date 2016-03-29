@@ -1,8 +1,8 @@
 Package: fmrs
 Type: Package
 Title: Variable Selection in Finite Mixture of AFT Regression and FMR
-Version: 1.0-9
-Date: 2016-03-27
+Version: 1.0-7
+Date: 2016-03-28
 Author: Farhad Shokoohi <shokoohi@icloud.com>
     Abbas Khalili
     Masoud Asgharian
@@ -14,8 +14,8 @@ Imports:
     methods,
     stats
 Description: Provides parameter estimation as well as variable selection in
-    Finite Mixture of Accelerated Failure Time Regression and Finite Mixture
-    of Regression Models.
+    Finite Mixture of Accelerated Failure Time Regression and Finite
+    Mixture of Regression Models.
     Furthermore, this package provides Ridge Regression and Elastic Net.
 biocViews:
     Survival,

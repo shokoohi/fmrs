@@ -1,5 +1,43 @@
 ------------------------
-CHANGES IN VERSION 1.0-9
+CHANGES IN VERSION 1.0-7
+----------------------
+IMPROVEMENTS SINCE LAST TIME
+    o We have implemented S4 classes and methods in this release.
+
+CHANGES SINCE LAST TIME
+    o Since S4 methods are implemented we have changed some arguments and
+    definitions in this release.
+    o fmrs object is changed to fmrsfit.
+    o tunpar object is changed to fmrstunpar
+    o You can no longer use $ to call the arguments of objects since they are
+    written in S4 classes. You need to use @ instead or slot().
+    o New methods added to the package (see the manual).
+
+------------------------
+CHANGES IN VERSION 1.0-6
+----------------------
+MINOR CHANGES SINCE LAST TIME
+    o We have changed the name of the functions and classes so that it won't
+    be mistaken with S3 and S4 methods and classes as follows.
+    o fmrs.mel() changed to fmrmle()
+    o fmrs.tunsel() changed to fmrstunsel()
+    o fmrs.varsel() changed to fmrsvarsel()
+    o fmrs.fit changed to fmrs.
+    o fmrs.lambda changed to tunepar.
+
+FUTURE DEVELOPMENT
+    o We intend to make some refinements to the package by introducing better
+    S4 classes and methods.
+    o We will add more distributions to the package including Generalized Gamma
+    and Gompertz.
+    o Since we are working on length-biased models, these models will be added
+    to the package.
+
+BUG FIXES
+    o None reported so far.
+
+------------------------
+CHANGES IN VERSION 1.0-5
 ----------------------
 IMPROVEMENTS SINCE LAST TIME
     o We have refined some of the codes to speed up the package.
@@ -16,7 +54,7 @@ BUG FIXES
     o None reported so far.
 
 ------------------------
-CHANGES IN VERSION 1.0-7
+CHANGES IN VERSION 1.0-4
 ------------------------
 
 IMPROVEMENTS SINCE LAST TIME

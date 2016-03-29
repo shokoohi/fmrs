@@ -7,7 +7,7 @@
     and Finite Mixture of Regression Models}
 \usage{
 fmrstunsel(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initDeviance,
-  initPi, penFamily = "lasso", lambRidge = 0, nIterEM = 2000,
+  initmixProp, penFamily = "lasso", lambRidge = 0, nIterEM = 2000,
   nIterNR = 2, conveps = 1e-08, convepsEM = 1e-08, convepsNR = 1e-08,
   porNR = 2, gamMixPor = 1)
 }
@@ -23,22 +23,22 @@ fmrstunsel(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initDeviance,
 \item{disFamily}{Specify sub-distributions family. The options
 are \code{"norm"} for FMR models,
 \code{"lnorm"} for mixture of AFT regression models with Log-Normal
-sub-distributions, \code{"weibull"} for mixture of AFT regression models
-with Weibull sub-distributions,}
+sub-distributions, \code{"weibull"} for mixture of AFT regression
+models with Weibull sub-distributions,}
 
 \item{initCoeff}{Vector of initial values for regression coefficients
 including intercepts}
 
 \item{initDeviance}{Vector of initial values for standard deviations}
 
-\item{initPi}{Vector of initial values for proportion of components}
+\item{initmixProp}{Vector of initial values for proportion of components}
 
 \item{penFamily}{Penalty name that is used in variable selection method.
 The available options are  \code{"lasso"}, \code{"adplasso"},
 \code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.}
 
-\item{lambRidge}{A positive value for tuniing parameter in Ridge regression
-or Elastic Net}
+\item{lambRidge}{A positive value for tuniing parameter in Ridge
+Regression or Elastic Net}
 
 \item{nIterEM}{Maximum number of iterations for EM algorithm}
 
@@ -55,27 +55,29 @@ NR algorithm}
 \item{porNR}{Used in pow(0.5, porNR) for tuning the increment in
 NR algorithm}
 
-\item{gamMixPor}{Proportion of mixing parameters in the penalty. The value
-must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty
-structure is no longer mixture.}
+\item{gamMixPor}{Proportion of mixing parameters in the penalty. The
+value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
+penalty structure is no longer mixture.}
 }
 \value{
-An \code{\link{tunepar-class}} object includes component-wise
-    tuning parameter estimates to be used in variable selection procedure.
+An \code{\link{fmrstunpar-class}} object includes component-wise
+    tuning parameter estimates to be used in variable
+    selection procedure.
 }
 \description{
 It provides component-wise tuning parameters for Finite
     Mixture of Accelerated Failure Time Regression Models
-    and Finite Mixture of Regression Models.
-    The penalties that are implemented in this package are \code{lasso},
-    \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}.
+    and Finite Mixture of Regression Models. The penalties that are
+    implemented in this package are \code{lasso}, \code{adplasso},
+    \code{scad}, \code{mcp}, \code{sica} and \code{hard}.
 }
 \details{
 The maximizer of penalized Log-Likelihood depends on selecting a
-    set of good tuning parameters which is a rather thorny issue. We choose
-    a value in an equally spaced set of values in \eqn{(0, \lambda_{max})}
-    for a pre-specified \eqn{\lambda_{max}} that maximize the component-wise
-    BIC, \deqn{\hat\lambda_{k} ={argmax}_{\lambda_{k}}BIC_k(\lambda_{k}) =
+    set of good tuning parameters which is a rather thorny issue. We
+    choose a value in an equally spaced set of values in
+    \eqn{(0, \lambda_{max})} for a pre-specified \eqn{\lambda_{max}}
+    that maximize the component-wise
+    BIC, \deqn{\hat\lambda_{k} ={argmax}_{\lambda_{k}}BIC_k(\lambda_{k})=
     {argmax}_{\lambda_{k}}\left\{\ell^{c}_{k, n}
     (\hat{\boldsymbol\Psi}_{\lambda_{k}, k}) -
     |d_{\lambda_{k},k}| \log (n)\right\},}
@@ -91,9 +93,8 @@ set.seed(1980)
 nComp = 2
 nCov = 10
 n = 500
-REP = 500
 deviance = c(1, 1)
-pi = c(0.4, 0.6)
+mixProp = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
 coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
@@ -101,21 +102,22 @@ umax = 40
 
 dat <- fmrsgendata(n = n, nComp = nComp, nCov = nCov,
                      coeff = c(coeff1, coeff2), deviance = deviance,
-                     pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
+                     mixProp = mixProp, rho = rho, umax = umax,
+                     disFamily = "lnorm")
 
 res.mle <- fmrsmle(y = dat$y, x = dat$x, delta = dat$delta,
-                    nComp = nComp, disFamily = "lnorm",
-                    initCoeff = rnorm(nComp*nCov+nComp),
-                    initDeviance = rep(1, nComp),
-                    initPi = rep(1/nComp, nComp))
+                   nComp = nComp, disFamily = "lnorm",
+                   initCoeff = rnorm(nComp*nCov+nComp),
+                   initDeviance = rep(1, nComp),
+                   initmixProp = rep(1/nComp, nComp))
 
 res.lam <- fmrstunsel(y = dat$y, x = dat$x, delta = dat$delta,
-                       nComp = nComp, disFamily = "lnorm",
-                       initCoeff=c(res.mle$coefficients),
-                       initDeviance = res.mle$deviance,
-                       initPi = res.mle$pi, penFamily = "adplasso")
-
-res.lam
+                      nComp = nComp, disFamily = "lnorm",
+                      initCoeff = c(coefficients(res.mle)),
+                      initDeviance = deviance(res.mle),
+                      initmixProp = mixProp(res.mle),
+                      penFamily = "adplasso")
+slot(res.lam,"lambPen")
 }
 \author{
 Farhad Shokoohi <shokoohi@icloud.com>

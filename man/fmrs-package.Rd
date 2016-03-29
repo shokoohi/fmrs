@@ -4,7 +4,8 @@
 \name{fmrs-package}
 \alias{fmrs}
 \alias{fmrs-package}
-\title{fmrs: Variable Selection in Finite Mixture of AFT Regression and FMR}
+\title{fmrs: Variable Selection in Finite Mixture of AFT Regression and
+    FMR}
 \description{
 The fmrs package provides several useful functions. The
     function \code{\link{fmrsmle}} provides Maximum Likelihood estimation

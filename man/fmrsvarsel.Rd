@@ -6,9 +6,9 @@
     Regression Models and Finite Mixture of Regression Models}
 \usage{
 fmrsvarsel(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initDeviance,
-  initPi, penFamily = "lasso", lambPen, lambRidge = 0, nIterEM = 2000,
-  nIterNR = 2, conveps = 1e-08, convepsEM = 1e-08, convepsNR = 1e-08,
-  porNR = 2, gamMixPor = 1)
+  initmixProp, penFamily = "lasso", lambPen, lambRidge = 0,
+  nIterEM = 2000, nIterNR = 2, conveps = 1e-08, convepsEM = 1e-08,
+  convepsNR = 1e-08, porNR = 2, gamMixPor = 1)
 }
 \arguments{
 \item{y}{Responses (observations)}
@@ -29,7 +29,7 @@ including intercepts}
 
 \item{initDeviance}{Vector of initial values for standard deviations}
 
-\item{initPi}{Vector of initial values for proportion of components}
+\item{initmixProp}{Vector of initial values for proportion of components}
 
 \item{penFamily}{Penalty name that is used in variable selection method
 The available options are  \code{"lasso"}, \code{"adplasso"},
@@ -37,8 +37,8 @@ The available options are  \code{"lasso"}, \code{"adplasso"},
 
 \item{lambPen}{A vector of positive numbers for tuning parameters}
 
-\item{lambRidge}{A positive value for tuning parameter in Ridge regression
-or Elastic Net}
+\item{lambRidge}{A positive value for tuning parameter in Ridge
+Regression or Elastic Net}
 
 \item{nIterEM}{Maximum number of iterations for EM algorithm}
 
@@ -55,12 +55,12 @@ NR algorithm}
 \item{porNR}{Used in pow(0.5, porNR) for tuning the increment in
 NR algorithm}
 
-\item{gamMixPor}{Proportion of mixing parameters in the penalty. The value
-must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty
-structure is no longer mixture.}
+\item{gamMixPor}{Proportion of mixing parameters in the penalty. The
+value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
+penalty structure is no longer mixture.}
 }
 \value{
-An \code{\link{fmrs-class}} object which includes parameter
+An \code{\link{fmrsfit-class}} object which includes parameter
     estimates of an FMRs model
 }
 \description{
@@ -86,8 +86,8 @@ The penalized likelihood of a finite mixture of AFT regression
     \sum\limits_{k=1}^{K} \left[{Q}_{k}(\boldsymbol\Psi_k,
     \boldsymbol\Psi^{(m)}_k) - \pi_{k}^\alpha\left\{
     \sum\limits_{j=1}^{d}p_{\lambda_{n,k}}(\beta_{kj}) \right\}\right]}
-    is maximized. Since the penalty function is singular at origin, we use
-    a local quadratic approximation (LQA) for the penalty as
+    is maximized. Since the penalty function is singular at origin, we
+    use a local quadratic approximation (LQA) for the penalty as
     follows, \deqn{\mathbf{p}^\ast_{k,\boldsymbol\lambda_{n}}
     (\boldsymbol\beta,\boldsymbol\beta^{(m)})
     =(\pi_{k}^{(m)})^{\alpha}\sum\limits_{j=1}^{d}\left\{
@@ -118,7 +118,8 @@ The penalized likelihood of a finite mixture of AFT regression
     +(1-\delta_{i})\{A(w^{(m)}_{ik})[A(w^{(m)}_{ik})-
     w^{(m)}_{ik}]\}\right]}}}.}
     For the Weibull distribution, on the other hand,  we have
-    \eqn{\tilde{\boldsymbol\Psi}^{(m+1)}_k=\tilde{\boldsymbol\Psi}^{(m)}_k
+    \eqn{\tilde{\boldsymbol\Psi}^{(m+1)}_k
+    =\tilde{\boldsymbol\Psi}^{(m)}_k
     - 0.5^{\kappa}\left[{H_{k}^{p,(m)}}\right]^{-1}I_{k}^{p,(m)}},
     where \eqn{H^p_{k}=H_k+h(\boldsymbol\Psi_k)}
     is the penalized version of hessian matrix
@@ -131,9 +132,8 @@ set.seed(1980)
 nComp = 2
 nCov = 10
 n = 500
-REP = 500
 deviance = c(1, 1)
-pi = c(0.4, 0.6)
+mixProp = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
 coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
@@ -141,29 +141,31 @@ umax = 40
 
 dat <- fmrsgendata(n = n, nComp = nComp, nCov = nCov,
                      coeff = c(coeff1, coeff2), deviance = deviance,
-                     pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
+                     mixProp =mixProp, rho = rho, umax = umax,
+                     disFamily = "lnorm")
 
 res.mle <- fmrsmle(y = dat$y, x = dat$x, delta = dat$delta,
-                    nComp = nComp, disFamily = "lnorm",
-                    initCoeff = rnorm(nComp*nCov+nComp),
-                    initDeviance = rep(1, nComp),
-                    initPi = rep(1/nComp, nComp))
+                   nComp = nComp, disFamily = "lnorm",
+                   initCoeff = rnorm(nComp*nCov+nComp),
+                   initDeviance = rep(1, nComp),
+                   initmixProp = rep(1/nComp, nComp))
 
 res.lam <- fmrstunsel(y = dat$y, x = dat$x, delta = dat$delta,
-                       nComp = nComp, disFamily = "lnorm",
-                       initCoeff=c(res.mle$coefficients),
-                       initDeviance = res.mle$deviance,
-                       initPi = res.mle$pi, penFamily = "adplasso")
-
+                      nComp = ncomp(res.mle), disFamily = "lnorm",
+                      initCoeff=c(coefficients(res.mle)),
+                      initDeviance = deviance(res.mle),
+                      initmixProp = mixProp(res.mle),
+                      penFamily = "adplasso")
 res.var <- fmrsvarsel(y = dat$y, x = dat$x, delta = dat$delta,
-                       nComp = nComp, disFamily = "lnorm",
-                       initCoeff = c(res.mle$coefficients),
-                       initDeviance = res.mle$deviance,
-                       initPi = res.mle$pi, penFamily = "adplasso",
-                       lambPen = res.lam$lamPen)
+                      nComp = ncomp(res.mle), disFamily = "lnorm",
+                      initCoeff=c(coefficients(res.mle)),
+                      initDeviance = deviance(res.mle),
+                      initmixProp = mixProp(res.mle),
+                      penFamily = "adplasso",
+                      lambPen = slot(res.lam, "lambPen"))
 
-beta.est <- coefficients(res.var)[-1,]
-round(beta.est,5)
+coefficients(res.var)[-1,]
+round(coefficients(res.var)[-1,],5)
 }
 \author{
 Farhad Shokoohi <shokoohi@icloud.com>

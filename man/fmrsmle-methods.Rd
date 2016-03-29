@@ -3,11 +3,12 @@
 \name{fmrsmle}
 \alias{fmrsmle}
 \title{Maximum Likelihood Estimation in Finite Mixture of Accelerated
-    Failure Time Regression Models and Finite Mixture of Regression Models}
+    Failure Time Regression Models and Finite Mixture of
+    Regression Models}
 \usage{
 fmrsmle(y, x, delta, nComp, disFamily = "lnorm", initCoeff, initDeviance,
-  initPi, lambRidge = 0, nIterEM = 2000, nIterNR = 2, conveps = 1e-08,
-  convepsEM = 1e-08, convepsNR = 1e-08, porNR = 2)
+  initmixProp, lambRidge = 0, nIterEM = 2000, nIterNR = 2,
+  conveps = 1e-08, convepsEM = 1e-08, convepsNR = 1e-08, porNR = 2)
 }
 \arguments{
 \item{y}{Responses (observations)}
@@ -28,10 +29,10 @@ including intercepts}
 
 \item{initDeviance}{Vector of initial values for standard deviations}
 
-\item{initPi}{Vector of initial values for proportion of components}
+\item{initmixProp}{Vector of initial values for proportion of components}
 
-\item{lambRidge}{A positive value for tuning parameter in Ridge regression
-or Elastic Net}
+\item{lambRidge}{A positive value for tuning parameter in Ridge
+Regression or Elastic Net}
 
 \item{nIterEM}{Maximum number of iterations for EM algorithm}
 
@@ -49,17 +50,17 @@ NR algorithm}
 NR algorithm}
 }
 \value{
-An \code{\link{fmrs-class}} object which includes parameter
+An \code{\link{fmrsfit-class}} object which includes parameter
     estimates of an FMRs model
 }
 \description{
-Provides parameter estimation for Finite Mixture of Accelerated
-    Failure Time Regression Models and Finite Mixture of Regression Models.
-    It also provide Ridge Regression.
+Provides parameter estimation for Finite Mixture of
+    Accelerated Failure Time Regression Models and Finite Mixture of
+    Regression Models. It also provide Ridge Regression.
 }
 \details{
-Finite mixture of AFT regression models are represented as follows.
-    Let \eqn{X} be the survival time with non-negative values,
+Finite mixture of AFT regression models are represented as
+    follows. Let \eqn{X} be the survival time with non-negative values,
     and \eqn{\boldsymbol{z} =(z_{1}, \ldots, z_{d})^{\top}}
     be a \eqn{d}-dimensional vector of covariates that may have an effect
     on \eqn{X}.
@@ -67,9 +68,9 @@ Finite mixture of AFT regression models are represented as follows.
     response time is \eqn{T=\min \{Y, C\}},
     where \eqn{Y=\log X}, \eqn{C} is  logarithm of  the censoring time
     and \eqn{\delta=I_{\{y<c\}}} is the censoring indicator.
-    We say that \eqn{V=(T,\delta,\boldsymbol z)} follows a finite mixture of
-    AFT regression models of order \eqn{K}
-    if the conditional density of \eqn{(T,\delta)} given \eqn{\boldsymbol z}
+    We say that \eqn{V=(T,\delta,\boldsymbol z)} follows a finite mixture
+    of AFT regression models of order \eqn{K} if the
+    conditional density of \eqn{(T,\delta)} given \eqn{\boldsymbol z}
     has the form \deqn{f(t,\delta;\boldsymbol{z},\boldsymbol\Psi)
     =\sum\limits_{k=1}^{K}\pi_{k}[f_Y(t;\theta_{k}(\boldsymbol z),
     \sigma_{k})]^{\delta}[S_Y(t;\theta_{k}(\boldsymbol z)
@@ -80,9 +81,11 @@ Finite mixture of AFT regression models are represented as follows.
     \eqn{{\theta}_{k}(\boldsymbol{z})=h(\beta_{0k}+\boldsymbol{z}^{\top}
     \boldsymbol\beta_{k})} for a known link function \eqn{h(.)},
     \eqn{\boldsymbol\Psi=(\pi_{1},\ldots,\pi_{K},\beta_{01},\ldots,
-    \beta_{0K}, \boldsymbol\beta_{1},\ldots,\boldsymbol\beta_{K},\sigma_{1},
+    \beta_{0K},\boldsymbol\beta_{1},
+    \ldots,\boldsymbol\beta_{K},\sigma_{1},
     \ldots,\sigma_{K})^{\top}} with \eqn{\boldsymbol\beta_{k}=
-    (\beta_{k1},\beta_{k2},\ldots,\beta_{kd})^{\top}} and \eqn{0<\pi_{k}<1}
+    (\beta_{k1},\beta_{k2},\ldots,\beta_{kd})^{\top}}
+    and \eqn{0<\pi_{k}<1}
     with \eqn{\sum_{k=1}^{K}\pi_{k}=1}.
     The log-likelihood of a sample of size $n$ is formed
     as \deqn{\ell_{n}(\boldsymbol\Psi) =
@@ -92,17 +95,16 @@ Finite mixture of AFT regression models are represented as follows.
     \sigma_{k})\right]^{1-\delta_{i}}.}
     Note that we assume the censoring distribution is non-informative and
     hence won't play any role in the estimation process. We use EM and
-    Newton-Raphson algorithms in our method to find the maximizer of above
-    Log-Likelihood.
+    Newton-Raphson algorithms in our method to find the maximizer of
+    above Log-Likelihood.
 }
 \examples{
 set.seed(1980)
 nComp = 2
 nCov = 10
 n = 500
-REP = 500
 deviance = c(1, 1)
-pi = c(0.4, 0.6)
+mixProp = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
 coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
@@ -110,17 +112,15 @@ umax = 40
 
 dat <- fmrsgendata(n = n, nComp = nComp, nCov = nCov,
                      coeff = c(coeff1, coeff2), deviance = deviance,
-                     pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
+                     mixProp = mixProp, rho = rho, umax = umax,
+                     disFamily = "lnorm")
 
 res.mle <- fmrsmle(y = dat$y, x = dat$x, delta = dat$delta,
                     nComp = nComp, disFamily = "lnorm",
                     initCoeff = rnorm(nComp*nCov+nComp),
                     initDeviance = rep(1, nComp),
-                    initPi = rep(1/nComp, nComp))
-
-res.mle$coefficients
-res.mle$deviance
-res.mle$pi
+                    initmixProp = rep(1/nComp, nComp))
+summary(res.mle)
 }
 \author{
 Farhad Shokoohi <shokoohi@icloud.com>

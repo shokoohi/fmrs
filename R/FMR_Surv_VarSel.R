@@ -21,13 +21,13 @@
 #' @param initCoeff Vector of initial values for regression coefficients
 #'     including intercepts
 #' @param initDeviance Vector of initial values for standard deviations
-#' @param initPi Vector of initial values for proportion of components
+#' @param initmixProp Vector of initial values for proportion of components
 #' @param penFamily Penalty name that is used in variable selection method
 #'     The available options are  \code{"lasso"}, \code{"adplasso"},
 #'     \code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.
 #' @param lambPen A vector of positive numbers for tuning parameters
-#' @param lambRidge A positive value for tuning parameter in Ridge regression
-#'     or Elastic Net
+#' @param lambRidge A positive value for tuning parameter in Ridge
+#'     Regression or Elastic Net
 #' @param nIterEM Maximum number of iterations for EM algorithm
 #' @param nIterNR Maximum number of iterations for Newton-Raphson algorithm
 #' @param conveps A positive value for avoiding NaN in computing divisions
@@ -37,9 +37,9 @@
 #'     NR algorithm
 #' @param porNR Used in pow(0.5, porNR) for tuning the increment in
 #'     NR algorithm
-#' @param gamMixPor Proportion of mixing parameters in the penalty. The value
-#'     must be in the interval [0,1]. If \code{gamMixPor = 0}, the penalty
-#'     structure is no longer mixture.
+#' @param gamMixPor Proportion of mixing parameters in the penalty. The
+#'     value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
+#'     penalty structure is no longer mixture.
 #' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression
 #' @concept fmr, aft, lasso, adplasso, mcp, scad, sica, ridge
 #' @details The penalized likelihood of a finite mixture of AFT regression
@@ -56,8 +56,8 @@
 #'     \sum\limits_{k=1}^{K} \left[{Q}_{k}(\boldsymbol\Psi_k,
 #'     \boldsymbol\Psi^{(m)}_k) - \pi_{k}^\alpha\left\{
 #'     \sum\limits_{j=1}^{d}p_{\lambda_{n,k}}(\beta_{kj}) \right\}\right]}
-#'     is maximized. Since the penalty function is singular at origin, we use
-#'     a local quadratic approximation (LQA) for the penalty as
+#'     is maximized. Since the penalty function is singular at origin, we
+#'     use a local quadratic approximation (LQA) for the penalty as
 #'     follows, \deqn{\mathbf{p}^\ast_{k,\boldsymbol\lambda_{n}}
 #'     (\boldsymbol\beta,\boldsymbol\beta^{(m)})
 #'     =(\pi_{k}^{(m)})^{\alpha}\sum\limits_{j=1}^{d}\left\{
@@ -88,7 +88,8 @@
 #'     +(1-\delta_{i})\{A(w^{(m)}_{ik})[A(w^{(m)}_{ik})-
 #'     w^{(m)}_{ik}]\}\right]}}}.}
 #'     For the Weibull distribution, on the other hand,  we have
-#'     \eqn{\tilde{\boldsymbol\Psi}^{(m+1)}_k=\tilde{\boldsymbol\Psi}^{(m)}_k
+#'     \eqn{\tilde{\boldsymbol\Psi}^{(m+1)}_k
+#'     =\tilde{\boldsymbol\Psi}^{(m)}_k
 #'     - 0.5^{\kappa}\left[{H_{k}^{p,(m)}}\right]^{-1}I_{k}^{p,(m)}},
 #'     where \eqn{H^p_{k}=H_k+h(\boldsymbol\Psi_k)}
 #'     is the penalized version of hessian matrix
@@ -97,16 +98,15 @@
 #'     at \eqn{\tilde{\boldsymbol\Psi}_k^{(m)}}.
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
 #' (2016 submitted) Variable Selection in Mixture of Survival Models
-#' @return An \code{\link{fmrs-class}} object which includes parameter
+#' @return An \code{\link{fmrsfit-class}} object which includes parameter
 #'     estimates of an FMRs model
 #' @examples
 #' set.seed(1980)
 #' nComp = 2
 #' nCov = 10
 #' n = 500
-#' REP = 500
 #' deviance = c(1, 1)
-#' pi = c(0.4, 0.6)
+#' mixProp = c(0.4, 0.6)
 #' rho = 0.5
 #' coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
 #' coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
@@ -114,48 +114,50 @@
 #'
 #' dat <- fmrsgendata(n = n, nComp = nComp, nCov = nCov,
 #'                      coeff = c(coeff1, coeff2), deviance = deviance,
-#'                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      mixProp =mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrsmle(y = dat$y, x = dat$x, delta = dat$delta,
-#'                     nComp = nComp, disFamily = "lnorm",
-#'                     initCoeff = rnorm(nComp*nCov+nComp),
-#'                     initDeviance = rep(1, nComp),
-#'                     initPi = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDeviance = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #'
 #' res.lam <- fmrstunsel(y = dat$y, x = dat$x, delta = dat$delta,
-#'                        nComp = nComp, disFamily = "lnorm",
-#'                        initCoeff=c(res.mle$coefficients),
-#'                        initDeviance = res.mle$deviance,
-#'                        initPi = res.mle$pi, penFamily = "adplasso")
-#'
+#'                       nComp = ncomp(res.mle), disFamily = "lnorm",
+#'                       initCoeff=c(coefficients(res.mle)),
+#'                       initDeviance = deviance(res.mle),
+#'                       initmixProp = mixProp(res.mle),
+#'                       penFamily = "adplasso")
 #' res.var <- fmrsvarsel(y = dat$y, x = dat$x, delta = dat$delta,
-#'                        nComp = nComp, disFamily = "lnorm",
-#'                        initCoeff = c(res.mle$coefficients),
-#'                        initDeviance = res.mle$deviance,
-#'                        initPi = res.mle$pi, penFamily = "adplasso",
-#'                        lambPen = res.lam$lamPen)
+#'                       nComp = ncomp(res.mle), disFamily = "lnorm",
+#'                       initCoeff=c(coefficients(res.mle)),
+#'                       initDeviance = deviance(res.mle),
+#'                       initmixProp = mixProp(res.mle),
+#'                       penFamily = "adplasso",
+#'                       lambPen = slot(res.lam, "lambPen"))
 #'
-#' beta.est <- coefficients(res.var)[-1,]
-#' round(beta.est,5)
+#' coefficients(res.var)[-1,]
+#' round(coefficients(res.var)[-1,],5)
 #' @export
 fmrsvarsel <- function(y,
-                        x,
-                        delta,
-                        nComp,
-                        disFamily = "lnorm",
-                        initCoeff,
-                        initDeviance,
-                        initPi,
-                        penFamily = "lasso",
-                        lambPen,
-                        lambRidge = 0,
-                        nIterEM = 2000,
-                        nIterNR = 2,
-                        conveps = 1e-8,
-                        convepsEM = 1e-8,
-                        convepsNR = 1e-8,
-                        porNR = 2,
-                        gamMixPor = 1
+                       x,
+                       delta,
+                       nComp,
+                       disFamily = "lnorm",
+                       initCoeff,
+                       initDeviance,
+                       initmixProp,
+                       penFamily = "lasso",
+                       lambPen,
+                       lambRidge = 0,
+                       nIterEM = 2000,
+                       nIterNR = 2,
+                       conveps = 1e-8,
+                       convepsEM = 1e-8,
+                       convepsNR = 1e-8,
+                       porNR = 2,
+                       gamMixPor = 1
 )
 {
   if(is.null(y))
@@ -166,9 +168,9 @@ fmrsvarsel <- function(y,
     stop("The censoring vector is not specified.")
   if(is.null(nComp))
     stop("Number of components of mixture model is not specified.")
-  if(is.null(initCoeff) | is.null(initDeviance) | is.null(initPi))
+  if(is.null(initCoeff) | is.null(initDeviance) | is.null(initmixProp))
     stop("Initial values are not specified.")
-  if(length(initCoeff) != nComp*nCov+nComp | length(initPi)!=nComp |
+  if(length(initCoeff) != nComp*nCov+nComp | length(initmixProp)!=nComp |
      length(initDeviance)!=nComp)
     stop("The length of initial values are not correctly specified.")
   if(!is.matrix(x))
@@ -197,7 +199,7 @@ fmrsvarsel <- function(y,
   else {print("Penalty is not specified.")  }
 
   if(disFamily == "norm"){
-    meth = "FMR"
+    model = "FMR"
     delta = rep(1, n)
 
     res=.C("FMR_Norm_Surv_EM_VarSel", PACKAGE="fmrs",
@@ -215,14 +217,14 @@ fmrsvarsel <- function(y,
            Initial.Intercept = as.double(c(coef0[,1])),
            Initial.Coefficient = as.double(c(t(coef0[,-1]))),
            Initial.Deviance = as.double(initDeviance),
-           Initial.Pi = as.double(initPi),
+           Initial.mixProp = as.double(initmixProp),
            conv.eps = as.double(conveps),
            conv.eps.em = as.double(convepsEM),
            GamMixPortion = as.double(gamMixPor),
            Intecept.Hat = as.double(rep(0,nComp)),
            Coefficient.Hat = as.double(rep(0,nComp*nCov)),
            Deviance.Hat = as.double(rep(0,nComp)),
-           Pi.Hat = as.double(rep(0,nComp)),
+           mixProp.Hat = as.double(rep(0,nComp)),
            LogLikelihood = as.double(0),
            BIC = as.double(0),
            AIC = as.double(0),
@@ -236,7 +238,7 @@ fmrsvarsel <- function(y,
     )
 
   }else if(disFamily == "lnorm"){
-    meth = "FMAFTR"
+    model = "FMAFTR"
     logy = log(y)
 
     res=.C("FMR_Norm_Surv_EM_VarSel", PACKAGE="fmrs",
@@ -254,14 +256,14 @@ fmrsvarsel <- function(y,
            Initial.Intercept = as.double(c(coef0[,1])),
            Initial.Coefficient = as.double(c(t(coef0[,-1]))),
            Initial.Deviance = as.double(initDeviance),
-           Initial.Pi = as.double(initPi),
+           Initial.mixProp = as.double(initmixProp),
            conv.eps = as.double(conveps),
            conv.eps.em = as.double(convepsEM),
            GamMixPortion = as.double(gamMixPor),
            Intecept.Hat = as.double(rep(0,nComp)),
            Coefficient.Hat = as.double(rep(0,nComp*nCov)),
            Deviance.Hat = as.double(rep(0,nComp)),
-           Pi.Hat = as.double(rep(0,nComp)),
+           mixProp.Hat = as.double(rep(0,nComp)),
            LogLikelihood = as.double(0),
            BIC = as.double(0),
            AIC = as.double(0),
@@ -274,7 +276,7 @@ fmrsvarsel <- function(y,
            tau = as.double(rep(0,n*nComp))
     )
   }else if(disFamily == "weibull"){
-    meth = "FMAFTR"
+    model = "FMAFTR"
     logy = log(y)
 
     res=.C("FMR_Weibl_Surv_EM_VarSel", PACKAGE="fmrs",
@@ -294,14 +296,14 @@ fmrsvarsel <- function(y,
            Initial.Intercept = as.double(c(coef0[,1])),
            Initial.Coefficient = as.double(c(t(coef0[,-1]))),
            Initial.Deviance = as.double(initDeviance),
-           Initial.Pi = as.double(initPi),
+           Initial.mixProp = as.double(initmixProp),
            conv.eps = as.double(convepsNR),
            conv.eps.em = as.double(convepsEM),
            GamMixPortion = as.double(gamMixPor),
            Intecept.Hat = as.double(rep(0,nComp)),
            Coefficient.Hat = as.double(rep(0,nComp*nCov)),
            Deviance.Hat = as.double(rep(0,nComp)),
-           Pi.Hat = as.double(rep(0,nComp)),
+           mixProp.Hat = as.double(rep(0,nComp)),
            LogLikelihood = as.double(0),
            BIC = as.double(0),
            AIC = as.double(0),
@@ -317,33 +319,39 @@ fmrsvarsel <- function(y,
     stop("The family of sub-distributions is not specified correctly.")
   }
 
-  fit <- list(coefficients =
-                array(rbind(res$Intecept.Hat,
-                            matrix(res$Coefficient.Hat,
-                                   nrow = nCov, byrow = FALSE)),
-                                   dim = c(nCov+1, nComp), dimnames =
-                        list(xnames,comnames)),
-              deviance = array(res$Deviance.Hat, dim = c(1,nComp),dimnames =
-                                 list(NULL,comnames)),
-              pi = array(res$Pi.Hat, dim = c(1,nComp),dimnames =
-                           list(NULL,comnames)),
-              logLik = res$LogLikelihood,
-              BIC = res$BIC,
-              nIterEMconv = res$Max.iterEM.used,
-              method = meth,
-              disFamily = disFamily,
-              penFamily = penFamily,
-              lamPen = lambPen,
-              fitted = array(matrix(res$predict, nrow = n, byrow = FALSE),
-                             dim = c(n, nComp), dimnames =
+  fit <- new("fmrsfit", y = y,
+             delta = delta,
+             x = x,
+             nobs = n,
+             ncov = nCov,
+             ncomp = nComp,
+             coefficients = array(rbind(res$Intecept.Hat,
+                                        matrix(res$Coefficient.Hat,
+                                               nrow = nCov, byrow = FALSE)),
+                                  dim = c(nCov+1, nComp),
+                                  dimnames = list(xnames,comnames)),
+             deviance = array(res$Deviance.Hat, dim = c(1,nComp),dimnames =
+                                list(NULL,comnames)),
+             mixProp = array(res$mixProp.Hat, dim = c(1,nComp),dimnames =
                                list(NULL,comnames)),
-              residuals = array(matrix(res$residual, nrow = n, byrow = FALSE),
-                                dim = c(n, nComp), dimnames =
-                                  list(NULL,comnames)),
-              weights = array(matrix(res$tau, nrow = n, byrow = FALSE),
-                              dim = c(n, nComp), dimnames =
-                                list(NULL,comnames))
+             logLik = res$LogLikelihood,
+             BIC = res$BIC,
+             nIterEMconv = res$Max.iterEM.used,
+             disFamily = disFamily,
+             penFamily = penFamily,
+             lambPen = array(lambPen, dim = c(1,nComp),dimnames =
+                               list(NULL,comnames)),
+             model = model,
+             fitted = array(matrix(res$predict, nrow = n, byrow = FALSE),
+                            dim = c(n, nComp), dimnames =
+                              list(NULL,comnames)),
+             residuals = array(matrix(res$residual, nrow =n, byrow = FALSE),
+                               dim = c(n, nComp), dimnames =
+                                 list(NULL,comnames)),
+             weights = array(matrix(res$tau, nrow = n, byrow = FALSE),
+                             dim = c(n, nComp), dimnames =
+                               list(NULL,comnames))
   )
-  class(fit) <- "fmrs"
   return(fit)
 }
+

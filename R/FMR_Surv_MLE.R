@@ -1,9 +1,10 @@
 #' @title  Maximum Likelihood Estimation in Finite Mixture of Accelerated
-#'     Failure Time Regression Models and Finite Mixture of Regression Models
+#'     Failure Time Regression Models and Finite Mixture of
+#'     Regression Models
 #'
-#' @description Provides parameter estimation for Finite Mixture of Accelerated
-#'     Failure Time Regression Models and Finite Mixture of Regression Models.
-#'     It also provide Ridge Regression.
+#' @description Provides parameter estimation for Finite Mixture of
+#'     Accelerated Failure Time Regression Models and Finite Mixture of
+#'     Regression Models. It also provide Ridge Regression.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
 #' @name fmrsmle
@@ -18,9 +19,9 @@
 #' @param initCoeff Vector of initial values for regression coefficients
 #' including intercepts
 #' @param initDeviance Vector of initial values for standard deviations
-#' @param initPi Vector of initial values for proportion of components
-#' @param lambRidge A positive value for tuning parameter in Ridge regression
-#'     or Elastic Net
+#' @param initmixProp Vector of initial values for proportion of components
+#' @param lambRidge A positive value for tuning parameter in Ridge
+#'     Regression or Elastic Net
 #' @param nIterEM Maximum number of iterations for EM algorithm
 #' @param nIterNR Maximum number of iterations for Newton-Raphson algorithm
 #' @param conveps A positive value for avoiding NaN in computing divisions
@@ -31,9 +32,10 @@
 #' @param porNR Used in pow(0.5, porNR) for tuning the increment in
 #'     NR algorithm
 #' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression
+#' @rdname fmrsmle-methods
 #' @concept fmr, aft, lasso, adplasso, mcp, scad, sica, ridge
-#' @details Finite mixture of AFT regression models are represented as follows.
-#'     Let \eqn{X} be the survival time with non-negative values,
+#' @details Finite mixture of AFT regression models are represented as
+#'     follows. Let \eqn{X} be the survival time with non-negative values,
 #'     and \eqn{\boldsymbol{z} =(z_{1}, \ldots, z_{d})^{\top}}
 #'     be a \eqn{d}-dimensional vector of covariates that may have an effect
 #'     on \eqn{X}.
@@ -41,9 +43,9 @@
 #'     response time is \eqn{T=\min \{Y, C\}},
 #'     where \eqn{Y=\log X}, \eqn{C} is  logarithm of  the censoring time
 #'     and \eqn{\delta=I_{\{y<c\}}} is the censoring indicator.
-#'     We say that \eqn{V=(T,\delta,\boldsymbol z)} follows a finite mixture of
-#'     AFT regression models of order \eqn{K}
-#'     if the conditional density of \eqn{(T,\delta)} given \eqn{\boldsymbol z}
+#'     We say that \eqn{V=(T,\delta,\boldsymbol z)} follows a finite mixture
+#'     of AFT regression models of order \eqn{K} if the
+#'     conditional density of \eqn{(T,\delta)} given \eqn{\boldsymbol z}
 #'     has the form \deqn{f(t,\delta;\boldsymbol{z},\boldsymbol\Psi)
 #'     =\sum\limits_{k=1}^{K}\pi_{k}[f_Y(t;\theta_{k}(\boldsymbol z),
 #'     \sigma_{k})]^{\delta}[S_Y(t;\theta_{k}(\boldsymbol z)
@@ -54,9 +56,11 @@
 #'     \eqn{{\theta}_{k}(\boldsymbol{z})=h(\beta_{0k}+\boldsymbol{z}^{\top}
 #'     \boldsymbol\beta_{k})} for a known link function \eqn{h(.)},
 #'     \eqn{\boldsymbol\Psi=(\pi_{1},\ldots,\pi_{K},\beta_{01},\ldots,
-#'     \beta_{0K}, \boldsymbol\beta_{1},\ldots,\boldsymbol\beta_{K},\sigma_{1},
+#'     \beta_{0K},\boldsymbol\beta_{1},
+#'     \ldots,\boldsymbol\beta_{K},\sigma_{1},
 #'     \ldots,\sigma_{K})^{\top}} with \eqn{\boldsymbol\beta_{k}=
-#'     (\beta_{k1},\beta_{k2},\ldots,\beta_{kd})^{\top}} and \eqn{0<\pi_{k}<1}
+#'     (\beta_{k1},\beta_{k2},\ldots,\beta_{kd})^{\top}}
+#'     and \eqn{0<\pi_{k}<1}
 #'     with \eqn{\sum_{k=1}^{K}\pi_{k}=1}.
 #'     The log-likelihood of a sample of size $n$ is formed
 #'     as \deqn{\ell_{n}(\boldsymbol\Psi) =
@@ -66,20 +70,19 @@
 #'     \sigma_{k})\right]^{1-\delta_{i}}.}
 #'     Note that we assume the censoring distribution is non-informative and
 #'     hence won't play any role in the estimation process. We use EM and
-#'     Newton-Raphson algorithms in our method to find the maximizer of above
-#'     Log-Likelihood.
+#'     Newton-Raphson algorithms in our method to find the maximizer of
+#'     above Log-Likelihood.
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
 #'     (2016 submitted) Variable Selection in Mixture of Survival Models
-#' @return An \code{\link{fmrs-class}} object which includes parameter
+#' @return An \code{\link{fmrsfit-class}} object which includes parameter
 #'     estimates of an FMRs model
 #' @examples
 #' set.seed(1980)
 #' nComp = 2
 #' nCov = 10
 #' n = 500
-#' REP = 500
 #' deviance = c(1, 1)
-#' pi = c(0.4, 0.6)
+#' mixProp = c(0.4, 0.6)
 #' rho = 0.5
 #' coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
 #' coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
@@ -87,33 +90,31 @@
 #'
 #' dat <- fmrsgendata(n = n, nComp = nComp, nCov = nCov,
 #'                      coeff = c(coeff1, coeff2), deviance = deviance,
-#'                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrsmle(y = dat$y, x = dat$x, delta = dat$delta,
 #'                     nComp = nComp, disFamily = "lnorm",
 #'                     initCoeff = rnorm(nComp*nCov+nComp),
 #'                     initDeviance = rep(1, nComp),
-#'                     initPi = rep(1/nComp, nComp))
-#'
-#' res.mle$coefficients
-#' res.mle$deviance
-#' res.mle$pi
+#'                     initmixProp = rep(1/nComp, nComp))
+#' summary(res.mle)
 #' @export
 fmrsmle <- function(y,
-                     x,
-                     delta,
-                     nComp,
-                     disFamily = "lnorm",
-                     initCoeff,
-                     initDeviance,
-                     initPi,
-                     lambRidge = 0,
-                     nIterEM = 2000,
-                     nIterNR = 2,
-                     conveps = 1e-8,
-                     convepsEM = 1e-8,
-                     convepsNR = 1e-8,
-                     porNR = 2
+                    x,
+                    delta,
+                    nComp,
+                    disFamily = "lnorm",
+                    initCoeff,
+                    initDeviance,
+                    initmixProp,
+                    lambRidge = 0,
+                    nIterEM = 2000,
+                    nIterNR = 2,
+                    conveps = 1e-8,
+                    convepsEM = 1e-8,
+                    convepsNR = 1e-8,
+                    porNR = 2
 )
 {
   if(is.null(y))
@@ -124,9 +125,9 @@ fmrsmle <- function(y,
     stop("The censoring vector is not specified.")
   if(is.null(nComp))
     stop("Number of components of mixture model is not specified.")
-  if(is.null(initCoeff) | is.null(initDeviance) | is.null(initPi))
+  if(is.null(initCoeff) | is.null(initDeviance) | is.null(initmixProp))
     stop("Initial values are not specified.")
-  if(length(initCoeff) != nComp*nCov+nComp | length(initPi)!=nComp |
+  if(length(initCoeff) != nComp*nCov+nComp | length(initmixProp)!=nComp |
      length(initDeviance)!=nComp)
     stop("The length of initial values are not correctly specified.")
   if(!is.matrix(x))
@@ -147,7 +148,7 @@ fmrsmle <- function(y,
   comnames <- c(paste("Comp",1:nComp,sep="."))
 
   if(disFamily == "norm"){
-    meth = "FMR"
+    model = "FMR"
     delta = rep(1, n)
     res=.C("FMR_Norm_Surv_EM_MLE", PACKAGE="fmrs",
            y = as.double(y),
@@ -162,13 +163,13 @@ fmrsmle <- function(y,
            Initial.Intercept = as.double(unlist(coef0[,1])),
            Initial.Coefficient = as.double(unlist(t(coef0[,-1]))),
            Initial.Deviance = as.double(initDeviance),
-           Initial.Pi = as.double(initPi),
+           Initial.mixProp = as.double(initmixProp),
            conv.eps = as.double(conveps),
            conv.eps.em = as.double(convepsEM),
            Intecept.Hat = as.double(rep(0,nComp)),
            Coefficient.Hat = as.double(rep(0,nComp*nCov)),
            Deviance.Hat = as.double(rep(0,nComp)),
-           Pi.Hat = as.double(rep(0,nComp)),
+           mixProp.Hat = as.double(rep(0,nComp)),
            LogLikelihood = as.double(0),
            BIC = as.double(0),
            AIC = as.double(0),
@@ -181,7 +182,7 @@ fmrsmle <- function(y,
            tau = as.double(rep(0,n*nComp))
     )
   }else if(disFamily == "lnorm"){
-    meth = "FMAFTR"
+    model = "FMAFTR"
     logy = log(y)
     res=.C("FMR_Norm_Surv_EM_MLE", PACKAGE="fmrs",
            y = as.double(logy),
@@ -196,13 +197,13 @@ fmrsmle <- function(y,
            Initial.Intercept = as.double(unlist(coef0[,1])),
            Initial.Coefficient = as.double(unlist(t(coef0[,-1]))),
            Initial.Deviance = as.double(initDeviance),
-           Initial.Pi = as.double(initPi),
+           Initial.mixProp = as.double(initmixProp),
            conv.eps = as.double(conveps),
            conv.eps.em = as.double(convepsEM),
            Intecept.Hat = as.double(rep(0,nComp)),
            Coefficient.Hat = as.double(rep(0,nComp*nCov)),
            Deviance.Hat = as.double(rep(0,nComp)),
-           Pi.Hat = as.double(rep(0,nComp)),
+           mixProp.Hat = as.double(rep(0,nComp)),
            LogLikelihood = as.double(0),
            BIC = as.double(0),
            AIC = as.double(0),
@@ -216,7 +217,7 @@ fmrsmle <- function(y,
     )
 
   }else if(disFamily == "weibull"){
-    meth = "FMAFTR"
+    model = "FMAFTR"
     logy = log(y)
     res=.C("FMR_Weibl_Surv_EM_MLE", PACKAGE="fmrs",
            y = as.double(logy),
@@ -233,12 +234,12 @@ fmrsmle <- function(y,
            Initial.Intercept = as.double(c(coef0[,1])),
            Initial.Coefficient = as.double(c(t(coef0[,-1]))),
            Initial.Deviance = as.double(initDeviance),
-           Initial.Pi = as.double(initPi),
+           Initial.mixProp = as.double(initmixProp),
            conv.eps.em = as.double(convepsEM),
            Intecept.Hat = as.double(rep(0,nComp)),
            Coefficient.Hat = as.double(rep(0,nComp*nCov)),
            Deviance.Hat = as.double(rep(0,nComp)),
-           Pi.Hat = as.double(rep(0,nComp)),
+           mixProp.Hat = as.double(rep(0,nComp)),
            LogLikelihood = as.double(0),
            BIC = as.double(0),
            AIC = as.double(0),
@@ -254,33 +255,38 @@ fmrsmle <- function(y,
     stop("The family of sub-distributions is not specified correctly.")
   }
 
-  fit <- list(coefficients =
-                array(rbind(res$Intecept.Hat,
-                            matrix(res$Coefficient.Hat,
-                                   nrow = nCov, byrow = FALSE)),
-                                   dim = c(nCov+1, nComp),
-                      dimnames = list(xnames,comnames)),
-              deviance = array(res$Deviance.Hat, dim =
-                                 c(1,nComp),dimnames = list(NULL,comnames)),
-              pi = array(res$Pi.Hat, dim =
-                           c(1,nComp),dimnames = list(NULL,comnames)),
-              logLik = res$LogLikelihood,
-              BIC = res$BIC,
-              nIterEMconv = res$Max.iterEM.used,
-              method = meth,
-              disFamily = disFamily,
-              lambRidge = lambRidge,
-              fitted = array(matrix(res$predict, nrow = n, byrow = FALSE),
+  fit <- new("fmrsfit",
+             y = y,
+             delta = delta,
+             x = x,
+             nobs = n,
+             ncov = nCov,
+             ncomp = nComp,
+             coefficients = array(rbind(res$Intecept.Hat,
+                                        matrix(res$Coefficient.Hat,
+                                               nrow = nCov, byrow = FALSE)),
+                                  dim = c(nCov+1, nComp),
+                                  dimnames = list(xnames,comnames)),
+             deviance = array(res$Deviance.Hat, dim =
+                                c(1,nComp),dimnames = list(NULL,comnames)),
+             mixProp = array(res$mixProp.Hat, dim =
+                               c(1,nComp),dimnames = list(NULL,comnames)),
+             logLik = res$LogLikelihood,
+             BIC = res$BIC,
+             nIterEMconv = res$Max.iterEM.used,
+             disFamily = disFamily,
+             lambRidge = lambRidge,
+             model = model,
+             fitted = array(matrix(res$predict, nrow = n, byrow = FALSE),
+                            dim = c(n, nComp), dimnames =
+                              list(NULL,comnames)),
+             residuals = array(matrix(res$residual, nrow =n, byrow = FALSE),
+                               dim = c(n, nComp),
+                               dimnames = list(NULL,comnames)),
+             weights = array(matrix(res$tau, nrow = n, byrow = FALSE),
                              dim = c(n, nComp), dimnames =
-                               list(NULL,comnames)),
-              residuals = array(matrix(res$residual, nrow = n, byrow = FALSE),
-                                dim = c(n, nComp),
-                                dimnames = list(NULL,comnames)),
-              weights = array(matrix(res$tau, nrow = n, byrow = FALSE),
-                              dim = c(n, nComp), dimnames =
-                                list(NULL,comnames))
+                               list(NULL,comnames))
   )
-  class(fit) <- "fmrs"
   return(fit)
 
 }

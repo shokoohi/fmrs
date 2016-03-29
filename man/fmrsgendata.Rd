@@ -4,25 +4,26 @@
 \alias{fmrsgendata}
 \title{Generating data from FMRs models}
 \usage{
-fmrsgendata(n, nComp, nCov, coeff, deviance, pi, rho, umax,
+fmrsgendata(n, nComp, nCov, coeff, deviance, mixProp, rho, umax,
   disFamily = "lnorm")
 }
 \arguments{
 \item{n}{A numeric value represents number of observations (sample size)}
 
-\item{nComp}{A numeric value represents the order (number of components) of
-an FMRs model}
+\item{nComp}{A numeric value represents the order (number of components)
+of an FMRs model}
 
-\item{nCov}{A numberic value represents the number of covariates in design
-matrix}
+\item{nCov}{A numberic value represents the number of covariates in
+design matrix}
 
-\item{coeff}{A vector of all regression coefficients including intercepts.
-It must be a vector of size \code{nComp} by \code{nCov+1}.}
+\item{coeff}{A vector of all regression coefficients including
+intercepts. It must be a vector of length
+\code{nComp} by \code{nCov+1}.}
 
 \item{deviance}{A vector of positive values for dispersion parameters of
 sub-distributions in FMRs models}
 
-\item{pi}{A vector of mixing proportions which their sum must be one}
+\item{mixProp}{A vector of mixing proportions which their sum must be one}
 
 \item{rho}{A numeric value in [-1, 1] which represents the correlation
 between covariates of design matrix}
@@ -30,8 +31,8 @@ between covariates of design matrix}
 \item{umax}{A numeric value represents the upper bound in Uniform
 distribution for censoring}
 
-\item{disFamily}{Specify the family of sub-distributioons. The options are
-\code{"lnormal"} for Log-Normal, \code{"norm"} for Normal and
+\item{disFamily}{Specify the family of sub-distributioons. The options
+are \code{"lnormal"} for Log-Normal, \code{"norm"} for Normal and
 \code{"weibull"} for Weibull.}
 }
 \value{
@@ -39,8 +40,8 @@ A list including a vector of observations \code{y}, a vector of
     censoring indicators \code{delta} and a matrix of covariates \code{x}
 }
 \description{
-This function will generate a data set from Finite Mixture of
-    AFT regression models or Finite Mixture of Regression models.
+This function will generate a data set from Finite Mixture
+    of AFT regression models or Finite Mixture of Regression models.
 }
 \examples{
 set.seed(1980)
@@ -49,7 +50,7 @@ nCov = 10
 n = 500
 REP = 500
 deviance = c(1, 1)
-pi = c(0.4, 0.6)
+mixProp = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
 coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
@@ -57,7 +58,8 @@ umax = 40
 
 dat <- fmrsgendata(n = n, nComp = nComp, nCov = nCov,
                      coeff = c(coeff1, coeff2), deviance = deviance,
-                     pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
+                     mixProp =mixProp, rho = rho, umax = umax,
+                     disFamily = "lnorm")
 }
 \author{
 Farhad Shokoohi <shokoohi@icloud.com>

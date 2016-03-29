@@ -6,7 +6,7 @@ nCov = 10
 n = 500
 REP = 500
 deviance = c(1, 1)
-pi = c(0.4, 0.6)
+mixProp = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
 coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
@@ -15,39 +15,41 @@ umax = 40
 ## ------------------------------------------------------------------------
 dat <- fmrsgendata(n = n, nComp = nComp, nCov = nCov,
                      coeff = c(coeff1, coeff2), deviance = deviance,
-                     pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
+                     mixProp = mixProp, rho = rho, umax = umax, 
+                     disFamily = "lnorm")
 
 ## ------------------------------------------------------------------------
 res.mle <- fmrsmle(y = dat$y, x = dat$x, delta = dat$delta,
                     nComp = nComp, disFamily = "lnorm",
                     initCoeff = rnorm(nComp*nCov+nComp),
                     initDeviance = rep(1, nComp),
-                    initPi = rep(1/nComp, nComp))
+                    initmixProp = rep(1/nComp, nComp))
 
-res.mle$coefficients
-res.mle$deviance
-res.mle$pi
+coefficients(res.mle)
+deviance(res.mle)
+mixProp(res.mle)
 
 ## ------------------------------------------------------------------------
 res.lam <- fmrstunsel(y = dat$y, x = dat$x, delta = dat$delta,
                        nComp = nComp, disFamily = "lnorm",
-                       initCoeff=c(res.mle$coefficients),
-                       initDeviance = res.mle$deviance,
-                       initPi = res.mle$pi, penFamily = "adplasso")
-res.lam
+                       initCoeff = coefficients(res.mle),
+                       initDeviance = deviance(res.mle),
+                       initmixProp = mixProp(res.mle), 
+                       penFamily = "adplasso")
+slot(res.lam, "lambPen")
 
 ## ------------------------------------------------------------------------
 res.var <- fmrsvarsel(y = dat$y, x = dat$x, delta = dat$delta,
                        nComp = nComp, disFamily = "lnorm",
-                       initCoeff = c(res.mle$coefficients),
-                       initDeviance = res.mle$deviance,
-                       initPi = res.mle$pi, penFamily = "adplasso",
-                       lambPen = res.lam$lamPen)
-res.var$coefficients
-res.var$deviance
-res.var$pi
+                       initCoeff = coefficients(res.mle),
+                       initDeviance = deviance(res.mle),
+                       initmixProp = mixProp(res.mle), 
+                       penFamily = "adplasso",
+                       lambPen = slot(res.lam, "lambPen"))
+coefficients(res.var)
+deviance(res.var)
+mixProp(res.var)
 
 ## ------------------------------------------------------------------------
-beta.est <- coefficients(res.var)[-1,]
-round(beta.est,5)
+round(coefficients(res.var)[-1,],5)
 

@@ -1,25 +1,26 @@
 #' @title Generating data from FMRs models
 #'
 #' @name fmrsgendata
-#' @description This function will generate a data set from Finite Mixture of
-#'     AFT regression models or Finite Mixture of Regression models.
+#' @description This function will generate a data set from Finite Mixture
+#'     of AFT regression models or Finite Mixture of Regression models.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
 #' @return A list including a vector of observations \code{y}, a vector of
 #'     censoring indicators \code{delta} and a matrix of covariates \code{x}
-#' @param disFamily Specify the family of sub-distributioons. The options are
-#'     \code{"lnormal"} for Log-Normal, \code{"norm"} for Normal and
+#' @param disFamily Specify the family of sub-distributioons. The options
+#'     are \code{"lnormal"} for Log-Normal, \code{"norm"} for Normal and
 #'     \code{"weibull"} for Weibull.
 #' @param n A numeric value represents number of observations (sample size)
-#' @param nComp A numeric value represents the order (number of components) of
-#'     an FMRs model
-#' @param nCov A numberic value represents the number of covariates in design
-#'     matrix
-#' @param coeff A vector of all regression coefficients including intercepts.
-#'     It must be a vector of size \code{nComp} by \code{nCov+1}.
+#' @param nComp A numeric value represents the order (number of components)
+#'     of an FMRs model
+#' @param nCov A numberic value represents the number of covariates in
+#'     design matrix
+#' @param coeff A vector of all regression coefficients including
+#'     intercepts. It must be a vector of length
+#'     \code{nComp} by \code{nCov+1}.
 #' @param deviance A vector of positive values for dispersion parameters of
 #'     sub-distributions in FMRs models
-#' @param pi A vector of mixing proportions which their sum must be one
+#' @param mixProp A vector of mixing proportions which their sum must be one
 #' @param rho A numeric value in [-1, 1] which represents the correlation
 #'     between covariates of design matrix
 #' @param umax A numeric value represents the upper bound in Uniform
@@ -36,7 +37,7 @@
 #' n = 500
 #' REP = 500
 #' deviance = c(1, 1)
-#' pi = c(0.4, 0.6)
+#' mixProp = c(0.4, 0.6)
 #' rho = 0.5
 #' coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
 #' coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
@@ -44,20 +45,21 @@
 #'
 #' dat <- fmrsgendata(n = n, nComp = nComp, nCov = nCov,
 #'                      coeff = c(coeff1, coeff2), deviance = deviance,
-#'                      pi = pi, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      mixProp =mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #' @export
 fmrsgendata <- function(n,
-                          nComp,
-                          nCov,
-                          coeff,
-                          deviance,
-                          pi,
-                          rho,
-                          umax,
-                          disFamily = "lnorm"
+                        nComp,
+                        nCov,
+                        coeff,
+                        deviance,
+                        mixProp,
+                        rho,
+                        umax,
+                        disFamily = "lnorm"
 )
 {
-  if(sum(pi) != 1)
+  if(sum(mixProp) != 1)
     stop("The sum of mixing proportions must be 1.")
   if(sum(deviance <= 0) != 0)
     stop("Dispersion parameters cannot be zero or negative.")
@@ -90,7 +92,7 @@ fmrsgendata <- function(n,
   colnames(cX) <-  paste("X", 1:nCov,sep = ".")
 
   coef0 <- matrix(coeff, nrow = nComp, ncol = nCov+1, byrow = TRUE)
-  pi0 <- cumsum(pi)
+  mixProp0 <- cumsum(mixProp)
 
   yobs <-c()
   c <- rep()
@@ -102,7 +104,7 @@ fmrsgendata <- function(n,
     for(i in 1:n){
       epss <- rnorm(1)
       u1 <- runif(1)
-      k = length(which(pi0<=u1)) + 1
+      k = length(which(mixProp0<=u1)) + 1
       u[i] = k
       yobs[i] <- coef0[k,1] + coef0[k,-1] %*% cX[i,] + deviance[k] * epss
 
@@ -114,7 +116,7 @@ fmrsgendata <- function(n,
     for(i in 1:n){
       epss <- rnorm(1)
       u1 <- runif(1)
-      k = length(which(pi0<=u1)) + 1
+      k = length(which(mixProp0<=u1)) + 1
       u[i] = k
       yobs[i] <- coef0[k,1] + coef0[k,-1] %*% cX[i,] + deviance[k] * epss
       tobs[i] <- yobs[i]
@@ -124,7 +126,7 @@ fmrsgendata <- function(n,
     for(i in 1:n){
       ext <- log(rexp(1))
       u1 <- runif(1)
-      k = length(which(pi0<=u1)) + 1
+      k = length(which(mixProp0<=u1)) + 1
       yobs[i] <- coef0[k,1] + coef0[k,-1] %*% cX[i,] + deviance[k] * ext
 
       c[i]<- log(runif(1, 0, umax))
