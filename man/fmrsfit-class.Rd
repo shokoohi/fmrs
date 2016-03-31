@@ -7,8 +7,8 @@
 \title{An S4 class to represent a fit of an FMRs model}
 \description{
 fmrsfit is an S4 class represents a fit of FMRs models
-    resulted from running \code{\link{fmrsmle}}
-    or \code{\link{fmrsvarsel}}
+    resulted from running \code{\link{fmrs.mle}}
+    or \code{\link{fmrs.varsel}}
 }
 \section{Slots}{
 
@@ -25,7 +25,7 @@ fmrsfit is an S4 class represents a fit of FMRs models
 
 \item{\code{ncomp}}{A length-one numeric vector}
 
-\item{\code{coefficients}}{A length-\code{ncov+1}*\code{ncomp} numeric matrix}
+\item{\code{coefficients}}{A length-\code{(ncov+1)}*\code{ncomp} numeric matrix}
 
 \item{\code{deviance}}{A length-\code{ncomp} numeric vector}
 

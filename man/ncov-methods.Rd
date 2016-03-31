@@ -25,7 +25,7 @@ ncov method
 set.seed(1980)
 nComp = 2
 nCov = 10
-n = 500
+nObs = 500
 deviance = c(1, 1)
 mixProp = c(0.4, 0.6)
 rho = 0.5
@@ -33,12 +33,12 @@ coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
 coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
-dat <- fmrsgendata(n = n, nComp = nComp, nCov = nCov,
+dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
                      coeff = c(coeff1, coeff2), deviance = deviance,
                      mixProp = mixProp, rho = rho, umax = umax,
                      disFamily = "lnorm")
 
-res.mle <- fmrsmle(y = dat$y, x = dat$x, delta = dat$delta,
+res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    nComp = nComp, disFamily = "lnorm",
                    initCoeff = rnorm(nComp*nCov+nComp),
                    initDeviance = rep(1, nComp),

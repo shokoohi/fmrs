@@ -1,7 +1,7 @@
 #' @title An S4 class to represent estimated optimal lambdas
 #'
 #' @description An S4 class to represent estimated optimal lambdas resulted
-#'     from runnig \code{\link{fmrstunsel}}.
+#'     from runnig \code{\link{fmrs.tunsel}}.
 #' @name fmrstunpar-class
 #' @docType class
 #' @exportClass fmrstunpar
@@ -34,8 +34,8 @@ fmrstunpar <- setClass("fmrstunpar",
 #' @title An S4 class to represent a fit of an FMRs model
 #'
 #' @description fmrsfit is an S4 class represents a fit of FMRs models
-#'     resulted from running \code{\link{fmrsmle}}
-#'     or \code{\link{fmrsvarsel}}
+#'     resulted from running \code{\link{fmrs.mle}}
+#'     or \code{\link{fmrs.varsel}}
 #' @name fmrsfit-class
 #' @import methods
 #' @slot y A length-\code{nobs} numeric vector
@@ -44,7 +44,7 @@ fmrstunpar <- setClass("fmrstunpar",
 #' @slot nobs A length-one numeric vector
 #' @slot ncov A length-one numeric vector
 #' @slot ncomp A length-one numeric vector
-#' @slot coefficients A length-\code{ncov+1}*\code{ncomp} numeric matrix
+#' @slot coefficients A length-\code{(ncov+1)}*\code{ncomp} numeric matrix
 #' @slot deviance A length-\code{ncomp} numeric vector
 #' @slot mixProp A length-\code{ncomp} numeric vector
 #' @slot logLik A length-one numeric vector
@@ -106,5 +106,14 @@ frmsfit <- setClass("fmrsfit",
                     ),
                     contains = "fmrstunpar"
 )
+
+
+
+validity.fmrsfit <- function(object) {
+  if( (length(object@y)!= object@nobs) | (dim(object@x)[1]!= object@nobs) |
+      (dim(object@x)[1]!=length(object@y)) ) {
+    return("data do not match")
+  }else return(TRUE)
+}
 
 

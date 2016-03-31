@@ -8,25 +8,18 @@ Author: Farhad Shokoohi <shokoohi@icloud.com>
     Masoud Asgharian
     Shili Lin
 Maintainer: Farhad Shokoohi <shokoohi@icloud.com>
-Depends:
-    R (>= 3.2.4)
-Imports:
-    methods,
-    stats
+Depends: R (>= 3.2.4)
+Imports: methods, stats
 Description: Provides parameter estimation as well as variable selection in
     Finite Mixture of Accelerated Failure Time Regression and Finite
     Mixture of Regression Models.
     Furthermore, this package provides Ridge Regression and Elastic Net.
-biocViews:
-    Survival,
-    Regression,
-    DimensionReduction
+biocViews: Survival, Regression, DimensionReduction
 License: GPL (>= 3)
 LazyData: TRUE
-Suggests:
-    knitr,
-    utils
-VignetteBuilder:
-    knitr
+Suggests: knitr, utils
+VignetteBuilder: knitr
 RoxygenNote: 5.0.1
 BugReports: https://github.com/shokoohi/fmrs/issues
+NeedsCompilation: yes
+Packaged: 2016-03-31 00:13:03 UTC; Farhad
