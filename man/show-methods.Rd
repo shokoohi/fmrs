@@ -4,7 +4,8 @@
 \name{show}
 \alias{show}
 \alias{show,fmrsfit-method}
-\title{Method show}
+\alias{show,show-method}
+\title{show method}
 \usage{
 show(object)
 
@@ -14,10 +15,10 @@ show(object)
 \item{object}{An \code{\link{fmrsfit-class}} object}
 }
 \value{
-A fitted fmrs model
+Display information about the fitted FMRs model
 }
 \description{
-show method
+Provides information about the fitted FMRs model
 }
 \examples{
 set.seed(1980)
@@ -42,5 +43,8 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initDeviance = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 show(res.mle)
+}
+\author{
+Farhad Shokoohi <shokoohi@icloud.com>
 }
 

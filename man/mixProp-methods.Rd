@@ -4,7 +4,8 @@
 \name{mixProp}
 \alias{mixProp}
 \alias{mixProp,fmrsfit-method}
-\title{Method mixProp}
+\alias{mixProp,mixProp-method}
+\title{mixProp method}
 \usage{
 mixProp(object, ...)
 
@@ -19,7 +20,8 @@ mixProp(object, ...)
 A numeric array
 }
 \description{
-mixProp method
+Provides the estimated mixing proportions of an FMRs model
+    form an \code{\link{fmrsfit-class}}
 }
 \examples{
 set.seed(1980)
@@ -44,5 +46,8 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initDeviance = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 mixProp(res.mle)
+}
+\author{
+Farhad Shokoohi <shokoohi@icloud.com>
 }
 

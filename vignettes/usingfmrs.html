@@ -109,14 +109,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Example: finite mixture of AFT regression model (Log-Normal)</h2>
 <p>We use a simulated data set to illustrate using <code>fmrs</code> package. We generate the covariates (design matrix) from a multivariate normal distribution of dimension <code>nCov=10</code> and sample size 200 with mean vector <span class="math inline">\(\bf 0\)</span> and variance-covariance matrix <span class="math inline">\(\Sigma=(0.5^{|i-j|})\)</span>. We then generate time-to-event data from a finite mixture of two components AFT regression models with Log-Normal sub-distributions. The mixing proportions are set to <span class="math inline">\(\pi=(0.3, 0.7)\)</span>. We choose <span class="math inline">\(\boldsymbol\beta_0=(2,-1)\)</span> as the intercepts, <span class="math inline">\(\boldsymbol\beta_1=(-1, -2, 1, 2, 0 , 0, 0, 0, 0, 0)\)</span> and <span class="math inline">\(\boldsymbol\beta_2=(1, 2, 0, 0, 0 , 0, -1, 2, -2, 3)\)</span> as the regression coefficients in first and second component, respectively.</p>
 <p>We start by loading necessary libraries and assigning the parameters of model as follows.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(fmrs)</code></pre></div>
-<pre><code>## fmrs package, Version 1.0.7, Released 2016-03-28 
-## Provides parameter estimation as well as variable selection in
-##     Finite Mixture of Accelerated Failure Time Regression and Finite
-##     Mixture of Regression Models.
-##     Furthermore, this package provides Ridge Regression and Elastic Net.
-## BugReports: https://github.com/shokoohi/fmrs/issues</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1980</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(fmrs)
+<span class="kw">set.seed</span>(<span class="dv">1980</span>)
 nComp =<span class="st"> </span><span class="dv">2</span>
 nCov =<span class="st"> </span><span class="dv">10</span>
 nObs =<span class="st"> </span><span class="dv">500</span>

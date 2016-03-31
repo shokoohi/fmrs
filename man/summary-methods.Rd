@@ -4,7 +4,8 @@
 \name{summary}
 \alias{summary}
 \alias{summary,fmrsfit-method}
-\title{Method summary}
+\alias{summary,summary-method}
+\title{summary method}
 \usage{
 summary(object, ...)
 
@@ -16,10 +17,11 @@ summary(object, ...)
 \item{...}{other possible arguments}
 }
 \value{
-A fitted fmrs model
+Display informations about a fitted FMRs model
 }
 \description{
-summary method
+Displays the fitted FMRs model by showing the estimated
+coefficients, dispersians and mixing proportions
 }
 \examples{
 set.seed(1980)
@@ -44,5 +46,8 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initDeviance = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 summary(res.mle)
+}
+\author{
+Farhad Shokoohi <shokoohi@icloud.com>
 }
 

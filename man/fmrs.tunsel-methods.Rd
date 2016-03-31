@@ -65,16 +65,14 @@ value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
 penalty structure is no longer mixture.}
 }
 \value{
-An \code{\link{fmrstunpar-class}} object includes component-wise
-    tuning parameter estimates to be used in variable
-    selection procedure.
+An \code{\link{fmrstunpar-class}} object that includes
+    component-wise tuning parameter estimates that can be used in
+    variable selection procedure.
 }
 \description{
-Provides component-wise tuning parameters for Finite
-    Mixture of Accelerated Failure Time Regression Models
-    and Finite Mixture of Regression Models. The penalties
-    are \code{lasso}, \code{adplasso},
-    \code{scad}, \code{mcp}, \code{sica} and \code{hard}.
+Provides component-wise tuning parameters using BIC for
+    Finite Mixture of Accelerated Failure Time Regression Models
+    and Finite Mixture of Regression Models.
 }
 \details{
 The maximizer of penalized Log-Likelihood depends on selecting a
@@ -122,7 +120,7 @@ res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
                       initDeviance = deviance(res.mle),
                       initmixProp = mixProp(res.mle),
                       penFamily = "adplasso")
-show(res.lam)
+summary(res.lam)
 }
 \author{
 Farhad Shokoohi <shokoohi@icloud.com>
@@ -139,11 +137,16 @@ Other lnorm..norm..weibull: \code{\link{fmrs.gendata}},
 fmr, aft, lasso, adplasso, mcp, scad, sica, ridge
 }
 \keyword{AFT,}
-\keyword{Algorithm,}
+\keyword{Adaptive}
 \keyword{Censored}
 \keyword{Data,}
-\keyword{EM}
-\keyword{FMR,}
-\keyword{Regression}
+\keyword{FMRs,}
+\keyword{LASSO,}
+\keyword{MCP,}
+\keyword{Parameter,}
+\keyword{Regression,}
 \keyword{Ridge}
+\keyword{SCAD,}
+\keyword{SICA}
+\keyword{Tuning}
 

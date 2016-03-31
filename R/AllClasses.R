@@ -1,7 +1,7 @@
 #' @title An S4 class to represent estimated optimal lambdas
 #'
 #' @description An S4 class to represent estimated optimal lambdas resulted
-#'     from runnig \code{\link{fmrs.tunsel}}.
+#'     from running \code{\link{fmrs.tunsel}}.
 #' @name fmrstunpar-class
 #' @docType class
 #' @exportClass fmrstunpar
@@ -13,6 +13,7 @@
 #' @slot lambRidge A length-one numeric vector
 #' @slot model A length-one character vector
 #' @rdname fmrstunpar-class
+#' @keywords object
 #' @export
 fmrstunpar <- setClass("fmrstunpar",
                        representation(ncomp = "numeric",
@@ -33,7 +34,7 @@ fmrstunpar <- setClass("fmrstunpar",
 
 #' @title An S4 class to represent a fit of an FMRs model
 #'
-#' @description fmrsfit is an S4 class represents a fit of FMRs models
+#' @description 'fmrsfit' is an S4 class represents a fit of FMRs models
 #'     resulted from running \code{\link{fmrs.mle}}
 #'     or \code{\link{fmrs.varsel}}
 #' @name fmrsfit-class
@@ -44,7 +45,7 @@ fmrstunpar <- setClass("fmrstunpar",
 #' @slot nobs A length-one numeric vector
 #' @slot ncov A length-one numeric vector
 #' @slot ncomp A length-one numeric vector
-#' @slot coefficients A length-\code{(ncov+1)}*\code{ncomp} numeric matrix
+#' @slot coefficients A length-\code{(ncov+1)}-\code{ncomp} numeric matrix
 #' @slot deviance A length-\code{ncomp} numeric vector
 #' @slot mixProp A length-\code{ncomp} numeric vector
 #' @slot logLik A length-one numeric vector
@@ -55,10 +56,11 @@ fmrstunpar <- setClass("fmrstunpar",
 #' @slot lambPen A length-\code{ncomp} numeric vector
 #' @slot lambRidge A length-one numeric vector
 #' @slot model A length-one character vector
-#' @slot fitted A dimension-\code{n}-\code{ncomp} numeric matrix
-#' @slot residuals A dimension-\code{n}-\code{ncomp} numeric matrix
-#' @slot weights A dimension-\code{n}-\code{ncomp} numeric matrix
+#' @slot fitted A dimension-\code{nobs}-\code{ncomp} numeric matrix
+#' @slot residuals A dimension-\code{nobs}-\code{ncomp} numeric matrix
+#' @slot weights A dimension-\code{nobs}-\code{ncomp} numeric matrix
 #' @docType class
+#' @keywords object
 #' @rdname fmrsfit-class
 #' @exportClass fmrsfit
 frmsfit <- setClass("fmrsfit",

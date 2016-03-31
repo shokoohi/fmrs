@@ -69,11 +69,9 @@ penalty structure is no longer mixture.}
 \code{\link{fmrsfit-class}}
 }
 \description{
-Provides variable selection and parameter estimation for
+Provides variable selection and penalized MLE for
     Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models
     and Finite Mixture of Regression (FMR) Models.
-    The penalties that are implemented in this package are \code{lasso},
-\code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}.
     It also provide Ridge Regression and Elastic Net.
 }
 \details{
@@ -184,14 +182,24 @@ Other lnorm..norm..weibull: \code{\link{fmrs.gendata}},
   \code{\link{fmrs.mle}}, \code{\link{fmrs.tunsel}}
 }
 \concept{
-fmr, aft, lasso, adplasso, mcp, scad, sica, ridge
+fmr, aft, lasso, adplasso, mcp, scad, sica, ridge, elastic net
 }
 \keyword{AFT,}
+\keyword{Adaptive}
 \keyword{Algorithm,}
 \keyword{Censored}
 \keyword{Data,}
 \keyword{EM}
+\keyword{Elastic}
 \keyword{FMR,}
-\keyword{Regression}
+\keyword{LASSO}
+\keyword{LASSO,}
+\keyword{MCP,}
+\keyword{Net,}
+\keyword{Regression,}
 \keyword{Ridge}
+\keyword{SCAD,}
+\keyword{SICA,}
+\keyword{Selection,}
+\keyword{Variable}
 

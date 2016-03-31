@@ -3,8 +3,9 @@
 \docType{methods}
 \name{deviance}
 \alias{deviance}
+\alias{deviance,deviance-method}
 \alias{deviance,fmrsfit-method}
-\title{Method deviance}
+\title{deviance method}
 \usage{
 deviance(object, ...)
 
@@ -16,10 +17,11 @@ deviance(object, ...)
 \item{...}{other possible arguments}
 }
 \value{
-A numeric array
+A numeric array of dimension \code{(nCov+1)} by \code{nComp}
 }
 \description{
-deviance method
+Provides the estimated deviances from
+an \code{\link{fmrsfit-class}}
 }
 \examples{
 set.seed(1980)
@@ -44,5 +46,8 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initDeviance = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 deviance(res.mle)
+}
+\author{
+Farhad Shokoohi <shokoohi@icloud.com>
 }
 

@@ -4,7 +4,8 @@
 \name{ncov}
 \alias{ncov}
 \alias{ncov,fmrsfit-method}
-\title{Method ncov}
+\alias{ncov,ncov-method}
+\title{ncov method}
 \usage{
 ncov(object, ...)
 
@@ -19,7 +20,8 @@ ncov(object, ...)
 An integer value
 }
 \description{
-ncov method
+Provides the number of covariates of an FMRs model from
+an \code{\link{fmrsfit-class}}
 }
 \examples{
 set.seed(1980)
@@ -44,5 +46,8 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initDeviance = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 ncov(res.mle)
+}
+\author{
+Farhad Shokoohi <shokoohi@icloud.com>
 }
 

@@ -4,7 +4,8 @@
 \name{residuals}
 \alias{residuals}
 \alias{residuals,fmrsfit-method}
-\title{Method residuals}
+\alias{residuals,residuals-method}
+\title{residuals method}
 \usage{
 residuals(object, ...)
 
@@ -19,7 +20,8 @@ residuals(object, ...)
 A numeric array
 }
 \description{
-residuals method
+Provides the residuals of an FMRs model from
+an \code{\link{fmrsfit-class}}
 }
 \examples{
 set.seed(1980)
@@ -44,5 +46,8 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initDeviance = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 head(residuals(res.mle))
+}
+\author{
+Farhad Shokoohi <shokoohi@icloud.com>
 }
 

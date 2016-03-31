@@ -3,8 +3,9 @@
 \docType{methods}
 \name{fitted}
 \alias{fitted}
+\alias{fitted,fitted-method}
 \alias{fitted,fmrsfit-method}
-\title{Method fitted}
+\title{fitted method}
 \usage{
 fitted(object, ...)
 
@@ -16,10 +17,11 @@ fitted(object, ...)
 \item{...}{other possible arguments}
 }
 \value{
-A numeric array
+A numeric array of dimension \code{nObs} by \code{nComp}
 }
 \description{
-fitted method
+Provides fitted obervations under
+an \code{\link{fmrsfit-class}}
 }
 \examples{
 set.seed(1980)
@@ -44,5 +46,8 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initDeviance = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 head(fitted(res.mle))
+}
+\author{
+Farhad Shokoohi <shokoohi@icloud.com>
 }
 

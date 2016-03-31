@@ -1,5 +1,7 @@
-#' @title Method nobs
-#' @description nobs method
+#' @title nobs method
+#' @description Provides the number of observations in
+#' an \code{\link{fmrsfit-class}}
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name nobs
 #' @rdname nobs-methods
 #' @param object An \code{\link{fmrsfit-class}} object
@@ -32,8 +34,10 @@
 setGeneric("nobs", function(object, ...) standardGeneric("nobs"))
 nobs.fmrsfit <- function(object, ...) {object@nobs}
 
-#' @title Method ncov
-#' @description ncov method
+#' @title ncov method
+#' @description Provides the number of covariates of an FMRs model from
+#' an \code{\link{fmrsfit-class}}
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name ncov
 #' @rdname ncov-methods
 #' @param object An \code{\link{fmrsfit-class}} object
@@ -66,8 +70,10 @@ nobs.fmrsfit <- function(object, ...) {object@nobs}
 setGeneric("ncov", function(object, ...) standardGeneric("ncov"))
 ncov.fmrsfit <- function(object, ...) {object@ncov}
 
-#' @title Method ncomp
-#' @description ncomp method
+#' @title ncomp method
+#' @description Provides the order of an FMRs models from
+#' an \code{\link{fmrsfit-class}}
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name ncomp
 #' @rdname ncomp-methods
 #' @param object An \code{\link{fmrsfit-class}} object
@@ -100,13 +106,15 @@ ncov.fmrsfit <- function(object, ...) {object@ncov}
 setGeneric("ncomp", function(object, ...) standardGeneric("ncomp"))
 ncomp.fmrsfit <- function(object, ...) {object@ncomp}
 
-#' @title Method coefficients
-#' @description coefficients method
+#' @title coefficients method
+#' @description Provides the estimated regression coefficients from an
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
+#' \code{\link{fmrsfit-class}}
 #' @name coefficients
 #' @rdname coefficients-methods
 #' @param object An \code{\link{fmrsfit-class}} object
 #' @param ... other possible arguments
-#' @return A numeric array
+#' @return A numeric array of dimension \code{(nCov+1)} by \code{nComp}
 #' @examples
 #' set.seed(1980)
 #' nComp = 2
@@ -135,13 +143,15 @@ setGeneric("coefficients",
            function(object, ...) standardGeneric("coefficients"))
 coefficients.fmrsfit <- function(object, ...) {object@coefficients}
 
-#' @title Method deviance
-#' @description deviance method
+#' @title deviance method
+#' @description Provides the estimated deviances from
+#' an \code{\link{fmrsfit-class}}
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name deviance
 #' @rdname deviance-methods
 #' @param object An \code{\link{fmrsfit-class}} object
 #' @param ... other possible arguments
-#' @return A numeric array
+#' @return A numeric array of dimension \code{(nCov+1)} by \code{nComp}
 #' @examples
 #' set.seed(1980)
 #' nComp = 2
@@ -169,8 +179,10 @@ coefficients.fmrsfit <- function(object, ...) {object@coefficients}
 setGeneric("deviance", function(object, ...) standardGeneric("deviance"))
 deviance.fmrsfit <- function(object, ...) {object@deviance}
 
-#' @title Method mixProp
-#' @description mixProp method
+#' @title mixProp method
+#' @description Provides the estimated mixing proportions of an FMRs model
+#'     form an \code{\link{fmrsfit-class}}
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name mixProp
 #' @rdname mixProp-methods
 #' @param object An \code{\link{fmrsfit-class}} object
@@ -203,13 +215,15 @@ deviance.fmrsfit <- function(object, ...) {object@deviance}
 setGeneric("mixProp", function(object, ...) standardGeneric("mixProp"))
 mixProp.fmrsfit <- function(object, ...) {object@mixProp}
 
-#' @title Method fitted
-#' @description fitted method
+#' @title fitted method
+#' @description Provides fitted obervations under
+#' an \code{\link{fmrsfit-class}}
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name fitted
 #' @rdname fitted-methods
 #' @param object An \code{\link{fmrsfit-class}} object
 #' @param ... other possible arguments
-#' @return A numeric array
+#' @return A numeric array of dimension \code{nObs} by \code{nComp}
 #' @examples
 #' set.seed(1980)
 #' nComp = 2
@@ -237,8 +251,10 @@ mixProp.fmrsfit <- function(object, ...) {object@mixProp}
 setGeneric("fitted", function(object, ...) standardGeneric("fitted"))
 fitted.fmrsfit <- function(object, ...) {object@fitted}
 
-#' @title Method residuals
-#' @description residuals method
+#' @title residuals method
+#' @description Provides the residuals of an FMRs model from
+#' an \code{\link{fmrsfit-class}}
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name residuals
 #' @rdname residuals-methods
 #' @param object An \code{\link{fmrsfit-class}} object
@@ -271,8 +287,10 @@ fitted.fmrsfit <- function(object, ...) {object@fitted}
 setGeneric("residuals", function(object, ...) standardGeneric("residuals"))
 residuals.fmrsfit <- function(object, ...) {object@residuals}
 
-#' @title Method weights
-#' @description weights method
+#' @title weights method
+#' @description Provides the weights of fitted observations for
+#' each observation under all components of an FMRs model
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name weights
 #' @rdname weights-methods
 #' @param object An \code{\link{fmrsfit-class}} object
@@ -305,8 +323,10 @@ residuals.fmrsfit <- function(object, ...) {object@residuals}
 setGeneric("weights", function(object, ...) standardGeneric("weights"))
 weights.fmrsfit <- function(object, ...) {object@weights}
 
-#' @title Method logLik
-#' @description logLik method
+#' @title logLik method
+#' @description Provides the estimated logLikilihood of an FMRs model from
+#'     an \code{\link{fmrsfit-class}}
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name logLik
 #' @rdname logLik-methods
 #' @param object An \code{\link{fmrsfit-class}} object
@@ -339,8 +359,10 @@ weights.fmrsfit <- function(object, ...) {object@weights}
 setGeneric("logLik", function(object, ...) standardGeneric("logLik"))
 logLik.fmrsfit <- function(object, ...) {object@logLik}
 
-#' @title Method BIC
-#' @description BIC method
+#' @title BIC method
+#' @description Provides the estimated BIC from
+#' an \code{\link{fmrsfit-class}}
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name BIC
 #' @rdname BIC-methods
 #' @param object An \code{\link{fmrsfit-class}} object
@@ -373,13 +395,15 @@ logLik.fmrsfit <- function(object, ...) {object@logLik}
 setGeneric("BIC", function(object, ...) standardGeneric("BIC"))
 BIC.fmrsfit <- function(object, ...) {object@BIC}
 
-#' @title Method summary
-#' @description summary method
+#' @title summary method
+#' @description Displays the fitted FMRs model by showing the estimated
+#' coefficients, dispersians and mixing proportions
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name summary
 #' @rdname summary-methods
 #' @param object An \code{\link{fmrsfit-class}} object
 #' @param ... other possible arguments
-#' @return A fitted fmrs model
+#' @return Display informations about a fitted FMRs model
 #' @examples
 #' set.seed(1980)
 #' nComp = 2
@@ -431,12 +455,13 @@ summary.fmrsfit <- function(object, ...) {
   cat("\nLogLik: ", object@logLik, "; BIC: ", object@BIC, sep="")
   }
 
-#' @title Method show
-#' @description show method
+#' @title show method
+#' @description Provides information about the fitted FMRs model
+#' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name show
 #' @rdname show-methods
 #' @param object An \code{\link{fmrsfit-class}} object
-#' @return A fitted fmrs model
+#' @return Display information about the fitted FMRs model
 #' @examples
 #' set.seed(1980)
 #' nComp = 2
@@ -480,8 +505,9 @@ show.fmrsfit <- function(object) {
       " samples.\n", sep = "")
   }
 
+
 #' @title  fmrs.mle method
-#' @description Provides mle for Finite Mixture of
+#' @description Provides MLE for Finite Mixture of
 #'     Accelerated Failure Time Regression Models or Finite Mixture of
 #'     Regression Models. It also provides Ridge Regression.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
@@ -512,8 +538,9 @@ show.fmrsfit <- function(object) {
 #' @param porNR Used in pow(0.5, porNR) for tuning the increment in
 #'     NR algorithm
 #' @param ... other possible options
-#' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression
-#' @concept fmr, aft, mle, ridge
+#' @keywords FMRs, AFT, Censored Data, EM Algorithm, NR Algorithm,
+#' Ridge Regression
+#' @concept fmr, aft, mle, ridge, fmrs
 #' @details Finite mixture of AFT regression models are represented as
 #'     follows. Let \eqn{X} be the survival time with non-negative values,
 #'     and \eqn{\boldsymbol{z} =(z_{1}, \ldots, z_{d})^{\top}}
@@ -584,11 +611,9 @@ setGeneric("fmrs.mle",
            function(y,delta,x,nComp,...) standardGeneric("fmrs.mle"))
 
 #' @title  fmrs.tunsel method
-#' @description Provides component-wise tuning parameters for Finite
-#'     Mixture of Accelerated Failure Time Regression Models
-#'     and Finite Mixture of Regression Models. The penalties
-#'     are \code{lasso}, \code{adplasso},
-#'     \code{scad}, \code{mcp}, \code{sica} and \code{hard}.
+#' @description Provides component-wise tuning parameters using BIC for
+#'     Finite Mixture of Accelerated Failure Time Regression Models
+#'     and Finite Mixture of Regression Models.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
 #' @name fmrs.tunsel
@@ -624,7 +649,8 @@ setGeneric("fmrs.mle",
 #'     value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
 #'     penalty structure is no longer mixture.
 #' @param ... other possible options
-#' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression
+#' @keywords FMRs, AFT, Censored Data, Tuning Parameter, Ridge Regression,
+#' LASSO, Adaptive LASSO, MCP, SCAD, SICA
 #' @concept fmr, aft, lasso, adplasso, mcp, scad, sica, ridge
 #' @details The maximizer of penalized Log-Likelihood depends on selecting a
 #'     set of good tuning parameters which is a rather thorny issue. We
@@ -643,9 +669,9 @@ setGeneric("fmrs.mle",
 #'     maximize the penallized Log-Likelihood.
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
 #'     (2016 submitted) Variable Selection in Mixture of Survival Models
-#' @return An \code{\link{fmrstunpar-class}} object includes component-wise
-#'     tuning parameter estimates to be used in variable
-#'     selection procedure.
+#' @return An \code{\link{fmrstunpar-class}} object that includes
+#'     component-wise tuning parameter estimates that can be used in
+#'     variable selection procedure.
 #' @examples
 #' set.seed(1980)
 #' nComp = 2
@@ -675,18 +701,15 @@ setGeneric("fmrs.mle",
 #'                       initDeviance = deviance(res.mle),
 #'                       initmixProp = mixProp(res.mle),
 #'                       penFamily = "adplasso")
-#' show(res.lam)
+#' summary(res.lam)
 #' @exportMethod fmrs.tunsel
 setGeneric("fmrs.tunsel",
            function(y,delta,x,nComp,...) standardGeneric("fmrs.tunsel"))
 
-
 #' @title fmrs.varsel method
-#' @description Provides variable selection and parameter estimation for
+#' @description Provides variable selection and penalized MLE for
 #'     Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models
 #'     and Finite Mixture of Regression (FMR) Models.
-#'     The penalties that are implemented in this package are \code{lasso},
-#' \code{adplasso}, \code{scad}, \code{mcp}, \code{sica} and \code{hard}.
 #'     It also provide Ridge Regression and Elastic Net.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
@@ -723,8 +746,9 @@ setGeneric("fmrs.tunsel",
 #'     value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
 #'     penalty structure is no longer mixture.
 #' @param ... other possible options
-#' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression
-#' @concept fmr, aft, lasso, adplasso, mcp, scad, sica, ridge
+#' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression,
+#' Elastic Net, Variable Selection, LASSO, MCP, SCAD, SICA, Adaptive LASSO
+#' @concept fmr, aft, lasso, adplasso, mcp, scad, sica, ridge, elastic net
 #' @details The penalized likelihood of a finite mixture of AFT regression
 #'     models is written as \deqn{\tilde\ell_{n}(\boldsymbol\Psi)
 #'     =\ell_{n}(\boldsymbol\Psi) -
@@ -826,12 +850,10 @@ setGeneric("fmrs.varsel",
            function(y,delta,x,nComp,...) standardGeneric("fmrs.varsel"))
 
 
-
-
-
 #' @title fmrs.gendata method
-#' @description This function will generate a data set from Finite Mixture
-#'     of AFT regression models or Finite Mixture of Regression models.
+#' @description Generates a data set from Finite Mixture
+#'     of AFT regression models or Finite Mixture of Regression models under
+#'     the specified setting.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
 #' @name fmrs.gendata
@@ -856,9 +878,9 @@ setGeneric("fmrs.varsel",
 #'     \code{"weibull"} for Weibull.
 #' @param ... other possible options
 #' @import stats
-#' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression
+#' @keywords FMR, AFT, Censored Data
 #' @concept fmr, aft, censoring, data generation
-#' @return A list of reponse, covariates and cenroing variables
+#' @return A list including reponse, covariates and cenroing variables
 #' @examples
 #' set.seed(1980)
 #' nComp = 2

@@ -1,67 +1,68 @@
 #' @rdname weights-methods
 #' @rdname fmrsfit-class
-#' @aliases weights,fmrsfit-method
+#' @aliases weights,weights-method
 setMethod("weights", signature = "fmrsfit", weights.fmrsfit)
 
 #' @rdname residuals-methods
 #' @rdname fmrsfit-class
-#' @aliases residuals,fmrsfit-method
+#' @aliases residuals,residuals-method
 setMethod("residuals", signature = "fmrsfit", residuals.fmrsfit)
 
 #' @rdname nobs-methods
 #' @rdname fmrsfit-class
-#' @aliases nobs,fmrsfit-method
+#' @aliases nobs,nobs-method
 setMethod("nobs", signature = "fmrsfit", nobs.fmrsfit)
 
 #' @rdname ncov-methods
 #' @rdname fmrsfit-class
-#' @aliases ncov,fmrsfit-method
+#' @aliases ncov,ncov-method
 setMethod("ncov", signature = "fmrsfit", ncov.fmrsfit)
 
 #' @rdname ncomp-methods
 #' @rdname fmrsfit-class
-#' @aliases ncomp,fmrsfit-method
+#' @aliases ncomp,ncomp-method
 setMethod("ncomp", signature = "fmrsfit", ncomp.fmrsfit)
 
 #' @rdname mixProp-methods
 #' @rdname fmrsfit-class
-#' @aliases mixProp,fmrsfit-method
+#' @aliases mixProp,mixProp-method
 setMethod("mixProp", signature = "fmrsfit", mixProp.fmrsfit)
 
 #' @rdname logLik-methods
 #' @rdname fmrsfit-class
-#' @aliases logLik,fmrsfit-method
+#' @aliases logLik,logLik-method
 setMethod("logLik", signature = "fmrsfit", logLik.fmrsfit)
 
 #' @rdname fitted-methods
 #' @rdname fmrsfit-class
-#' @aliases fitted,fmrsfit-method
+#' @aliases fitted,fitted-method
 setMethod("fitted", signature = "fmrsfit", fitted.fmrsfit)
 
 #' @rdname deviance-methods
 #' @rdname fmrsfit-class
-#' @aliases deviance,fmrsfit-method
+#' @aliases deviance,deviance-method
 setMethod("deviance", signature = "fmrsfit", deviance.fmrsfit)
 
 #' @rdname coefficients-methods
 #' @rdname fmrsfit-class
-#' @aliases coefficients,fmrsfit-method
+#' @aliases coefficients,coefficients-method
 setMethod("coefficients", signature = "fmrsfit", coefficients.fmrsfit)
 
 #' @rdname BIC-methods
 #' @rdname fmrsfit-class
-#' @aliases BIC,fmrsfit-method
+#' @aliases BIC,BIC-method
 setMethod("BIC", signature = "fmrsfit", BIC.fmrsfit)
 
 #' @rdname summary-methods
 #' @rdname fmrsfit-class
-#' @aliases summary,fmrsfit-method
+#' @aliases summary,summary-method
 setMethod("summary", signature = "fmrsfit", summary.fmrsfit)
 
 #' @rdname show-methods
 #' @rdname fmrsfit-class
-#' @aliases show,fmrsfit-method
+#' @aliases show,show-method
 setMethod("show", signature = "fmrsfit", show.fmrsfit)
+
 
 #' @rdname fmrs.mle-methods
 #' @aliases fmrs.mle-method

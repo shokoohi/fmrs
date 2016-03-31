@@ -4,7 +4,8 @@
 \name{weights}
 \alias{weights}
 \alias{weights,fmrsfit-method}
-\title{Method weights}
+\alias{weights,weights-method}
+\title{weights method}
 \usage{
 weights(object, ...)
 
@@ -19,7 +20,8 @@ weights(object, ...)
 A numeric array
 }
 \description{
-weights method
+Provides the weights of fitted observations for
+each observation under all components of an FMRs model
 }
 \examples{
 set.seed(1980)
@@ -44,5 +46,8 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initDeviance = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 head(weights(res.mle))
+}
+\author{
+Farhad Shokoohi <shokoohi@icloud.com>
 }
 

@@ -4,7 +4,8 @@
 \name{nobs}
 \alias{nobs}
 \alias{nobs,fmrsfit-method}
-\title{Method nobs}
+\alias{nobs,nobs-method}
+\title{nobs method}
 \usage{
 nobs(object, ...)
 
@@ -19,7 +20,8 @@ nobs(object, ...)
 An integer value
 }
 \description{
-nobs method
+Provides the number of observations in
+an \code{\link{fmrsfit-class}}
 }
 \examples{
 set.seed(1980)
@@ -44,5 +46,8 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initDeviance = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 nobs(res.mle)
+}
+\author{
+Farhad Shokoohi <shokoohi@icloud.com>
 }
 

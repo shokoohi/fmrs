@@ -60,7 +60,7 @@ An \code{\link{fmrsfit-class}} object that includes parameter
     estimates of an FMRs model
 }
 \description{
-Provides mle for Finite Mixture of
+Provides MLE for Finite Mixture of
     Accelerated Failure Time Regression Models or Finite Mixture of
     Regression Models. It also provides Ridge Regression.
 }
@@ -140,14 +140,15 @@ Other lnorm..norm..weibull: \code{\link{fmrs.gendata}},
   \code{\link{fmrs.tunsel}}, \code{\link{fmrs.varsel}}
 }
 \concept{
-fmr, aft, mle, ridge
+fmr, aft, mle, ridge, fmrs
 }
 \keyword{AFT,}
 \keyword{Algorithm,}
 \keyword{Censored}
 \keyword{Data,}
 \keyword{EM}
-\keyword{FMR,}
+\keyword{FMRs,}
+\keyword{NR}
 \keyword{Regression}
 \keyword{Ridge}
 

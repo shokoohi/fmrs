@@ -3,8 +3,9 @@
 \docType{methods}
 \name{coefficients}
 \alias{coefficients}
+\alias{coefficients,coefficients-method}
 \alias{coefficients,fmrsfit-method}
-\title{Method coefficients}
+\title{coefficients method}
 \usage{
 coefficients(object, ...)
 
@@ -16,10 +17,10 @@ coefficients(object, ...)
 \item{...}{other possible arguments}
 }
 \value{
-A numeric array
+A numeric array of dimension \code{(nCov+1)} by \code{nComp}
 }
 \description{
-coefficients method
+Provides the estimated regression coefficients from an
 }
 \examples{
 set.seed(1980)
@@ -44,5 +45,9 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initDeviance = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 coefficients(res.mle)
+}
+\author{
+Farhad Shokoohi <shokoohi@icloud.com>
+\code{\link{fmrsfit-class}}
 }
 

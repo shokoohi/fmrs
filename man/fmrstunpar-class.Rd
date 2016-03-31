@@ -7,7 +7,7 @@
 \title{An S4 class to represent estimated optimal lambdas}
 \description{
 An S4 class to represent estimated optimal lambdas resulted
-    from runnig \code{\link{fmrs.tunsel}}.
+    from running \code{\link{fmrs.tunsel}}.
 }
 \section{Slots}{
 
@@ -24,4 +24,5 @@ An S4 class to represent estimated optimal lambdas resulted
 
 \item{\code{model}}{A length-one character vector}
 }}
+\keyword{object}
 

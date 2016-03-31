@@ -6,7 +6,7 @@
 \alias{frmsfit}
 \title{An S4 class to represent a fit of an FMRs model}
 \description{
-fmrsfit is an S4 class represents a fit of FMRs models
+'fmrsfit' is an S4 class represents a fit of FMRs models
     resulted from running \code{\link{fmrs.mle}}
     or \code{\link{fmrs.varsel}}
 }
@@ -25,7 +25,7 @@ fmrsfit is an S4 class represents a fit of FMRs models
 
 \item{\code{ncomp}}{A length-one numeric vector}
 
-\item{\code{coefficients}}{A length-\code{(ncov+1)}*\code{ncomp} numeric matrix}
+\item{\code{coefficients}}{A length-\code{(ncov+1)}-\code{ncomp} numeric matrix}
 
 \item{\code{deviance}}{A length-\code{ncomp} numeric vector}
 
@@ -47,10 +47,11 @@ fmrsfit is an S4 class represents a fit of FMRs models
 
 \item{\code{model}}{A length-one character vector}
 
-\item{\code{fitted}}{A dimension-\code{n}-\code{ncomp} numeric matrix}
+\item{\code{fitted}}{A dimension-\code{nobs}-\code{ncomp} numeric matrix}
 
-\item{\code{residuals}}{A dimension-\code{n}-\code{ncomp} numeric matrix}
+\item{\code{residuals}}{A dimension-\code{nobs}-\code{ncomp} numeric matrix}
 
-\item{\code{weights}}{A dimension-\code{n}-\code{ncomp} numeric matrix}
+\item{\code{weights}}{A dimension-\code{nobs}-\code{ncomp} numeric matrix}
 }}
+\keyword{object}
 

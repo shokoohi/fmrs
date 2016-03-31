@@ -43,11 +43,12 @@ are \code{"lnormal"} for Log-Normal, \code{"norm"} for Normal and
 \code{"weibull"} for Weibull.}
 }
 \value{
-A list of reponse, covariates and cenroing variables
+A list including reponse, covariates and cenroing variables
 }
 \description{
-This function will generate a data set from Finite Mixture
-    of AFT regression models or Finite Mixture of Regression models.
+Generates a data set from Finite Mixture
+    of AFT regression models or Finite Mixture of Regression models under
+    the specified setting.
 }
 \examples{
 set.seed(1980)
@@ -78,11 +79,7 @@ Other lnorm..norm..weibull: \code{\link{fmrs.mle}},
 fmr, aft, censoring, data generation
 }
 \keyword{AFT,}
-\keyword{Algorithm,}
 \keyword{Censored}
-\keyword{Data,}
-\keyword{EM}
+\keyword{Data}
 \keyword{FMR,}
-\keyword{Regression}
-\keyword{Ridge}
 

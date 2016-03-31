@@ -4,7 +4,8 @@
 \name{ncomp}
 \alias{ncomp}
 \alias{ncomp,fmrsfit-method}
-\title{Method ncomp}
+\alias{ncomp,ncomp-method}
+\title{ncomp method}
 \usage{
 ncomp(object, ...)
 
@@ -19,7 +20,8 @@ ncomp(object, ...)
 An integer value
 }
 \description{
-ncomp method
+Provides the order of an FMRs models from
+an \code{\link{fmrsfit-class}}
 }
 \examples{
 set.seed(1980)
@@ -44,5 +46,8 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initDeviance = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 ncomp(res.mle)
+}
+\author{
+Farhad Shokoohi <shokoohi@icloud.com>
 }
 

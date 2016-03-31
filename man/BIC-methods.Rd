@@ -3,8 +3,9 @@
 \docType{methods}
 \name{BIC}
 \alias{BIC}
+\alias{BIC,BIC-method}
 \alias{BIC,fmrsfit-method}
-\title{Method BIC}
+\title{BIC method}
 \usage{
 BIC(object, ...)
 
@@ -19,7 +20,8 @@ BIC(object, ...)
 A numeric value
 }
 \description{
-BIC method
+Provides the estimated BIC from
+an \code{\link{fmrsfit-class}}
 }
 \examples{
 set.seed(1980)
@@ -44,5 +46,8 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initDeviance = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 BIC(res.mle)
+}
+\author{
+Farhad Shokoohi <shokoohi@icloud.com>
 }
 

@@ -4,7 +4,8 @@
 \name{logLik}
 \alias{logLik}
 \alias{logLik,fmrsfit-method}
-\title{Method logLik}
+\alias{logLik,logLik-method}
+\title{logLik method}
 \usage{
 logLik(object, ...)
 
@@ -19,7 +20,8 @@ logLik(object, ...)
 A numeric value
 }
 \description{
-logLik method
+Provides the estimated logLikilihood of an FMRs model from
+    an \code{\link{fmrsfit-class}}
 }
 \examples{
 set.seed(1980)
@@ -44,5 +46,8 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initDeviance = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 logLik(res.mle)
+}
+\author{
+Farhad Shokoohi <shokoohi@icloud.com>
 }
 
