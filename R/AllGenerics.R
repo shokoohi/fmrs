@@ -4,7 +4,7 @@
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name nobs
 #' @rdname nobs-methods
-#' @param object An \code{\link{fmrsfit-class}} object
+#' @param object An \code{\link{fmrsfit-class}}
 #' @param ... other possible arguments
 #' @return An integer value
 #' @examples
@@ -40,7 +40,7 @@ nobs.fmrsfit <- function(object, ...) {object@nobs}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name ncov
 #' @rdname ncov-methods
-#' @param object An \code{\link{fmrsfit-class}} object
+#' @param object An \code{\link{fmrsfit-class}}
 #' @param ... other possible arguments
 #' @return An integer value
 #' @examples
@@ -76,7 +76,7 @@ ncov.fmrsfit <- function(object, ...) {object@ncov}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name ncomp
 #' @rdname ncomp-methods
-#' @param object An \code{\link{fmrsfit-class}} object
+#' @param object An \code{\link{fmrsfit-class}}
 #' @param ... other possible arguments
 #' @return An integer value
 #' @examples
@@ -112,7 +112,7 @@ ncomp.fmrsfit <- function(object, ...) {object@ncomp}
 #' \code{\link{fmrsfit-class}}
 #' @name coefficients
 #' @rdname coefficients-methods
-#' @param object An \code{\link{fmrsfit-class}} object
+#' @param object An \code{\link{fmrsfit-class}}
 #' @param ... other possible arguments
 #' @return A numeric array of dimension \code{(nCov+1)} by \code{nComp}
 #' @examples
@@ -149,7 +149,7 @@ coefficients.fmrsfit <- function(object, ...) {object@coefficients}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name deviance
 #' @rdname deviance-methods
-#' @param object An \code{\link{fmrsfit-class}} object
+#' @param object An \code{\link{fmrsfit-class}}
 #' @param ... other possible arguments
 #' @return A numeric array of dimension \code{(nCov+1)} by \code{nComp}
 #' @examples
@@ -185,7 +185,7 @@ deviance.fmrsfit <- function(object, ...) {object@deviance}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name mixProp
 #' @rdname mixProp-methods
-#' @param object An \code{\link{fmrsfit-class}} object
+#' @param object An \code{\link{fmrsfit-class}}
 #' @param ... other possible arguments
 #' @return A numeric array
 #' @examples
@@ -221,7 +221,7 @@ mixProp.fmrsfit <- function(object, ...) {object@mixProp}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name fitted
 #' @rdname fitted-methods
-#' @param object An \code{\link{fmrsfit-class}} object
+#' @param object An \code{\link{fmrsfit-class}}
 #' @param ... other possible arguments
 #' @return A numeric array of dimension \code{nObs} by \code{nComp}
 #' @examples
@@ -257,7 +257,7 @@ fitted.fmrsfit <- function(object, ...) {object@fitted}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name residuals
 #' @rdname residuals-methods
-#' @param object An \code{\link{fmrsfit-class}} object
+#' @param object An \code{\link{fmrsfit-class}}
 #' @param ... other possible arguments
 #' @return A numeric array
 #' @examples
@@ -293,7 +293,7 @@ residuals.fmrsfit <- function(object, ...) {object@residuals}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name weights
 #' @rdname weights-methods
-#' @param object An \code{\link{fmrsfit-class}} object
+#' @param object An \code{\link{fmrsfit-class}}
 #' @param ... other possible arguments
 #' @return A numeric array
 #' @examples
@@ -329,7 +329,7 @@ weights.fmrsfit <- function(object, ...) {object@weights}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name logLik
 #' @rdname logLik-methods
-#' @param object An \code{\link{fmrsfit-class}} object
+#' @param object An \code{\link{fmrsfit-class}}
 #' @param ... other possible arguments
 #' @return A numeric value
 #' @examples
@@ -365,7 +365,7 @@ logLik.fmrsfit <- function(object, ...) {object@logLik}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name BIC
 #' @rdname BIC-methods
-#' @param object An \code{\link{fmrsfit-class}} object
+#' @param object An \code{\link{fmrsfit-class}}
 #' @param ... other possible arguments
 #' @return A numeric value
 #' @examples
@@ -401,7 +401,7 @@ BIC.fmrsfit <- function(object, ...) {object@BIC}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name summary
 #' @rdname summary-methods
-#' @param object An \code{\link{fmrsfit-class}} object
+#' @param object An \code{\link{fmrsfit-class}}
 #' @param ... other possible arguments
 #' @return Display informations about a fitted FMRs model
 #' @examples
@@ -460,7 +460,7 @@ summary.fmrsfit <- function(object, ...) {
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name show
 #' @rdname show-methods
-#' @param object An \code{\link{fmrsfit-class}} object
+#' @param object An \code{\link{fmrsfit-class}}
 #' @return Display information about the fitted FMRs model
 #' @examples
 #' set.seed(1980)
@@ -538,8 +538,7 @@ show.fmrsfit <- function(object) {
 #' @param porNR Used in pow(0.5, porNR) for tuning the increment in
 #'     NR algorithm
 #' @param ... other possible options
-#' @keywords FMRs, AFT, Censored Data, EM Algorithm, NR Algorithm,
-#' Ridge Regression
+#' @keywords FMRs AFT Censored EM NR Ridge
 #' @concept fmr, aft, mle, ridge, fmrs
 #' @details Finite mixture of AFT regression models are represented as
 #'     follows. Let \eqn{X} be the survival time with non-negative values,
@@ -581,7 +580,7 @@ show.fmrsfit <- function(object) {
 #'     above Log-Likelihood.
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
 #'     (2016 submitted) Variable Selection in Mixture of Survival Models
-#' @return An \code{\link{fmrsfit-class}} object that includes parameter
+#' @return An \code{\link{fmrsfit-class}} that includes parameter
 #'     estimates of an FMRs model
 #' @examples
 #' set.seed(1980)
@@ -649,8 +648,8 @@ setGeneric("fmrs.mle",
 #'     value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
 #'     penalty structure is no longer mixture.
 #' @param ... other possible options
-#' @keywords FMRs, AFT, Censored Data, Tuning Parameter, Ridge Regression,
-#' LASSO, Adaptive LASSO, MCP, SCAD, SICA
+#' @keywords FMRs AFT Censored Tuning Ridge Regression LASSO Adaptive MCP
+#' SCAD SICA
 #' @concept fmr, aft, lasso, adplasso, mcp, scad, sica, ridge
 #' @details The maximizer of penalized Log-Likelihood depends on selecting a
 #'     set of good tuning parameters which is a rather thorny issue. We
@@ -669,7 +668,7 @@ setGeneric("fmrs.mle",
 #'     maximize the penallized Log-Likelihood.
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
 #'     (2016 submitted) Variable Selection in Mixture of Survival Models
-#' @return An \code{\link{fmrstunpar-class}} object that includes
+#' @return An \code{\link{fmrstunpar-class}} that includes
 #'     component-wise tuning parameter estimates that can be used in
 #'     variable selection procedure.
 #' @examples
@@ -746,8 +745,8 @@ setGeneric("fmrs.tunsel",
 #'     value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
 #'     penalty structure is no longer mixture.
 #' @param ... other possible options
-#' @keywords FMR, AFT, Censored Data, EM Algorithm, Ridge Regression,
-#' Elastic Net, Variable Selection, LASSO, MCP, SCAD, SICA, Adaptive LASSO
+#' @keywords FMR AFT Censored EM Algorithm Ridge Regression
+#' ElasticNet Selection LASSO MCP SCAD SICA Adaptive
 #' @concept fmr, aft, lasso, adplasso, mcp, scad, sica, ridge, elastic net
 #' @details The penalized likelihood of a finite mixture of AFT regression
 #'     models is written as \deqn{\tilde\ell_{n}(\boldsymbol\Psi)
@@ -878,7 +877,7 @@ setGeneric("fmrs.varsel",
 #'     \code{"weibull"} for Weibull.
 #' @param ... other possible options
 #' @import stats
-#' @keywords FMR, AFT, Censored Data
+#' @keywords FMRs AFT Censored Data Generation
 #' @concept fmr, aft, censoring, data generation
 #' @return A list including reponse, covariates and cenroing variables
 #' @examples

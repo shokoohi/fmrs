@@ -12,7 +12,7 @@ coefficients(object, ...)
 \S4method{coefficients}{fmrsfit}(object, ...)
 }
 \arguments{
-\item{object}{An \code{\link{fmrsfit-class}} object}
+\item{object}{An \code{\link{fmrsfit-class}}}
 
 \item{...}{other possible arguments}
 }

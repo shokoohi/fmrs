@@ -12,7 +12,7 @@ ncomp(object, ...)
 \S4method{ncomp}{fmrsfit}(object, ...)
 }
 \arguments{
-\item{object}{An \code{\link{fmrsfit-class}} object}
+\item{object}{An \code{\link{fmrsfit-class}}}
 
 \item{...}{other possible arguments}
 }

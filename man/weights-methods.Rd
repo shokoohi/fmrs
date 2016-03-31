@@ -12,7 +12,7 @@ weights(object, ...)
 \S4method{weights}{fmrsfit}(object, ...)
 }
 \arguments{
-\item{object}{An \code{\link{fmrsfit-class}} object}
+\item{object}{An \code{\link{fmrsfit-class}}}
 
 \item{...}{other possible arguments}
 }

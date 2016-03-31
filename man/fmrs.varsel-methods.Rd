@@ -184,22 +184,18 @@ Other lnorm..norm..weibull: \code{\link{fmrs.gendata}},
 \concept{
 fmr, aft, lasso, adplasso, mcp, scad, sica, ridge, elastic net
 }
-\keyword{AFT,}
+\keyword{AFT}
 \keyword{Adaptive}
-\keyword{Algorithm,}
+\keyword{Algorithm}
 \keyword{Censored}
-\keyword{Data,}
 \keyword{EM}
-\keyword{Elastic}
-\keyword{FMR,}
+\keyword{ElasticNet}
+\keyword{FMR}
 \keyword{LASSO}
-\keyword{LASSO,}
-\keyword{MCP,}
-\keyword{Net,}
-\keyword{Regression,}
+\keyword{MCP}
+\keyword{Regression}
 \keyword{Ridge}
-\keyword{SCAD,}
-\keyword{SICA,}
-\keyword{Selection,}
-\keyword{Variable}
+\keyword{SCAD}
+\keyword{SICA}
+\keyword{Selection}
 

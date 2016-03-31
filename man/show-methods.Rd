@@ -12,7 +12,7 @@ show(object)
 \S4method{show}{fmrsfit}(object)
 }
 \arguments{
-\item{object}{An \code{\link{fmrsfit-class}} object}
+\item{object}{An \code{\link{fmrsfit-class}}}
 }
 \value{
 Display information about the fitted FMRs model

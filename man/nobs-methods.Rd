@@ -12,7 +12,7 @@ nobs(object, ...)
 \S4method{nobs}{fmrsfit}(object, ...)
 }
 \arguments{
-\item{object}{An \code{\link{fmrsfit-class}} object}
+\item{object}{An \code{\link{fmrsfit-class}}}
 
 \item{...}{other possible arguments}
 }

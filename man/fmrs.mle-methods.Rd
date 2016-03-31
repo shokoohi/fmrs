@@ -56,7 +56,7 @@ NR algorithm}
 NR algorithm}
 }
 \value{
-An \code{\link{fmrsfit-class}} object that includes parameter
+An \code{\link{fmrsfit-class}} that includes parameter
     estimates of an FMRs model
 }
 \description{
@@ -142,13 +142,10 @@ Other lnorm..norm..weibull: \code{\link{fmrs.gendata}},
 \concept{
 fmr, aft, mle, ridge, fmrs
 }
-\keyword{AFT,}
-\keyword{Algorithm,}
+\keyword{AFT}
 \keyword{Censored}
-\keyword{Data,}
 \keyword{EM}
-\keyword{FMRs,}
+\keyword{FMRs}
 \keyword{NR}
-\keyword{Regression}
 \keyword{Ridge}
 

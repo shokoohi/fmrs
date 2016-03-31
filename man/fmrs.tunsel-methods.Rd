@@ -65,7 +65,7 @@ value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
 penalty structure is no longer mixture.}
 }
 \value{
-An \code{\link{fmrstunpar-class}} object that includes
+An \code{\link{fmrstunpar-class}} that includes
     component-wise tuning parameter estimates that can be used in
     variable selection procedure.
 }
@@ -136,17 +136,15 @@ Other lnorm..norm..weibull: \code{\link{fmrs.gendata}},
 \concept{
 fmr, aft, lasso, adplasso, mcp, scad, sica, ridge
 }
-\keyword{AFT,}
+\keyword{AFT}
 \keyword{Adaptive}
 \keyword{Censored}
-\keyword{Data,}
-\keyword{FMRs,}
-\keyword{LASSO,}
-\keyword{MCP,}
-\keyword{Parameter,}
-\keyword{Regression,}
+\keyword{FMRs}
+\keyword{LASSO}
+\keyword{MCP}
+\keyword{Regression}
 \keyword{Ridge}
-\keyword{SCAD,}
+\keyword{SCAD}
 \keyword{SICA}
 \keyword{Tuning}
 

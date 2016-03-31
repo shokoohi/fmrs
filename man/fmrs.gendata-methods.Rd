@@ -78,8 +78,9 @@ Other lnorm..norm..weibull: \code{\link{fmrs.mle}},
 \concept{
 fmr, aft, censoring, data generation
 }
-\keyword{AFT,}
+\keyword{AFT}
 \keyword{Censored}
 \keyword{Data}
-\keyword{FMR,}
+\keyword{FMRs}
+\keyword{Generation}
 
