@@ -1,7 +1,8 @@
-#' @title fmrs: Variable Selection in Finite Mixture of AFT Regression and
+#' @title Variable Selection in Finite Mixture of AFT Regression and
 #'     FMR
 #'
-#' @description The fmrs package provides several useful functions. The
+#' @description Provides parameter estimation and variable selection in
+#'     FMRs models. The
 #'     \code{\link{fmrs.mle}} method provides Maximum Likelihood Estimation
 #'     for FMRs models. The \code{\link{fmrs.tunsel}} method provides
 #'     component-wise tuning parameters. The \code{\link{fmrs.varsel}}

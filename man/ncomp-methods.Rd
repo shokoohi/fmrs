@@ -14,13 +14,13 @@ ncomp(object, ...)
 \arguments{
 \item{object}{An \code{\link{fmrsfit-class}}}
 
-\item{...}{other possible arguments}
+\item{...}{Other possible arguments}
 }
 \value{
 An integer value
 }
 \description{
-Provides the order of an FMRs models from
+Provides the order of an FMRs model from
 an \code{\link{fmrsfit-class}}
 }
 \examples{

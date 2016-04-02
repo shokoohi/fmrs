@@ -14,14 +14,14 @@ deviance(object, ...)
 \arguments{
 \item{object}{An \code{\link{fmrsfit-class}}}
 
-\item{...}{other possible arguments}
+\item{...}{Other possible arguments}
 }
 \value{
-A numeric array of dimension \code{(nCov+1)} by \code{nComp}
+A numeric array of dimension-\code{(nCov+1)}-\code{nComp}
 }
 \description{
-Provides the estimated deviances from
-an \code{\link{fmrsfit-class}}
+Provides the estimated deviances of the fitted FMRs model
+from from an \code{\link{fmrsfit-class}}
 }
 \examples{
 set.seed(1980)

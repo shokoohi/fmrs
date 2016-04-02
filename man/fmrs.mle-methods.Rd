@@ -23,9 +23,9 @@ fmrs.mle(y, delta, x, nComp, ...)
 
 \item{nComp}{Order (Number of components) of mixture model}
 
-\item{...}{other possible options}
+\item{...}{Other possible options}
 
-\item{disFamily}{Specify sub-distributions family. The options
+\item{disFamily}{A sub-distribution family. The options
 are \code{"norm"} for FMR models, \code{"lnorm"} for mixture of AFT
 regression models with Log-Normal sub-distributions,\code{"weibull"}
 for mixture of AFT regression models with Weibull sub-distributions,}
@@ -52,12 +52,12 @@ EM algorithm}
 \item{convepsNR}{A positive value for treshold of convergence in
 NR algorithm}
 
-\item{porNR}{Used in pow(0.5, porNR) for tuning the increment in
+\item{porNR}{A positive interger for maximum number of searches in
 NR algorithm}
 }
 \value{
 An \code{\link{fmrsfit-class}} that includes parameter
-    estimates of an FMRs model
+    estimates of the specified FMRs model
 }
 \description{
 Provides MLE for Finite Mixture of

@@ -28,7 +28,7 @@ respectively, and `rho` is the used in the variance-covariance matrix for
 simulating the design matrix `x`, and `umax` is the upper bound for 
 Uniform distribution for generating censoring times. 
 
-Depending on the choice of `disFamily`, the function `fmrsgendata` generates 
+Depending on the choice of `disFamily`, the function `fmrs.gendata` generates 
 a simulated data from FMRs models. For instance, if we choose 
 `disFamily = "norm"`, the function ignores the censoring parameter `umax` 
 and generates a data set from an FMR model with Normal sub-distributions. 

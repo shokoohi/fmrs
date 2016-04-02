@@ -14,7 +14,7 @@ ncov(object, ...)
 \arguments{
 \item{object}{An \code{\link{fmrsfit-class}}}
 
-\item{...}{other possible arguments}
+\item{...}{Other possible arguments}
 }
 \value{
 An integer value

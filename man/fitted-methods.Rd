@@ -14,13 +14,13 @@ fitted(object, ...)
 \arguments{
 \item{object}{An \code{\link{fmrsfit-class}}}
 
-\item{...}{other possible arguments}
+\item{...}{Other possible arguments}
 }
 \value{
-A numeric array of dimension \code{nObs} by \code{nComp}
+A numeric array of dimension-\code{nObs}-\code{nComp}
 }
 \description{
-Provides fitted obervations under
+Provides the fitted response of the fitted FMRs model from
 an \code{\link{fmrsfit-class}}
 }
 \examples{

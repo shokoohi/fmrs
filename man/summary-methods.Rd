@@ -14,14 +14,14 @@ summary(object, ...)
 \arguments{
 \item{object}{An \code{\link{fmrsfit-class}}}
 
-\item{...}{other possible arguments}
+\item{...}{Other possible arguments}
 }
 \value{
-Display informations about a fitted FMRs model
+Summary of the fitted FMRs model
 }
 \description{
 Displays the fitted FMRs model by showing the estimated
-coefficients, dispersians and mixing proportions
+coefficients, deviances and mixing proportions
 }
 \examples{
 set.seed(1980)

@@ -14,13 +14,13 @@ BIC(object, ...)
 \arguments{
 \item{object}{An \code{\link{fmrsfit-class}}}
 
-\item{...}{other possible arguments}
+\item{...}{Other possible arguments}
 }
 \value{
 A numeric value
 }
 \description{
-Provides the estimated BIC from
+Provides the estimated BIC of an FMRs model from
 an \code{\link{fmrsfit-class}}
 }
 \examples{

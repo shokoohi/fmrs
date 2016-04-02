@@ -14,10 +14,10 @@ mixProp(object, ...)
 \arguments{
 \item{object}{An \code{\link{fmrsfit-class}}}
 
-\item{...}{other possible arguments}
+\item{...}{Other possible arguments}
 }
 \value{
-A numeric array
+A numeric vector of length-\code{nComp}
 }
 \description{
 Provides the estimated mixing proportions of an FMRs model

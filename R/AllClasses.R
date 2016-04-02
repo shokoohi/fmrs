@@ -1,7 +1,7 @@
 #' @title An S4 class to represent estimated optimal lambdas
 #'
 #' @description An S4 class to represent estimated optimal lambdas resulted
-#'     from running \code{\link{fmrs.tunsel}}.
+#'     from running \code{\link{fmrs.tunsel}}
 #' @name fmrstunpar-class
 #' @docType class
 #' @exportClass fmrstunpar
@@ -32,9 +32,9 @@ fmrstunpar <- setClass("fmrstunpar",
                        )
 )
 
-#' @title An S4 class to represent a fit of an FMRs model
+#' @title An S4 class to represent a fitted FMRs model
 #'
-#' @description 'fmrsfit' is an S4 class represents a fit of FMRs models
+#' @description is an S4 class represents a fitted of FMRs model
 #'     resulted from running \code{\link{fmrs.mle}}
 #'     or \code{\link{fmrs.varsel}}
 #' @name fmrsfit-class

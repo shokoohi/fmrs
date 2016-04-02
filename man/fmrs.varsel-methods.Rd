@@ -23,9 +23,9 @@ fmrs.varsel(y, delta, x, nComp, ...)
 
 \item{nComp}{Order (Number of components) of mixture model}
 
-\item{...}{other possible options}
+\item{...}{Other possible options}
 
-\item{disFamily}{Name of sub-distributions' family. The options
+\item{disFamily}{A sub-distribution family. The options
 are \code{"norm"} for FMR models, \code{"lnorm"} for mixture of AFT
 regression models with Log-Normal sub-distributions, \code{"weibull"}
 for mixture of AFT regression models with Weibull sub-distributions}
@@ -58,7 +58,7 @@ EM algorithm}
 \item{convepsNR}{A positive value for treshold of convergence in
 NR algorithm}
 
-\item{porNR}{Used in pow(0.5, porNR) for tuning the increment in
+\item{porNR}{A positive interger for maximum number of searches in
 NR algorithm}
 
 \item{gamMixPor}{Proportion of mixing parameters in the penalty. The

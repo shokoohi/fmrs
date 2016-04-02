@@ -36,9 +36,9 @@ between covariates of design matrix}
 \item{umax}{A numeric value represents the upper bound in Uniform
 distribution for censoring}
 
-\item{...}{other possible options}
+\item{...}{Other possible options}
 
-\item{disFamily}{Specify the family of sub-distributioons. The options
+\item{disFamily}{A sub-distribution family. The options
 are \code{"lnormal"} for Log-Normal, \code{"norm"} for Normal and
 \code{"weibull"} for Weibull.}
 }

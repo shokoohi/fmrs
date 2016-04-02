@@ -7,7 +7,7 @@
 \title{An S4 class to represent estimated optimal lambdas}
 \description{
 An S4 class to represent estimated optimal lambdas resulted
-    from running \code{\link{fmrs.tunsel}}.
+    from running \code{\link{fmrs.tunsel}}
 }
 \section{Slots}{
 

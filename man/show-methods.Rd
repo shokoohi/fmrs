@@ -15,7 +15,7 @@ show(object)
 \item{object}{An \code{\link{fmrsfit-class}}}
 }
 \value{
-Display information about the fitted FMRs model
+Information about the fitted FMRs model
 }
 \description{
 Provides information about the fitted FMRs model

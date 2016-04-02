@@ -14,13 +14,13 @@ residuals(object, ...)
 \arguments{
 \item{object}{An \code{\link{fmrsfit-class}}}
 
-\item{...}{other possible arguments}
+\item{...}{Other possible arguments}
 }
 \value{
-A numeric array
+A numeric array of dimension-\code{nObs}-\code{nComp}
 }
 \description{
-Provides the residuals of an FMRs model from
+Provides the residuals of the fitted FMRs model from
 an \code{\link{fmrsfit-class}}
 }
 \examples{

@@ -14,13 +14,14 @@ coefficients(object, ...)
 \arguments{
 \item{object}{An \code{\link{fmrsfit-class}}}
 
-\item{...}{other possible arguments}
+\item{...}{Other possible arguments}
 }
 \value{
-A numeric array of dimension \code{(nCov+1)} by \code{nComp}
+A numeric array of dimension-\code{(nCov+1)}-\code{nComp}
 }
 \description{
-Provides the estimated regression coefficients from an
+Provides the estimated regression coefficients from the
+fitted FMRs model from an \code{\link{fmrsfit-class}}
 }
 \examples{
 set.seed(1980)
@@ -48,6 +49,5 @@ coefficients(res.mle)
 }
 \author{
 Farhad Shokoohi <shokoohi@icloud.com>
-\code{\link{fmrsfit-class}}
 }
 

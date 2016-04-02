@@ -4,9 +4,9 @@
 \name{fmrsfit-class}
 \alias{fmrsfit-class}
 \alias{frmsfit}
-\title{An S4 class to represent a fit of an FMRs model}
+\title{An S4 class to represent a fitted FMRs model}
 \description{
-'fmrsfit' is an S4 class represents a fit of FMRs models
+is an S4 class represents a fitted of FMRs model
     resulted from running \code{\link{fmrs.mle}}
     or \code{\link{fmrs.varsel}}
 }
