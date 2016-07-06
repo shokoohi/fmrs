@@ -10,9 +10,10 @@
 fmrs.tunsel(y, delta, x, nComp, ...)
 
 \S4method{fmrs.tunsel}{ANY}(y, delta, x, nComp, disFamily = "lnorm",
-  initCoeff, initDeviance, initmixProp, penFamily = "lasso", lambRidge = 0,
-  nIterEM = 2000, nIterNR = 2, conveps = 1e-08, convepsEM = 1e-08,
-  convepsNR = 1e-08, porNR = 2, gamMixPor = 1)
+  initCoeff, initDispersion, initmixProp, penFamily = "lasso",
+  lambRidge = 0, nIterEM = 2000, nIterNR = 2, conveps = 1e-08,
+  convepsEM = 1e-08, convepsNR = 1e-08, porNR = 2, gamMixPor = 1,
+  activeset, lambMCP, lambSICA)
 }
 \arguments{
 \item{y}{Responses (observations)}
@@ -26,7 +27,7 @@ fmrs.tunsel(y, delta, x, nComp, ...)
 \item{...}{Other possible options}
 
 \item{disFamily}{A sub-distribution family. The options
-are \code{"norm"} for FMR models,
+are \code{"norm"} for \code{FMR} models,
 \code{"lnorm"} for mixture of AFT regression models with Log-Normal
 sub-distributions, \code{"weibull"} for mixture of AFT regression
 models with Weibull sub-distributions,}
@@ -34,7 +35,7 @@ models with Weibull sub-distributions,}
 \item{initCoeff}{Vector of initial values for regression coefficients
 including intercepts}
 
-\item{initDeviance}{Vector of initial values for standard deviations}
+\item{initDispersion}{Vector of initial values for standard deviations}
 
 \item{initmixProp}{Vector of initial values for proportion of components}
 
@@ -51,10 +52,10 @@ Regression or Elastic Net}
 
 \item{conveps}{A positive value for avoiding NaN in computing divisions}
 
-\item{convepsEM}{A positive value for treshold of convergence in
+\item{convepsEM}{A positive value for threshold of convergence in
 EM algorithm}
 
-\item{convepsNR}{A positive value for treshold of convergence in
+\item{convepsNR}{A positive value for threshold of convergence in
 NR algorithm}
 
 \item{porNR}{A positive interger for maximum number of searches in
@@ -63,6 +64,13 @@ NR algorithm}
 \item{gamMixPor}{Proportion of mixing parameters in the penalty. The
 value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
 penalty structure is no longer mixture.}
+
+\item{activeset}{A matrix of zero-one that shows which intercepts and
+covariates are active in the fitted fmrs model}
+
+\item{lambMCP}{A positive numbers for \code{mcp}'s extra tuning parameter}
+
+\item{lambSICA}{A positive numbers for \code{sica}'s extra tuning parameter}
 }
 \value{
 An \code{\link{fmrstunpar-class}} that includes
@@ -96,7 +104,7 @@ set.seed(1980)
 nComp = 2
 nCov = 10
 nObs = 500
-deviance = c(1, 1)
+dispersion = c(1, 1)
 mixProp = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
@@ -104,30 +112,31 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-                     coeff = c(coeff1, coeff2), deviance = deviance,
+                     coeff = c(coeff1, coeff2), dispersion = dispersion,
                      mixProp = mixProp, rho = rho, umax = umax,
                      disFamily = "lnorm")
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    nComp = nComp, disFamily = "lnorm",
                    initCoeff = rnorm(nComp*nCov+nComp),
-                   initDeviance = rep(1, nComp),
+                   initDispersion = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 
 res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
                       nComp = nComp, disFamily = "lnorm",
                       initCoeff = c(coefficients(res.mle)),
-                      initDeviance = deviance(res.mle),
+                      initDispersion = dispersion(res.mle),
                       initmixProp = mixProp(res.mle),
                       penFamily = "adplasso")
-summary(res.lam)
+show(res.lam)
 }
 \author{
 Farhad Shokoohi <shokoohi@icloud.com>
 }
 \references{
 Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
-    (2016 submitted) Variable Selection in Mixture of Survival Models
+    (2016 submitted) Variable Selection in Mixture of Survival Models for
+    Biomedical Genomic Studies
 }
 \seealso{
 Other lnorm..norm..weibull: \code{\link{fmrs.gendata}},

@@ -8,10 +8,13 @@
 #' @import methods
 #' @slot ncomp A length-one numeric vector
 #' @slot lambPen A dimension-one-\code{ncomp} numeric array
+#' @slot MCPGam A length-one numeric vector
+#' @slot SICAGam A length-one numeric vector
 #' @slot disFamily A length-one character vector
 #' @slot penFamily A length-one character vector
 #' @slot lambRidge A length-one numeric vector
 #' @slot model A length-one character vector
+#' @slot activeset A dimension-\code{nobs}-\code{ncomp} 0-1 matrix
 #' @rdname fmrstunpar-class
 #' @keywords object
 #' @export
@@ -19,16 +22,22 @@ fmrstunpar <- setClass("fmrstunpar",
                        representation(ncomp = "numeric",
                                       lambPen = "array",
                                       lambRidge = "numeric",
+                                      MCPGam = "numeric",
+                                      SICAGam = "numeric",
                                       disFamily = "character",
                                       penFamily = "character",
-                                      model = "character"
+                                      model = "character",
+                                      activeset = "matrix"
                        ),
                        prototype (ncomp = numeric(length = 1L),
                                   lambPen = array(),
                                   lambRidge = numeric(length = 1L),
+                                  MCPGam = numeric(length = 1L),
+                                  SICAGam = numeric(length = 1L),
                                   disFamily = character(),
                                   penFamily = character(),
-                                  model = character()
+                                  model = character(),
+                                  activeset = matrix()
                        )
 )
 
@@ -46,7 +55,7 @@ fmrstunpar <- setClass("fmrstunpar",
 #' @slot ncov A length-one numeric vector
 #' @slot ncomp A length-one numeric vector
 #' @slot coefficients A length-\code{(ncov+1)}-\code{ncomp} numeric matrix
-#' @slot deviance A length-\code{ncomp} numeric vector
+#' @slot dispersion A length-\code{ncomp} numeric vector
 #' @slot mixProp A length-\code{ncomp} numeric vector
 #' @slot logLik A length-one numeric vector
 #' @slot BIC A length-one numeric vector
@@ -55,10 +64,13 @@ fmrstunpar <- setClass("fmrstunpar",
 #' @slot penFamily A length-one character vector
 #' @slot lambPen A length-\code{ncomp} numeric vector
 #' @slot lambRidge A length-one numeric vector
+#' @slot MCPGam A length-one numeric vector
+#' @slot SICAGam A length-one numeric vector
 #' @slot model A length-one character vector
 #' @slot fitted A dimension-\code{nobs}-\code{ncomp} numeric matrix
 #' @slot residuals A dimension-\code{nobs}-\code{ncomp} numeric matrix
 #' @slot weights A dimension-\code{nobs}-\code{ncomp} numeric matrix
+#' @slot activeset A dimension-\code{nobs}-\code{ncomp} 0-1 matrix
 #' @docType class
 #' @keywords object
 #' @rdname fmrsfit-class
@@ -71,7 +83,7 @@ frmsfit <- setClass("fmrsfit",
                                    ncov = "numeric",
                                    ncomp = "numeric",
                                    coefficients = "matrix",
-                                   deviance = "array",
+                                   dispersion = "array",
                                    mixProp = "array",
                                    logLik = "numeric",
                                    BIC = "numeric",
@@ -80,10 +92,13 @@ frmsfit <- setClass("fmrsfit",
                                    penFamily = "character",
                                    lambPen = "array",
                                    lambRidge = "numeric",
+                                   MCPGam = "numeric",
+                                   SICAGam = "numeric",
                                    model = "character",
                                    fitted = "matrix",
                                    residuals = "matrix",
-                                   weights = "matrix"
+                                   weights = "matrix",
+                                   activeset = "matrix"
                     ),
                     prototype (y = vector(),
                                delta = vector(),
@@ -92,7 +107,7 @@ frmsfit <- setClass("fmrsfit",
                                ncov = numeric(length = 1L),
                                ncomp = numeric(length = 1L),
                                coefficients = matrix(),
-                               deviance = array(),
+                               dispersion = array(),
                                mixProp = array(),
                                logLik = numeric(length = 1L),
                                BIC = numeric(length = 1L),
@@ -101,10 +116,13 @@ frmsfit <- setClass("fmrsfit",
                                penFamily = character(),
                                lambPen = array(),
                                lambRidge = numeric(length = 1L),
+                               MCPGam = numeric(length = 1L),
+                               SICAGam = numeric(length = 1L),
                                model = character(),
                                fitted = matrix(),
                                residuals = matrix(),
-                               weights = matrix()
+                               weights = matrix(),
+                               activeset = matrix()
                     ),
                     contains = "fmrstunpar"
 )

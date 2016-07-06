@@ -10,9 +10,9 @@
 fmrs.mle(y, delta, x, nComp, ...)
 
 \S4method{fmrs.mle}{ANY}(y, delta, x, nComp = 2, disFamily = "lnorm",
-  initCoeff, initDeviance, initmixProp, lambRidge = 0, nIterEM = 400,
+  initCoeff, initDispersion, initmixProp, lambRidge = 0, nIterEM = 400,
   nIterNR = 2, conveps = 1e-08, convepsEM = 1e-08, convepsNR = 1e-08,
-  porNR = 2)
+  porNR = 2, activeset)
 }
 \arguments{
 \item{y}{Responses (observations)}
@@ -26,14 +26,14 @@ fmrs.mle(y, delta, x, nComp, ...)
 \item{...}{Other possible options}
 
 \item{disFamily}{A sub-distribution family. The options
-are \code{"norm"} for FMR models, \code{"lnorm"} for mixture of AFT
+are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of AFT
 regression models with Log-Normal sub-distributions,\code{"weibull"}
-for mixture of AFT regression models with Weibull sub-distributions,}
+for mixture of AFT regression models with Weibull sub-distributions}
 
 \item{initCoeff}{Vector of initial values for regression coefficients
 including intercepts}
 
-\item{initDeviance}{Vector of initial values for standard deviations}
+\item{initDispersion}{Vector of initial values for standard deviations}
 
 \item{initmixProp}{Vector of initial values for proportion of components}
 
@@ -46,18 +46,21 @@ Regression or Elastic Net}
 
 \item{conveps}{A positive value for avoiding NaN in computing divisions}
 
-\item{convepsEM}{A positive value for treshold of convergence in
+\item{convepsEM}{A positive value for threshold of convergence in
 EM algorithm}
 
-\item{convepsNR}{A positive value for treshold of convergence in
+\item{convepsNR}{A positive value for threshold of convergence in
+Newton-Raphson algorithm}
+
+\item{porNR}{A positive integer for maximum number of searches in
 NR algorithm}
 
-\item{porNR}{A positive interger for maximum number of searches in
-NR algorithm}
+\item{activeset}{A matrix of zero-one that shows which intercepts and
+covariates are active in the fitted fmrs model}
 }
 \value{
 An \code{\link{fmrsfit-class}} that includes parameter
-    estimates of the specified FMRs model
+    estimates of the specified \code{FMRs} model
 }
 \description{
 Provides MLE for Finite Mixture of
@@ -109,7 +112,7 @@ set.seed(1980)
 nComp = 2
 nCov = 10
 nObs = 500
-deviance = c(1, 1)
+dispersion = c(1, 1)
 mixProp = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
@@ -117,14 +120,14 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-                     coeff = c(coeff1, coeff2), deviance = deviance,
+                     coeff = c(coeff1, coeff2), dispersion = dispersion,
                      mixProp = mixProp, rho = rho, umax = umax,
                      disFamily = "lnorm")
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                     nComp = nComp, disFamily = "lnorm",
                     initCoeff = rnorm(nComp*nCov+nComp),
-                    initDeviance = rep(1, nComp),
+                    initDispersion = rep(1, nComp),
                     initmixProp = rep(1/nComp, nComp))
 summary(res.mle)
 }
@@ -133,7 +136,8 @@ Farhad Shokoohi <shokoohi@icloud.com>
 }
 \references{
 Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
-    (2016 submitted) Variable Selection in Mixture of Survival Models
+    (2016 submitted) Variable Selection in Mixture of Survival Models for
+    Biomedical Genomic Studies
 }
 \seealso{
 Other lnorm..norm..weibull: \code{\link{fmrs.gendata}},

@@ -27,7 +27,7 @@ is an S4 class represents a fitted of FMRs model
 
 \item{\code{coefficients}}{A length-\code{(ncov+1)}-\code{ncomp} numeric matrix}
 
-\item{\code{deviance}}{A length-\code{ncomp} numeric vector}
+\item{\code{dispersion}}{A length-\code{ncomp} numeric vector}
 
 \item{\code{mixProp}}{A length-\code{ncomp} numeric vector}
 
@@ -45,6 +45,10 @@ is an S4 class represents a fitted of FMRs model
 
 \item{\code{lambRidge}}{A length-one numeric vector}
 
+\item{\code{MCPGam}}{A length-one numeric vector}
+
+\item{\code{SICAGam}}{A length-one numeric vector}
+
 \item{\code{model}}{A length-one character vector}
 
 \item{\code{fitted}}{A dimension-\code{nobs}-\code{ncomp} numeric matrix}
@@ -52,6 +56,8 @@ is an S4 class represents a fitted of FMRs model
 \item{\code{residuals}}{A dimension-\code{nobs}-\code{ncomp} numeric matrix}
 
 \item{\code{weights}}{A dimension-\code{nobs}-\code{ncomp} numeric matrix}
+
+\item{\code{activeset}}{A dimension-\code{nobs}-\code{ncomp} 0-1 matrix}
 }}
 \keyword{object}
 

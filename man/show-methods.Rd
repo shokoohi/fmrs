@@ -4,28 +4,39 @@
 \name{show}
 \alias{show}
 \alias{show,fmrsfit-method}
+\alias{show,fmrstunpar-method}
 \alias{show,show-method}
 \title{show method}
 \usage{
 show(object)
 
+show(object)
+
 \S4method{show}{fmrsfit}(object)
+
+\S4method{show}{fmrstunpar}(object)
 }
 \arguments{
-\item{object}{An \code{\link{fmrsfit-class}}}
+\item{object}{An \code{\link{fmrsfit-class}} or  \code{\link{fmrstunpar-class}}}
+
+\item{...}{Other possible arguments}
 }
 \value{
-Information about the fitted FMRs model
+Information about the fitted \code{FMRs} model
+
+Information about the selected tuning parameters
 }
 \description{
-Provides information about the fitted FMRs model
+Provides information about the fitted \code{FMRs} model
+
+Provides information about the selected tuning parameters
 }
 \examples{
 set.seed(1980)
 nComp = 2
 nCov = 10
 nObs = 500
-deviance = c(1, 1)
+dispersion = c(1, 1)
 mixProp = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
@@ -33,18 +44,27 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-                     coeff = c(coeff1, coeff2), deviance = deviance,
+                     coeff = c(coeff1, coeff2), dispersion = dispersion,
                      mixProp = mixProp, rho = rho, umax = umax,
                      disFamily = "lnorm")
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    nComp = nComp, disFamily = "lnorm",
                    initCoeff = rnorm(nComp*nCov+nComp),
-                   initDeviance = rep(1, nComp),
+                   initDispersion = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 show(res.mle)
+res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
+                      nComp = nComp, disFamily = "lnorm",
+                      initCoeff = c(coefficients(res.mle)),
+                      initDispersion = dispersion(res.mle),
+                      initmixProp = mixProp(res.mle),
+                      penFamily = "adplasso")
+show(res.lam)
 }
 \author{
+Farhad Shokoohi <shokoohi@icloud.com>
+
 Farhad Shokoohi <shokoohi@icloud.com>
 }
 

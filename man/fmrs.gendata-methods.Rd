@@ -7,26 +7,25 @@
 \alias{fmrs.gendata-method}
 \title{fmrs.gendata method}
 \usage{
-fmrs.gendata(nObs, nComp, nCov, coeff, deviance, mixProp, rho, umax, ...)
+fmrs.gendata(nObs, nComp, nCov, coeff, dispersion, mixProp, rho, umax, ...)
 
-\S4method{fmrs.gendata}{ANY}(nObs, nComp, nCov, coeff, deviance, mixProp, rho,
+\S4method{fmrs.gendata}{ANY}(nObs, nComp, nCov, coeff, dispersion, mixProp, rho,
   umax, disFamily = "lnorm")
 }
 \arguments{
-\item{nObs}{A numeric value represents number of observations (sample size)}
+\item{nObs}{A numeric value represents sample size}
 
-\item{nComp}{A numeric value represents the order (number of components)
-of an FMRs model}
+\item{nComp}{A numeric value represents the order mixture in \code{FMRs} model}
 
-\item{nCov}{A numberic value represents the number of covariates in
+\item{nCov}{A numeric value represents the number of covariates in
 design matrix}
 
 \item{coeff}{A vector of all regression coefficients including
 intercepts. It must be a vector of length
-\code{nComp} by \code{nCov+1}.}
+\code{nComp} *(\code{nCov+1}).}
 
-\item{deviance}{A vector of positive values for dispersion parameters of
-sub-distributions in FMRs models}
+\item{dispersion}{A vector of positive values for dispersion parameters of
+sub-distributions in \code{FMRs} models}
 
 \item{mixProp}{A vector of mixing proportions which their sum must be one}
 
@@ -39,8 +38,9 @@ distribution for censoring}
 \item{...}{Other possible options}
 
 \item{disFamily}{A sub-distribution family. The options
-are \code{"lnormal"} for Log-Normal, \code{"norm"} for Normal and
-\code{"weibull"} for Weibull.}
+are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of AFT
+regression models with Log-Normal sub-distributions,\code{"weibull"}
+for mixture of AFT regression models with Weibull sub-distributions}
 }
 \value{
 A list including reponse, covariates and cenroing variables
@@ -56,7 +56,7 @@ nComp = 2
 nCov = 10
 nObs = 500
 REP = 500
-deviance = c(1, 1)
+dispersion = c(1, 1)
 mixProp = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
@@ -64,7 +64,7 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-                     coeff = c(coeff1, coeff2), deviance = deviance,
+                     coeff = c(coeff1, coeff2), dispersion = dispersion,
                      mixProp =mixProp, rho = rho, umax = umax,
                      disFamily = "lnorm")
 }

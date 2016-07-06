@@ -4,31 +4,40 @@
 \name{summary}
 \alias{summary}
 \alias{summary,fmrsfit-method}
+\alias{summary,fmrstunpar-method}
 \alias{summary,summary-method}
 \title{summary method}
 \usage{
 summary(object, ...)
 
+summary(object, ...)
+
 \S4method{summary}{fmrsfit}(object, ...)
+
+\S4method{summary}{fmrstunpar}(object, ...)
 }
 \arguments{
-\item{object}{An \code{\link{fmrsfit-class}}}
+\item{object}{An \code{\link{fmrsfit-class}} or \code{\link{fmrstunpar-class}}}
 
 \item{...}{Other possible arguments}
 }
 \value{
-Summary of the fitted FMRs model
+Summary of the fitted \code{FMRs} model
+
+Summary of the selected component-wise tuning parameters
 }
 \description{
-Displays the fitted FMRs model by showing the estimated
-coefficients, deviances and mixing proportions
+Displays the fitted \code{FMRs} model by showing the estimated
+coefficients, dispersions and mixing proportions
+
+Display the selected component-wise tuning parameters
 }
 \examples{
 set.seed(1980)
 nComp = 2
 nCov = 10
 nObs = 500
-deviance = c(1, 1)
+dispersion = c(1, 1)
 mixProp = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
@@ -36,18 +45,27 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-                     coeff = c(coeff1, coeff2), deviance = deviance,
+                     coeff = c(coeff1, coeff2), dispersion = dispersion,
                      mixProp = mixProp, rho = rho, umax = umax,
                      disFamily = "lnorm")
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    nComp = nComp, disFamily = "lnorm",
                    initCoeff = rnorm(nComp*nCov+nComp),
-                   initDeviance = rep(1, nComp),
+                   initDispersion = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
 summary(res.mle)
+res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
+                      nComp = nComp, disFamily = "lnorm",
+                      initCoeff = c(coefficients(res.mle)),
+                      initDispersion = dispersion(res.mle),
+                      initmixProp = mixProp(res.mle),
+                      penFamily = "adplasso")
+summary(res.lam)
 }
 \author{
+Farhad Shokoohi <shokoohi@icloud.com>
+
 Farhad Shokoohi <shokoohi@icloud.com>
 }
 

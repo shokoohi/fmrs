@@ -2,7 +2,7 @@ citHeader("To cite fmrs in publications use:")
 
 citEntry(entry = "Manual",
          title = paste('{fmrs}: Variable Selection in Finite Mixture of AFT
-         Regression and FMR, Version 1.0-6'),
+         Regression and FMR, Version 1.0-9'),
          author = c(person("Farhad", "Shokoohi"),
                     person("Abbas", "Khalili"),
                     person("Masoud", "Asgharian"),
@@ -11,40 +11,22 @@ citEntry(entry = "Manual",
          url = 'https://CRAN.R-project.org/package=fmrs',
          textVersion  =
            paste('Farhad Shokoohi et. al. (2016) {fmrs}: Variable Selection in
-           Finite Mixture of AFT, Version 1.0-6 ',
+           Finite Mixture of AFT Regression and FMR, Version 1.0-9 ',
            'URL  https://CRAN.R-project.org/package=fmrs', sep="")
 )
 
 citEntry(entry = "Article",
-         title = "Variable Selection in Finite Mixture of Survival Models",
+         title = "Variable Selection in Finite Mixture of Survival Models for
+         Biomedical Genomic Studies",
          author = c(person("Farhad", "Shokoohi"),
                     person("Abbas", "Khalili"),
                     person("Masoud", "Asgharian"),
                     person("Shili", "Lin")),
          year = '2016',
-         journal = "To be submitted",
+         journal = "submitted",
          textVersion =
            paste('Shokoohi, F., Khalili A., Asgharian M, and Lin S. (2016).',
-                 'Variable Selection in Finite Mixture of Survival Models.',
-                 'To be submitted' )
+                 'Variable Selection in Finite Mixture of Survival Models for
+                 Biomedical Genomic Studies.',
+                 'submitted' )
 )
-
-bibentry(bibtype = "Manual",
-         title = paste('{fmrs}: Variable Selection in Finite Mixture of AFT
-         Regression and FMR, Version 1.0-6'),
-         author = c(person("Farhad", "Shokoohi"),
-                    person("Abbas", "Khalili"),
-                    person("Masoud", "Asgharian"),
-                    person("Shili", "Lin")),
-         year = '2016',
-         url = 'https://CRAN.R-project.org/package=fmrs')
-
-bibentry(bibtype = "Article",
-         title = 'Variable Selection in Finite Mixture of Survival Models',
-         author = c(person("Farhad", "Shokoohi"),
-                    person("Abbas", "Khalili"),
-                    person("Masoud", "Asgharian"),
-                    person("Shili", "Lin")),
-         journal = 'To be submitted',
-         year = '2016',
-         url = 'https://CRAN.R-project.org/package=fmrs')

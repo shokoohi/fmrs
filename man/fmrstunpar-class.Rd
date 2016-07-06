@@ -16,6 +16,10 @@ An S4 class to represent estimated optimal lambdas resulted
 
 \item{\code{lambPen}}{A dimension-one-\code{ncomp} numeric array}
 
+\item{\code{MCPGam}}{A length-one numeric vector}
+
+\item{\code{SICAGam}}{A length-one numeric vector}
+
 \item{\code{disFamily}}{A length-one character vector}
 
 \item{\code{penFamily}}{A length-one character vector}
@@ -23,6 +27,8 @@ An S4 class to represent estimated optimal lambdas resulted
 \item{\code{lambRidge}}{A length-one numeric vector}
 
 \item{\code{model}}{A length-one character vector}
+
+\item{\code{activeset}}{A dimension-\code{nobs}-\code{ncomp} 0-1 matrix}
 }}
 \keyword{object}
 

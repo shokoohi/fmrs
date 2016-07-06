@@ -17,13 +17,14 @@ The function `fmrs.gendata` generates a data set from an FMRs model.
 It has the form
 
 ````
-fmrs.gendata(nObs, nComp, nCov, coeff, deviance, mixProp, rho, umax, ...)
+fmrs.gendata(nObs, nComp, nCov, coeff, dispersion, mixProp, rho, umax, ...)
 ````
 
 where `n` is the sample size, `nComp` is the order of FMRs model, `nCov` is 
-the number of regression covariates, `coeff`, `deviance` and `mixProp` are 
+the number of regression covariates, `coeff`, `dispersion` and `mixProp` are 
 the parameters of regression models, i.e. regression coefficients, 
-dispersion of errors (sub-distributions) and the mixing proportions, 
+dispersion (standard deviation) of the errors (sub-distributions) and 
+mixing proportions, 
 respectively, and `rho` is the used in the variance-covariance matrix for 
 simulating the design matrix `x`, and `umax` is the upper bound for 
 Uniform distribution for generating censoring times. 
@@ -54,7 +55,7 @@ fmrs.mle(y, x, delta, nComp, ...)
 
 where `y`, `x` and `delta` are observations, covariates and censoring 
 indicators respectively, and `nComp` is the order of FMRs, `initCoeff`, 
-`initDeviance` and `initmixProp` are initial values for EM and NR 
+`initDispersion` and `initmixProp` are initial values for EM and NR 
 algorithms, and the rest of arguments of the function are controlling 
 parameres. The function returns a fitted FMRs model with estimates of 
 regression parameters, standard deviations and mixing proportions of the 
@@ -132,7 +133,7 @@ set.seed(1980)
 nComp = 2
 nCov = 10
 nObs = 500
-deviance = c(1, 1)
+dispersion = c(1, 1)
 mixProp = c(0.4, 0.6)
 rho = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
@@ -146,8 +147,8 @@ follow.
 
 ```{r}
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-                     coeff = c(coeff1, coeff2), deviance = deviance,
-                     mixProp = mixProp, rho = rho, umax = umax, 
+                     coeff = c(coeff1, coeff2), dispersion = dispersion,
+                     mixProp = mixProp, rho = rho, umax = umax,
                      disFamily = "lnorm")
 ```
 
@@ -158,13 +159,12 @@ generate the initial values form a Normal distribution with
 
 ```{r}
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-                    nComp = nComp, disFamily = "lnorm",
-                    initCoeff = rnorm(nComp*nCov+nComp),
-                    initDeviance = rep(1, nComp),
-                    initmixProp = rep(1/nComp, nComp))
-
+                   nComp = nComp, disFamily = "lnorm",
+                   initCoeff = rnorm(nComp*nCov+nComp),
+                   initDispersion = rep(1, nComp),
+                   initmixProp = rep(1/nComp, nComp))
 coefficients(res.mle)
-deviance(res.mle)
+dispersion(res.mle)
 mixProp(res.mle)
 ```
 
@@ -179,12 +179,12 @@ investigate if common tuning parameter performs better.
 
 ```{r}
 res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
-                       nComp = nComp, disFamily = "lnorm",
-                       initCoeff = coefficients(res.mle),
-                       initDeviance = deviance(res.mle),
-                       initmixProp = mixProp(res.mle), 
-                       penFamily = "adplasso")
-show(res.lam)
+                      nComp = nComp, disFamily = "lnorm",
+                      initCoeff = c(coefficients(res.mle)),
+                      initDispersion = dispersion(res.mle),
+                      initmixProp = mixProp(res.mle),
+                      penFamily = "adplasso")
+summary(res.lam)
 ```
 
 We have used MLE estimates as initial values for estimating the tuning 
@@ -193,14 +193,14 @@ adaptive lasso penalty as follows.
 
 ```{r}
 res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
-                       nComp = nComp, disFamily = "lnorm",
-                       initCoeff = coefficients(res.mle),
-                       initDeviance = deviance(res.mle),
-                       initmixProp = mixProp(res.mle), 
-                       penFamily = "adplasso",
-                       lambPen = slot(res.lam, "lambPen"))
+                      nComp = ncomp(res.mle), disFamily = "lnorm",
+                      initCoeff=c(coefficients(res.mle)),
+                      initDispersion = dispersion(res.mle),
+                      initmixProp = mixProp(res.mle),
+                      penFamily = "adplasso",
+                      lambPen = slot(res.lam, "lambPen"))
 coefficients(res.var)
-deviance(res.var)
+dispersion(res.var)
 mixProp(res.var)
 ```
 
@@ -209,7 +209,7 @@ non-zero coefficients. Note that a switching between components of mixture
 has happened here.   
 
 ```{r}
-round(coefficients(res.var)[-1,],5)
+round(coefficients(res.var)[-1,],3)
 ```
 
 Therefore the variable selection and parameter estimation is done 
