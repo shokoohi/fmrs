@@ -1,0 +1,31 @@
+Package: DMCFB
+Type: Package
+Title: Differentially Methylated CpG using Functional Bayesian Model
+Version: 0.99.0
+Author: Farhad Shokoohi
+Maintainer: Farhad Shokoohi <shokoohi@icloud.com>
+Description: A pipeline for identifying differentially methylated CpG sites 
+    using a functional Bayesian model in bisulfite sequencing data.
+Depends: R (>= 3.5.0),
+    SummarizedExperiment,
+    methods,
+    S4Vectors,
+    BiocParallel,
+    GenomicRanges,
+    IRanges
+Imports: utils,
+    stats,
+    grDevices,
+    rtracklayer,
+    calibrate,
+    graphics
+Suggests: testthat, 
+    knitr
+VignetteBuilder:
+    knitr
+biocViews: DifferentialMethylation, Sequencing, FunctionalBayesianModel, Coverage
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+BugReports: https://github.com/shokoohi/DMCFB/issues
+RoxygenNote: 6.1.1
