@@ -2,8 +2,8 @@
 % Please edit documentation in R/fmrs-package.R
 \docType{package}
 \name{fmrs-package}
-\alias{fmrs}
 \alias{fmrs-package}
+\alias{fmrs}
 \title{Variable Selection in Finite Mixture of AFT Regression and
     FMR}
 \description{

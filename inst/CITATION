@@ -2,7 +2,7 @@ citHeader("To cite fmrs in publications use:")
 
 citEntry(entry = "Manual",
          title = paste('{fmrs}: Variable Selection in Finite Mixture of AFT
-         Regression and FMR, Version 1.0-9'),
+         Regression and FMR, Version 1.1-0'),
          author = c(person("Farhad", "Shokoohi"),
                     person("Abbas", "Khalili"),
                     person("Masoud", "Asgharian"),
@@ -10,8 +10,8 @@ citEntry(entry = "Manual",
          year = '2016',
          url = 'https://CRAN.R-project.org/package=fmrs',
          textVersion  =
-           paste('Farhad Shokoohi et. al. (2016) {fmrs}: Variable Selection in
-           Finite Mixture of AFT Regression and FMR, Version 1.0-9 ',
+           paste('Farhad Shokoohi et. al. (2017) {fmrs}: Variable Selection in
+           Finite Mixture of AFT, Version 1.1-0 ',
            'URL  https://CRAN.R-project.org/package=fmrs', sep="")
 )
 
@@ -22,11 +22,11 @@ citEntry(entry = "Article",
                     person("Abbas", "Khalili"),
                     person("Masoud", "Asgharian"),
                     person("Shili", "Lin")),
-         year = '2016',
+         year = '2017',
          journal = "submitted",
          textVersion =
-           paste('Shokoohi, F., Khalili A., Asgharian M, and Lin S. (2016).',
+           paste('Shokoohi, F., Khalili A., Asgharian M, and Lin S. (2017).',
                  'Variable Selection in Finite Mixture of Survival Models for
-                 Biomedical Genomic Studies.',
+                  Biomedical Genomic Studies',
                  'submitted' )
 )

@@ -2,8 +2,8 @@
 % Please edit documentation in R/AllClasses.R
 \docType{class}
 \name{fmrstunpar-class}
-\alias{fmrstunpar}
 \alias{fmrstunpar-class}
+\alias{fmrstunpar}
 \title{An S4 class to represent estimated optimal lambdas}
 \description{
 An S4 class to represent estimated optimal lambdas resulted
@@ -28,7 +28,11 @@ An S4 class to represent estimated optimal lambdas resulted
 
 \item{\code{model}}{A length-one character vector}
 
-\item{\code{activeset}}{A dimension-\code{nobs}-\code{ncomp} 0-1 matrix}
-}}
-\keyword{object}
+\item{\code{oracleset}}{A dimension-\code{(ncov+1)}-\code{ncomp} 0-1 matrix}
 
+\item{\code{activeset}}{A dimension-\code{(ncov+1)}-\code{ncomp} 0-1 matrix}
+
+\item{\code{cutpoint}}{A length-one numeric vector}
+}}
+
+\keyword{object}

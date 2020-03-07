@@ -6,7 +6,7 @@ AlwaysSaveHistory: Default
 
 EnableCodeIndexing: Yes
 UseSpacesForTab: Yes
-NumSpacesForTab: 2
+NumSpacesForTab: 4
 Encoding: UTF-8
 
 RnwWeave: knitr
@@ -18,5 +18,5 @@ StripTrailingWhitespace: Yes
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
-PackageCheckArgs: --use-valgrind --as-cran
+PackageCheckArgs: run --vanilla  --as-cran
 PackageRoxygenize: rd,collate,namespace,vignette

@@ -1,5 +1,4 @@
 #' @title An S4 class to represent estimated optimal lambdas
-#'
 #' @description An S4 class to represent estimated optimal lambdas resulted
 #'     from running \code{\link{fmrs.tunsel}}
 #' @name fmrstunpar-class
@@ -14,35 +13,40 @@
 #' @slot penFamily A length-one character vector
 #' @slot lambRidge A length-one numeric vector
 #' @slot model A length-one character vector
-#' @slot activeset A dimension-\code{nobs}-\code{ncomp} 0-1 matrix
+#' @slot oracleset A dimension-\code{(ncov+1)}-\code{ncomp} 0-1 matrix
+#' @slot activeset A dimension-\code{(ncov+1)}-\code{ncomp} 0-1 matrix
+#' @slot cutpoint A length-one numeric vector
 #' @rdname fmrstunpar-class
 #' @keywords object
 #' @export
 fmrstunpar <- setClass("fmrstunpar",
-                       representation(ncomp = "numeric",
-                                      lambPen = "array",
-                                      lambRidge = "numeric",
-                                      MCPGam = "numeric",
-                                      SICAGam = "numeric",
-                                      disFamily = "character",
-                                      penFamily = "character",
-                                      model = "character",
-                                      activeset = "matrix"
-                       ),
-                       prototype (ncomp = numeric(length = 1L),
-                                  lambPen = array(),
-                                  lambRidge = numeric(length = 1L),
-                                  MCPGam = numeric(length = 1L),
-                                  SICAGam = numeric(length = 1L),
-                                  disFamily = character(),
-                                  penFamily = character(),
-                                  model = character(),
-                                  activeset = matrix()
-                       )
+    representation(ncomp = "numeric",
+    lambPen = "array",
+    lambRidge = "numeric",
+    MCPGam = "numeric",
+    SICAGam = "numeric",
+    disFamily = "character",
+    penFamily = "character",
+    model = "character",
+    oracleset = "matrix",
+    activeset = "matrix",
+    cutpoint = "numeric"
+    ),
+    prototype (ncomp = numeric(length = 1L),
+    lambPen = array(),
+    lambRidge = numeric(length = 1L),
+    MCPGam = numeric(length = 1L),
+    SICAGam = numeric(length = 1L),
+    disFamily = character(),
+    penFamily = character(),
+    model = character(),
+    oracleset = matrix(),
+    activeset = matrix(),
+    cutpoint = numeric(length = 1L)
+    )
 )
 
 #' @title An S4 class to represent a fitted FMRs model
-#'
 #' @description is an S4 class represents a fitted of FMRs model
 #'     resulted from running \code{\link{fmrs.mle}}
 #'     or \code{\link{fmrs.varsel}}
@@ -70,70 +74,73 @@ fmrstunpar <- setClass("fmrstunpar",
 #' @slot fitted A dimension-\code{nobs}-\code{ncomp} numeric matrix
 #' @slot residuals A dimension-\code{nobs}-\code{ncomp} numeric matrix
 #' @slot weights A dimension-\code{nobs}-\code{ncomp} numeric matrix
-#' @slot activeset A dimension-\code{nobs}-\code{ncomp} 0-1 matrix
+#' @slot oracleset A dimension-\code{(ncov+1)}-\code{ncomp} 0-1 matrix
+#' @slot activeset A dimension-\code{(ncov+1)}-\code{ncomp} 0-1 matrix
+#' @slot cutpoint A length-one numeric vector
 #' @docType class
 #' @keywords object
 #' @rdname fmrsfit-class
 #' @exportClass fmrsfit
 frmsfit <- setClass("fmrsfit",
-                    representation(y = "vector",
-                                   delta = "vector",
-                                   x = "matrix",
-                                   nobs = "numeric",
-                                   ncov = "numeric",
-                                   ncomp = "numeric",
-                                   coefficients = "matrix",
-                                   dispersion = "array",
-                                   mixProp = "array",
-                                   logLik = "numeric",
-                                   BIC = "numeric",
-                                   nIterEMconv = "numeric",
-                                   disFamily = "character",
-                                   penFamily = "character",
-                                   lambPen = "array",
-                                   lambRidge = "numeric",
-                                   MCPGam = "numeric",
-                                   SICAGam = "numeric",
-                                   model = "character",
-                                   fitted = "matrix",
-                                   residuals = "matrix",
-                                   weights = "matrix",
-                                   activeset = "matrix"
-                    ),
-                    prototype (y = vector(),
-                               delta = vector(),
-                               x = matrix(),
-                               nobs = numeric(length = 1L),
-                               ncov = numeric(length = 1L),
-                               ncomp = numeric(length = 1L),
-                               coefficients = matrix(),
-                               dispersion = array(),
-                               mixProp = array(),
-                               logLik = numeric(length = 1L),
-                               BIC = numeric(length = 1L),
-                               nIterEMconv = numeric(length = 1L),
-                               disFamily = character(),
-                               penFamily = character(),
-                               lambPen = array(),
-                               lambRidge = numeric(length = 1L),
-                               MCPGam = numeric(length = 1L),
-                               SICAGam = numeric(length = 1L),
-                               model = character(),
-                               fitted = matrix(),
-                               residuals = matrix(),
-                               weights = matrix(),
-                               activeset = matrix()
-                    ),
-                    contains = "fmrstunpar"
+    representation(y = "vector",
+    delta = "vector",
+    x = "matrix",
+    nobs = "numeric",
+    ncov = "numeric",
+    ncomp = "numeric",
+    coefficients = "matrix",
+    dispersion = "array",
+    mixProp = "array",
+    logLik = "numeric",
+    BIC = "numeric",
+    nIterEMconv = "numeric",
+    disFamily = "character",
+    penFamily = "character",
+    lambPen = "array",
+    lambRidge = "numeric",
+    MCPGam = "numeric",
+    SICAGam = "numeric",
+    model = "character",
+    fitted = "matrix",
+    residuals = "matrix",
+    weights = "matrix",
+    oracleset = "matrix",
+    activeset = "matrix",
+    cutpoint = "numeric"
+    ),
+    prototype (y = vector(),
+    delta = vector(),
+    x = matrix(),
+    nobs = numeric(length = 1L),
+    ncov = numeric(length = 1L),
+    ncomp = numeric(length = 1L),
+    coefficients = matrix(),
+    dispersion = array(),
+    mixProp = array(),
+    logLik = numeric(length = 1L),
+    BIC = numeric(length = 1L),
+    nIterEMconv = numeric(length = 1L),
+    disFamily = character(),
+    penFamily = character(),
+    lambPen = array(),
+    lambRidge = numeric(length = 1L),
+    MCPGam = numeric(length = 1L),
+    SICAGam = numeric(length = 1L),
+    model = character(),
+    fitted = matrix(),
+    residuals = matrix(),
+    weights = matrix(),
+    oracleset = matrix(),
+    activeset = matrix(),
+    cutpoint = numeric(length = 1L)
+    ),
+    contains = "fmrstunpar"
 )
 
-
-
 validity.fmrsfit <- function(object) {
-  if( (length(object@y)!= object@nobs) | (dim(object@x)[1]!= object@nobs) |
-      (dim(object@x)[1]!=length(object@y)) ) {
+    if( (length(object@y)!= object@nobs) | (dim(object@x)[1]!= object@nobs) |
+    (dim(object@x)[1]!=length(object@y)) ) {
     return("data do not match")
-  }else return(TRUE)
-}
-
+    }else return(TRUE)
+    }
 
