@@ -27,36 +27,33 @@ fmrs.varsel(y, delta, x, nComp, ...)
   convepsNR = 1e-08,
   porNR = 2,
   gamMixPor = 1,
-  oracle,
+  activeset,
   lambMCP,
-  lambSICA,
-  penVar = FALSE,
-  cutpoint = 0.1
+  lambSICA
 )
 }
 \arguments{
-\item{y}{Response vector}
+\item{y}{Responses (observations)}
 
-\item{delta}{Censoring indicator vector}
+\item{delta}{Censoring indicators}
 
 \item{x}{Design matrix (covariates)}
 
-\item{nComp}{A numeric value represents the order of mixture in \code{FMRs}}
+\item{nComp}{Order (Number of components) of mixture model}
 
 \item{...}{Other possible options}
 
-\item{disFamily}{A component-wise distribution family. The options
-are \code{"norm"} for FMR models, \code{"lnorm"} for mixture of AFT
-regression models with Log-Normal component-wise distribution,
-\code{"weibull"} for mixture of AFT regression models with Weibull
-component-wise distributions}
+\item{disFamily}{A sub-distribution family. The options
+are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of AFT
+regression models with Log-Normal sub-distributions, \code{"weibull"}
+for mixture of AFT regression models with Weibull sub-distributions}
 
-\item{initCoeff}{A vector of initial values for regression coefficients
+\item{initCoeff}{Vector of initial values for regression coefficients
 including intercepts}
 
-\item{initDispersion}{A vector of initial values for standard deviations}
+\item{initDispersion}{Vector of initial values for standard deviations}
 
-\item{initmixProp}{A vector of initial values for proportion of components}
+\item{initmixProp}{Vector of initial values for proportion of components}
 
 \item{penFamily}{Penalty name that is used in variable selection method
 The available options are  \code{"lasso"}, \code{"adplasso"},
@@ -67,17 +64,17 @@ The available options are  \code{"lasso"}, \code{"adplasso"},
 \item{lambRidge}{A positive value for tuning parameter in Ridge
 Regression or Elastic Net}
 
-\item{nIterEM}{Maximum number of iterations for E-M algorithm}
+\item{nIterEM}{Maximum number of iterations for EM algorithm}
 
 \item{nIterNR}{Maximum number of iterations for Newton-Raphson algorithm}
 
 \item{conveps}{A positive value for avoiding NaN in computing divisions}
 
 \item{convepsEM}{A positive value for threshold of convergence in
-E-M algorithm}
+EM algorithm}
 
 \item{convepsNR}{A positive value for threshold of convergence in
-Newton-Raphson algorithm}
+NR algorithm}
 
 \item{porNR}{A positive interger for maximum number of searches in
 NR algorithm}
@@ -86,27 +83,21 @@ NR algorithm}
 value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
 penalty structure is no longer mixture.}
 
-\item{oracle}{A matrix of zero-one that shows which intercepts and
-covariates are included in the fitted fmrs model}
+\item{activeset}{A matrix of zero-one that shows which intercepts and
+covariates are active in the fitted fmrs model}
 
 \item{lambMCP}{A positive numbers for \code{mcp}'s extra tuning parameter}
 
 \item{lambSICA}{A positive numbers for \code{sica}'s extra tuning parameter}
-
-\item{penVar}{default is FALSE. If it is chosen as TRUE then it
-penalizes the dispersions of components according to the penalty
-in Chen and Tau (2008 JMA) to avoid small values.}
-
-\item{cutpoint}{A positive integer for setting the estimates to zero
-if they are too small. The default is 0.1.}
 }
 \value{
 \code{\link{fmrsfit-class}}
 }
 \description{
-Provides variable selection and penalized MLE for Finite
-Mixture of Accelerated Failure Time Regression Models and Finite Mixture
-of Regression Models. It also provides Ridge Regression and Elastic Net.
+Provides variable selection and penalized MLE for
+    Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models
+    and Finite Mixture of Regression (\code{FMR}) Models.
+    It also provide Ridge Regression and Elastic Net.
 }
 \details{
 The penalized likelihood of a finite mixture of AFT regression
@@ -116,7 +107,7 @@ The penalized likelihood of a finite mixture of AFT regression
     where \deqn{\mathbf{p}_{\boldsymbol\lambda_{n}}(\boldsymbol\Psi) =
     \sum\limits_{k=1}^{K}\pi_{k}^\alpha\left\{
     \sum\limits_{j=1}^{d}p_{\lambda_{n,k}}(\beta_{kj}) \right\}.}
-    In the M step of E-M algorithm the
+    In the M step of EM algorithm the
     function \deqn{\tilde{Q}(\boldsymbol\Psi,\boldsymbol\Psi^{(m)})
     =\sum\limits_{k=1}^{K} \tilde{Q}_{k}(\boldsymbol\Psi_k,
     \boldsymbol\Psi^{(m)}_k) =
@@ -138,9 +129,9 @@ The penalized likelihood of a finite mixture of AFT regression
     \left[{Q}_{k}(\boldsymbol\Psi_k,\boldsymbol\Psi^{(m)}_k)-
     \mathbf{p}^\ast_{k,\boldsymbol\lambda_{n}}(\boldsymbol\beta,
     \boldsymbol\beta^{(m)})\right].}
-    In case of Log-Normal component-wise distribution, the maximizers of
-    \eqn{Q_k} functions are as follows. Given the data and current estimates
-     of parameters, the maximizers are \deqn{{\boldsymbol\beta}^{(m+1)}_{k}
+    In case of Log-Normal sub-distributions, the maximizers of \eqn{Q_k}
+    functions are as follows. Given the data and current estimates of
+    parameters, the maximizers are \deqn{{\boldsymbol\beta}^{(m+1)}_{k}
     =({\boldsymbol z}^{\prime}\boldsymbol\tau^{(m)}_{k}{\boldsymbol z}+
     \varpi_{k}(\boldsymbol\beta_{kj}^{(m)}))^{-1}{\boldsymbol z}^{\prime}
     \boldsymbol\tau^{(m)}_{k}T^{(m)}_{k},}
@@ -177,34 +168,36 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
- coeff = c(coeff1, coeff2), dispersion = dispersion,
-  mixProp =mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+                     coeff = c(coeff1, coeff2), dispersion = dispersion,
+                     mixProp =mixProp, rho = rho, umax = umax,
+                     disFamily = "lnorm")
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
- nComp = nComp, disFamily = "lnorm",
- initCoeff = rnorm(nComp*nCov+nComp),
- initDispersion = rep(1, nComp),
- initmixProp = rep(1/nComp, nComp))
+                   nComp = nComp, disFamily = "lnorm",
+                   initCoeff = rnorm(nComp*nCov+nComp),
+                   initDispersion = rep(1, nComp),
+                   initmixProp = rep(1/nComp, nComp))
 
 res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
- nComp = ncomp(res.mle), disFamily = "lnorm",
- initCoeff=c(coefficients(res.mle)),
- initDispersion = dispersion(res.mle),
- initmixProp = mixProp(res.mle), penFamily = "adplasso")
+                      nComp = ncomp(res.mle), disFamily = "lnorm",
+                      initCoeff=c(coefficients(res.mle)),
+                      initDispersion = dispersion(res.mle),
+                      initmixProp = mixProp(res.mle),
+                      penFamily = "adplasso")
 res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
- nComp = ncomp(res.mle), disFamily = "lnorm",
- initCoeff=c(coefficients(res.mle)),
- initDispersion = dispersion(res.mle),
- initmixProp = mixProp(res.mle),
- penFamily = "adplasso",
- lambPen = slot(res.lam, "lambPen"))
+                      nComp = ncomp(res.mle), disFamily = "lnorm",
+                      initCoeff=c(coefficients(res.mle)),
+                      initDispersion = dispersion(res.mle),
+                      initmixProp = mixProp(res.mle),
+                      penFamily = "adplasso",
+                      lambPen = slot(res.lam, "lambPen"))
 
 coefficients(res.var)[-1,]
 round(coefficients(res.var)[-1,],5)
 }
 \references{
 Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
-(2017 submitted) Variable Selection in Mixture of Survival Models for
+(2016 submitted) Variable Selection in Mixture of Survival Models for
 Biomedical Genomic Studies
 }
 \seealso{
@@ -220,8 +213,9 @@ Farhad Shokoohi <shokoohi@icloud.com>
 \concept{lnorm, norm, weibull}
 \keyword{AFT}
 \keyword{Adaptive}
+\keyword{Algorithm}
 \keyword{Censored}
-\keyword{E-M}
+\keyword{EM}
 \keyword{ElasticNet}
 \keyword{FMR}
 \keyword{LASSO}
@@ -231,4 +225,3 @@ Farhad Shokoohi <shokoohi@icloud.com>
 \keyword{SCAD}
 \keyword{SICA}
 \keyword{Selection}
-\keyword{algorithm}

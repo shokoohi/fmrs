@@ -2,31 +2,35 @@ citHeader("To cite fmrs in publications use:")
 
 citEntry(entry = "Manual",
          title = paste('{fmrs}: Variable Selection in Finite Mixture of AFT
-         Regression and FMR, Version 1.1-0'),
+         Regression and FMR, Version 0.99.1'),
          author = c(person("Farhad", "Shokoohi"),
                     person("Abbas", "Khalili"),
                     person("Masoud", "Asgharian"),
                     person("Shili", "Lin")),
-         year = '2016',
-         url = 'https://CRAN.R-project.org/package=fmrs',
+         year = '2020',
+         url = 'https://github.com/shokoohi/fmrs',
          textVersion  =
-           paste('Farhad Shokoohi et. al. (2017) {fmrs}: Variable Selection in
-           Finite Mixture of AFT, Version 1.1-0 ',
-           'URL  https://CRAN.R-project.org/package=fmrs', sep="")
+           paste('Farhad Shokoohi et. al. (2019) {fmrs}: Variable Selection in
+           Finite Mixture of AFT, Version 0.99.1 ',
+           'URL  https://github.com/shokoohi/fmrs', sep="")
 )
 
 citEntry(entry = "Article",
-         title = "Variable Selection in Finite Mixture of Survival Models for
-         Biomedical Genomic Studies",
+         title = "Capturing heterogeneity of covariate effects in hidden
+	 subpopulations in the presence of censoring and large number of covariates",
          author = c(person("Farhad", "Shokoohi"),
                     person("Abbas", "Khalili"),
                     person("Masoud", "Asgharian"),
                     person("Shili", "Lin")),
-         year = '2017',
-         journal = "submitted",
+         year = '2019',
+         journal = "The Annals of Applied Statistics",
+	 volume = "13",
+	 number = "1",
+	 pages = "444--465",
          textVersion =
-           paste('Shokoohi, F., Khalili A., Asgharian M, and Lin S. (2017).',
-                 'Variable Selection in Finite Mixture of Survival Models for
-                  Biomedical Genomic Studies',
-                 'submitted' )
+           paste('Shokoohi, F., Khalili A., Asgharian M, and Lin S. (2019).',
+                 'Capturing heterogeneity of covariate effects in hidden
+	              subpopulations in the presence of censoring and large number
+	              of covariates', 'The Annals of Applied Statistics', '13', '1',
+	              '444-465', 'doi:10.1214/18-AOAS1198' )
 )

@@ -1,5 +1,5 @@
 #' @title nobs method
-#' @description Provides the number of observations in an \code{FMRs}
+#' @description Provides the number of observations in an \code{FMRs} model
 #' from an \code{\link{fmrsfit-class}}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name nobs
@@ -20,22 +20,22 @@
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#' coeff = c(coeff1, coeff2), dispersion = dispersion,
-#' mixProp = mixProp, rho = rho, umax = umax,
-#' disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#' nComp = nComp, disFamily = "lnorm",
-#' initCoeff = rnorm(nComp*nCov+nComp),
-#' initDispersion = rep(1, nComp),
-#' initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #' nobs(res.mle)
 #' @exportMethod nobs
 setGeneric("nobs", function(object, ...) standardGeneric("nobs"))
 nobs.fmrsfit <- function(object, ...) {object@nobs}
 
 #' @title ncov method
-#' @description Provides the number of covariates of an \code{FMRs} from
+#' @description Provides the number of covariates of an \code{FMRs} model from
 #' an \code{\link{fmrsfit-class}}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name ncov
@@ -56,21 +56,22 @@ nobs.fmrsfit <- function(object, ...) {object@nobs}
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#' coeff = c(coeff1, coeff2), dispersion = dispersion,
-#' mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#' nComp = nComp, disFamily = "lnorm",
-#' initCoeff = rnorm(nComp*nCov+nComp),
-#' initDispersion = rep(1, nComp),
-#' initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #' ncov(res.mle)
 #' @exportMethod ncov
 setGeneric("ncov", function(object, ...) standardGeneric("ncov"))
 ncov.fmrsfit <- function(object, ...) {object@ncov}
 
 #' @title ncomp method
-#' @description Provides the order of an \code{FMRs} from
+#' @description Provides the order of an \code{FMRs} model from
 #' an \code{\link{fmrsfit-class}}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name ncomp
@@ -91,14 +92,15 @@ ncov.fmrsfit <- function(object, ...) {object@ncov}
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#' coeff = c(coeff1, coeff2), dispersion = dispersion,
-#' mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#' nComp = nComp, disFamily = "lnorm",
-#' initCoeff = rnorm(nComp*nCov+nComp),
-#' initDispersion = rep(1, nComp),
-#' initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #' ncomp(res.mle)
 #' @exportMethod ncomp
 setGeneric("ncomp", function(object, ...) standardGeneric("ncomp"))
@@ -106,7 +108,7 @@ ncomp.fmrsfit <- function(object, ...) {object@ncomp}
 
 #' @title coefficients method
 #' @description Provides the estimated regression coefficients from the
-#' fitted \code{FMRs}  from an \code{\link{fmrsfit-class}}
+#' fitted \code{FMRs} model from an \code{\link{fmrsfit-class}}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name coefficients
 #' @rdname coefficients-methods
@@ -126,23 +128,23 @@ ncomp.fmrsfit <- function(object, ...) {object@ncomp}
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#' coeff = c(coeff1, coeff2), dispersion = dispersion,
-#' mixProp = mixProp, rho = rho, umax = umax,
-#' disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#' nComp = nComp, disFamily = "lnorm",
-#' initCoeff = rnorm(nComp*nCov+nComp),
-#' initDispersion = rep(1, nComp),
-#' initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #' coefficients(res.mle)
 #' @exportMethod coefficients
 setGeneric("coefficients",
-    function(object, ...) standardGeneric("coefficients"))
+           function(object, ...) standardGeneric("coefficients"))
 coefficients.fmrsfit <- function(object, ...) {object@coefficients}
 
 #' @title dispersion method
-#' @description Provides the estimated dispersions of the fitted \code{FMRs}
+#' @description Provides the estimated dispersions of the fitted \code{FMRs} model
 #' from an \code{\link{fmrsfit-class}}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name dispersion
@@ -163,21 +165,22 @@ coefficients.fmrsfit <- function(object, ...) {object@coefficients}
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#' coeff = c(coeff1, coeff2), dispersion = dispersion,
-#' mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#' nComp = nComp, disFamily = "lnorm",
-#' initCoeff = rnorm(nComp*nCov+nComp),
-#' initDispersion = rep(1, nComp),
-#' initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #' dispersion(res.mle)
 #' @exportMethod dispersion
 setGeneric("dispersion", function(object, ...) standardGeneric("dispersion"))
 dispersion.fmrsfit <- function(object, ...) {object@dispersion}
 
 #' @title mixProp method
-#' @description Provides the estimated mixing proportions of an \code{FMRs}
+#' @description Provides the estimated mixing proportions of an \code{FMRs} model
 #'     form an \code{\link{fmrsfit-class}}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name mixProp
@@ -198,21 +201,22 @@ dispersion.fmrsfit <- function(object, ...) {object@dispersion}
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#' coeff = c(coeff1, coeff2), dispersion = dispersion,
-#' mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#' nComp = nComp, disFamily = "lnorm",
-#' initCoeff = rnorm(nComp*nCov+nComp),
-#' initDispersion = rep(1, nComp),
-#' initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #' mixProp(res.mle)
 #' @exportMethod mixProp
 setGeneric("mixProp", function(object, ...) standardGeneric("mixProp"))
 mixProp.fmrsfit <- function(object, ...) {object@mixProp}
 
 #' @title fitted method
-#' @description Provides the fitted response of the fitted \code{FMRs}  from
+#' @description Provides the fitted response of the fitted \code{FMRs} model from
 #' an \code{\link{fmrsfit-class}}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name fitted
@@ -233,21 +237,22 @@ mixProp.fmrsfit <- function(object, ...) {object@mixProp}
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#' coeff = c(coeff1, coeff2), dispersion = dispersion,
-#' mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#' nComp = nComp, disFamily = "lnorm",
-#' initCoeff = rnorm(nComp*nCov+nComp),
-#' initDispersion = rep(1, nComp),
-#' initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #' head(fitted(res.mle))
 #' @exportMethod fitted
 setGeneric("fitted", function(object, ...) standardGeneric("fitted"))
 fitted.fmrsfit <- function(object, ...) {object@fitted}
 
 #' @title residuals method
-#' @description Provides the residuals of the fitted \code{FMRs}  from
+#' @description Provides the residuals of the fitted \code{FMRs} model from
 #' an \code{\link{fmrsfit-class}}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name residuals
@@ -268,22 +273,23 @@ fitted.fmrsfit <- function(object, ...) {object@fitted}
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#' coeff = c(coeff1, coeff2), dispersion = dispersion,
-#' mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#' nComp = nComp, disFamily = "lnorm",
-#' initCoeff = rnorm(nComp*nCov+nComp),
-#' initDispersion = rep(1, nComp),
-#' initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #' head(residuals(res.mle))
 #' @exportMethod residuals
 setGeneric("residuals", function(object, ...) standardGeneric("residuals"))
 residuals.fmrsfit <- function(object, ...) {object@residuals}
 
 #' @title weights method
-#' @description Provides the posterior probabilities that observations belong
-#' to the components of an \code{FMRs}
+#' @description Provides the weights of fitted observations for
+#' each observation under all components of an \code{FMRs} model
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name weights
 #' @rdname weights-methods
@@ -303,21 +309,22 @@ residuals.fmrsfit <- function(object, ...) {object@residuals}
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#' coeff = c(coeff1, coeff2), dispersion = dispersion,
-#' mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#' nComp = nComp, disFamily = "lnorm",
-#' initCoeff = rnorm(nComp*nCov+nComp),
-#' initDispersion = rep(1, nComp),
-#' initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #' head(weights(res.mle))
 #' @exportMethod weights
 setGeneric("weights", function(object, ...) standardGeneric("weights"))
 weights.fmrsfit <- function(object, ...) {object@weights}
 
 #' @title logLik method
-#' @description Provides the estimated logLikelihood of an \code{FMRs}  from
+#' @description Provides the estimated logLikelihood of an \code{FMRs} model from
 #'     an \code{\link{fmrsfit-class}}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name logLik
@@ -338,21 +345,22 @@ weights.fmrsfit <- function(object, ...) {object@weights}
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#'  coeff = c(coeff1, coeff2), dispersion = dispersion,
-#'  mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#'  nComp = nComp, disFamily = "lnorm",
-#'  initCoeff = rnorm(nComp*nCov+nComp),
-#'  initDispersion = rep(1, nComp),
-#'  initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #' logLik(res.mle)
 #' @exportMethod logLik
 setGeneric("logLik", function(object, ...) standardGeneric("logLik"))
 logLik.fmrsfit <- function(object, ...) {object@logLik}
 
 #' @title BIC method
-#' @description Provides the estimated BIC of an \code{FMRs}  from
+#' @description Provides the estimated BIC of an \code{FMRs} model from
 #' an \code{\link{fmrsfit-class}}
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name BIC
@@ -373,30 +381,29 @@ logLik.fmrsfit <- function(object, ...) {object@logLik}
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#' coeff = c(coeff1, coeff2), dispersion = dispersion,
-#' mixProp = mixProp, rho = rho, umax = umax,
-#' disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#' nComp = nComp, disFamily = "lnorm",
-#' initCoeff = rnorm(nComp*nCov+nComp),
-#' initDispersion = rep(1, nComp),
-#' initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #' BIC(res.mle)
 #' @exportMethod BIC
 setGeneric("BIC", function(object, ...) standardGeneric("BIC"))
 BIC.fmrsfit <- function(object, ...) {object@BIC}
 
 #' @title summary method
-#' @description Displays the fitted \code{FMRs}  by showing the estimated
+#' @description Displays the fitted \code{FMRs} model by showing the estimated
 #' coefficients, dispersions and mixing proportions
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name summary
 #' @rdname summary-methods
-#' @param object An \code{\link{fmrsfit-class}}
-#' or \code{\link{fmrstunpar-class}}
+#' @param object An \code{\link{fmrsfit-class}} or \code{\link{fmrstunpar-class}}
 #' @param ... Other possible arguments
-#' @return Summary of the fitted \code{FMRs}
+#' @return Summary of the fitted \code{FMRs} model
 #' @examples
 #' set.seed(1980)
 #' nComp = 2
@@ -410,49 +417,45 @@ BIC.fmrsfit <- function(object, ...) {object@BIC}
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#'  coeff = c(coeff1, coeff2), dispersion = dispersion,
-#'  mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#'  nComp = nComp, disFamily = "lnorm",
-#'  initCoeff = rnorm(nComp*nCov+nComp),
-#'  initDispersion = rep(1, nComp),
-#'  initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #' summary(res.mle)
 #' @exportMethod summary
 setGeneric("summary", function(object, ...) standardGeneric("summary"))
 summary.fmrsfit <- function(object, ...) {
-    if(object@model == "FMR") {
+  if(object@model == "FMR") {
     modelfmr = "Finite Mixture of Regression Models"
-    }else if(object@disFamily == "lnorm"){
+  }else if(object@disFamily == "lnorm"){
     modelfmr = "Finite Mixture of Accelerated Failure Time Regression
-    Models \n  Component-Wise Distributions:  Log-Normal"
-    }else{
+    Models \n  Log-Normal Sub-Distributions"
+  }else{
     modelfmr = "Finite Mixture of Accelerated Failure Time Regression
-    Models \n Component-Wise Distributions:  Weibull"
-    }
-    cat("-------------------------------------------\n")
-    cat("Fitted Model: \n")
-    cat("-------------------------------------------\n")
-    cat(" ", modelfmr, "\n")
-    cat("  ", object@ncomp, " Components; ",
-    object@ncov," Covariates; ", object@nobs, " samples.", sep = "")
-    cat("\n\nCoefficients:\n")
-    print.default(object@coefficients)
-    if(!is.na(object@oracleset[1])){
-    cat("\n\nOracle Set:\n")
-    print.default(object@oracleset)
-    }
-    if(!is.na(object@activeset[1])){
-    cat("\n\nActive Set:\n")
-    print.default(object@activeset)
-    }
-    cat("\nDispersions:\n")
-    print.default(object@dispersion)
-    cat("\nMixing Proportions:\n")
-    print.default(object@mixProp)
-    cat("\nLogLik: ", object@logLik, "; BIC: ", object@BIC, sep="")
-    cat("\n")
+    Models \n  Weibull Sub-Distributions"
+  }
+  cat("-------------------------------------------\n")
+  cat("Fitted Model: \n")
+  cat("-------------------------------------------\n")
+  cat(" ", modelfmr, "\n")
+  cat("  ", object@ncomp, " Components; ",
+      object@ncov," Covariates; ", object@nobs,
+      " samples.", sep = "")
+  cat("\n\nCoefficients:\n")
+  print.default(object@coefficients)
+  cat("\n\nActive Set:\n")
+  print.default(object@activeset)
+  cat("\nDispersions:\n")
+  print.default(object@dispersion)
+  cat("\nMixing Proportions:\n")
+  print.default(object@mixProp)
+  cat("\nLogLik: ", object@logLik, "; BIC: ", object@BIC, sep="")
+  cat("\n")
 }
 
 #' @title summary method
@@ -463,29 +466,29 @@ summary.fmrsfit <- function(object, ...) {
 #' @return Summary of the selected component-wise tuning parameters
 #' @examples
 #' res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
-#'  nComp = nComp, disFamily = "lnorm",
-#'  initCoeff = c(coefficients(res.mle)),
-#'  initDispersion = dispersion(res.mle),
-#'  initmixProp = mixProp(res.mle), penFamily = "adplasso")
+#'                       nComp = nComp, disFamily = "lnorm",
+#'                       initCoeff = c(coefficients(res.mle)),
+#'                       initDispersion = dispersion(res.mle),
+#'                       initmixProp = mixProp(res.mle),
+#'                       penFamily = "adplasso")
 #' summary(res.lam)
 #' @exportMethod summary
 setGeneric("summary", function(object, ...) standardGeneric("summary"))
-    summary.fmrstunpar <- function(object, ...) {
+summary.fmrstunpar <- function(object, ...) {
     if(object@model == "FMR") {
-    modelfmr = "Finite Mixture of Regression Models"
+      modelfmr = "Finite Mixture of Regression Models"
     }else if(object@disFamily == "lnorm"){
-    modelfmr = "Finite Mixture of Accelerated Failure Time Regression
-    Models \n  Component-Wise Distributions: Log-Normal"
+      modelfmr = "Finite Mixture of Accelerated Failure Time Regression
+      Models \n  Log-Normal Sub-Distributions"
     }else{
-    modelfmr = "Finite Mixture of Accelerated Failure Time Regression
-    Models \n Component-Wise Distributions:  Weibull"
+      modelfmr = "Finite Mixture of Accelerated Failure Time Regression
+      Models \n  Weibull Sub-Distributions"
     }
     cat("-------------------------------------------\n")
     cat("Selected Tuning Parameters: \n")
     cat("-------------------------------------------\n")
     cat(" ", modelfmr, "\n")
-    cat("  ", "No. Components: ", object@ncomp, sep = "")
-    cat("\n  ", "Penalty: ", object@penFamily, sep = "")
+    cat("  ", object@ncomp, " Components; ", object@penFamily, " Penalty; ", sep = "")
     cat("\n\nComponent-wise lambda:\n")
     print.default(object@lambPen)
     cat("\n\nRidge lambda:\n")
@@ -494,26 +497,19 @@ setGeneric("summary", function(object, ...) standardGeneric("summary"))
     print.default(object@MCPGam)
     cat("\n\nSICA's Extra Tuning Parameter:\n")
     print.default(object@SICAGam)
-    if(!is.na(object@oracleset[1])){
-    cat("\n\nOracle Set:\n")
-    print.default(object@oracleset)
-    }
-    if(!is.na(object@activeset[1])){
     cat("\n\nActive Set:\n")
     print.default(object@activeset)
-    }
     cat("\n")
-}
+    }
 
 #' @title show method
-#' @description Provides information about the fitted \code{FMRs}
+#' @description Provides information about the fitted \code{FMRs} model
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @name show
 #' @rdname show-methods
-#' @param object An \code{\link{fmrsfit-class}}
-#' or \code{\link{fmrstunpar-class}}
+#' @param object An \code{\link{fmrsfit-class}} or  \code{\link{fmrstunpar-class}}
 #' @param ... Other possible arguments
-#' @return Information about the fitted \code{FMRs}
+#' @return Information about the fitted \code{FMRs} model
 #' @examples
 #' set.seed(1980)
 #' nComp = 2
@@ -527,33 +523,36 @@ setGeneric("summary", function(object, ...) standardGeneric("summary"))
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#'  coeff = c(coeff1, coeff2), dispersion = dispersion,
-#'  mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#'  nComp = nComp, disFamily = "lnorm",
-#'  initCoeff = rnorm(nComp*nCov+nComp),
-#'  initDispersion = rep(1, nComp),
-#'  initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #' show(res.mle)
 #' @exportMethod show
 setGeneric("show")
+
 show.fmrsfit <- function(object) {
-    if(object@model == "FMR") {
+  if(object@model == "FMR") {
     modelfmr = "Finite Mixture of Regression Models"
-    }else if(object@disFamily == "lnorm"){
+  }else if(object@disFamily == "lnorm"){
     modelfmr = "Finite Mixture of Accelerated Failure Time Regression Models
-    Component-Wise Distributions: Log-Normal"
-    }else{
+    Log-Normal Sub-Distributions"
+  }else{
     modelfmr = "Finite Mixture of Accelerated Failure Time Regression Models
-    Component-Wise Distributions: Weibull"
-    }
-    cat("An object of class '", class(object), "'\n", sep = "")
-    cat(" ", modelfmr, "\n")
-    cat("  ", object@ncomp, " Components; ", object@ncov," Covariates; ",
-    object@nobs, " samples.\n", sep = "")
-    cat("\n")
-    }
+    Weibull Sub-Distributions"
+  }
+  cat("An object of class '", class(object), "'\n", sep = "")
+  cat(" ", modelfmr, "\n")
+  cat("  ", object@ncomp, " Components; ",
+      object@ncov," Covariates; ", object@nobs,
+      " samples.\n", sep = "")
+  cat("\n")
+  }
 
 #' @title show method
 #' @description Provides information about the selected tuning parameters
@@ -563,112 +562,110 @@ show.fmrsfit <- function(object) {
 #' @return Information about the selected tuning parameters
 #' @examples
 #' res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
-#'  nComp = nComp, disFamily = "lnorm",
-#'  initCoeff = c(coefficients(res.mle)),
-#'  initDispersion = dispersion(res.mle),
-#'  initmixProp = mixProp(res.mle), penFamily = "adplasso")
+#'                       nComp = nComp, disFamily = "lnorm",
+#'                       initCoeff = c(coefficients(res.mle)),
+#'                       initDispersion = dispersion(res.mle),
+#'                       initmixProp = mixProp(res.mle),
+#'                       penFamily = "adplasso")
 #' show(res.lam)
 #' @exportMethod show
 setGeneric("show")
+
 show.fmrstunpar <- function(object) {
-    if(object@model == "FMR") {
+  if(object@model == "FMR") {
     modelfmr = "Finite Mixture of Regression Models"
-    }else if(object@disFamily == "lnorm"){
+  }else if(object@disFamily == "lnorm"){
     modelfmr = "Finite Mixture of Accelerated Failure Time Regression Models
-    Component-Wise Distributions: Log-Normal"
-    }else{
+    Log-Normal Sub-Distributions"
+  }else{
     modelfmr = "Finite Mixture of Accelerated Failure Time Regression Models
-    Component-Wise Distributions: Weibull"
-    }
-    cat("An object of class '", class(object), "'\n", sep = "")
-    cat(" ", modelfmr, "\n")
-    cat("  ", "No. Components: ", object@ncomp, sep = "")
-    cat("\n  ", "Penalty: ", object@penFamily, sep = "")
-    cat("\n")
-    }
+    Weibull Sub-Distributions"
+  }
+  cat("An object of class '", class(object), "'\n", sep = "")
+  cat(" ", modelfmr, "\n")
+  cat("  ", object@ncomp, " Components; ", object@penFamily, " Penalty; ", sep = "")
+  cat("\n")
+  }
 
 #' @title  fmrs.mle method
-#' @description Provides MLE for Finite Mixture of Accelerated Failure Time
-#' Regression Models or Finite Mixture of Regression Models.
+#' @description Provides MLE for Finite Mixture of
+#'     Accelerated Failure Time Regression Models or Finite Mixture of
+#'     Regression Models. It also provides Ridge Regression.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
 #' @name fmrs.mle
 #' @rdname fmrs.mle-methods
-#' @param y Response vector
+#' @param y Responses (observations)
 #' @param x Design matrix (covariates)
 #' @param delta Censoring indicator vector
-#' @param nComp A numeric value represents the order of mixture in \code{FMRs}
-#' @param disFamily A component-wise distribution family. The options
-#'  are \code{"norm"} for FMR models, \code{"lnorm"} for mixture of AFT
-#'  regression models with Log-Normal component-wise distribution,
-#'  \code{"weibull"} for mixture of AFT regression models with Weibull
-#'  component-wise distribution
-#' @param initCoeff A vector of initial values for regression coefficients
+#' @param nComp Order (Number of components) of mixture model
+#' @param disFamily A sub-distribution family. The options
+#'     are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of AFT
+#'     regression models with Log-Normal sub-distributions,\code{"weibull"}
+#'     for mixture of AFT regression models with Weibull sub-distributions
+#' @param initCoeff Vector of initial values for regression coefficients
 #' including intercepts
-#' @param initDispersion A vector of initial values for standard deviations
-#' @param initmixProp A vector of initial values for proportion of components
+#' @param initDispersion Vector of initial values for standard deviations
+#' @param initmixProp Vector of initial values for proportion of components
 #' @param lambRidge A positive value for tuning parameter in Ridge
-#'  Regression or Elastic Net
-#' @param nIterEM Maximum number of iterations for E-M algorithm
+#'     Regression or Elastic Net
+#' @param nIterEM Maximum number of iterations for EM algorithm
 #' @param nIterNR Maximum number of iterations for Newton-Raphson algorithm
 #' @param conveps A positive value for avoiding NaN in computing divisions
 #' @param convepsEM A positive value for threshold of convergence in
-#'  E-M algorithm
+#'     EM algorithm
 #' @param convepsNR A positive value for threshold of convergence in
-#'  Newton-Raphson algorithm
+#'     Newton-Raphson algorithm
 #' @param porNR A positive integer for maximum number of searches in
 #' NR algorithm
-#' @param oracle A matrix of zero-one that shows which intercepts and
-#' covariates are included in the fitted fmrs model
-#' @param penVar default is FALSE. If it is chosen as TRUE then it
-#' penalizes the dispersions of components according to penalty
-#' in Chen and Tau (2008 JMA) to avoid small values.
+#' @param activeset A matrix of zero-one that shows which intercepts and
+#' covariates are active in the fitted fmrs model
 #' @param ... Other possible options
 #' @keywords FMRs AFT Censored EM NR Ridge
 #' @concept fmr, aft, mle, ridge, fmrs
 #' @details Finite mixture of AFT regression models are represented as
-#'  follows. Let \eqn{X} be the survival time with non-negative values,
-#'  and \eqn{\boldsymbol{z} =(z_{1}, \ldots, z_{d})^{\top}}
-#'  be a \eqn{d}-dimensional vector of covariates that may have an effect
-#'  on \eqn{X}.
-#'  If the survival time is subject to right censoring, then the observed
-#'  response time is \eqn{T=\min \{Y, C\}},
-#'  where \eqn{Y=\log X}, \eqn{C} is  logarithm of  the censoring time
-#'  and \eqn{\delta=I_{\{y<c\}}} is the censoring indicator.
-#'  We say that \eqn{V=(T,\delta,\boldsymbol z)} follows a finite mixture
-#'  of AFT regression models of order \eqn{K} if the
-#'  conditional density of \eqn{(T,\delta)} given \eqn{\boldsymbol z}
-#'  has the form \deqn{f(t,\delta;\boldsymbol{z},\boldsymbol\Psi)
-#'  =\sum\limits_{k=1}^{K}\pi_{k}[f_Y(t;\theta_{k}(\boldsymbol z),
-#'  \sigma_{k})]^{\delta}[S_Y(t;\theta_{k}(\boldsymbol z)
-#'  ,\sigma_{k})]^{1-\delta}[f_{C}(t)]^{1-\delta}[S_{C}(t)]^{\delta}}
-#'  where \eqn{f_Y(.)} and \eqn{S_Y(.)} are respectively the density and
-#'  survival functions of \eqn{Y}, \eqn{f_C(.)} and \eqn{S_C(.)} are
-#'  respectively the density and survival functions of \eqn{C}; and
-#'  \eqn{{\theta}_{k}(\boldsymbol{z})=h(\beta_{0k}+\boldsymbol{z}^{\top}
-#'  \boldsymbol\beta_{k})} for a known link function \eqn{h(.)},
-#'  \eqn{\boldsymbol\Psi=(\pi_{1},\ldots,\pi_{K},\beta_{01},\ldots,
-#'  \beta_{0K},\boldsymbol\beta_{1},
-#'  \ldots,\boldsymbol\beta_{K},\sigma_{1},
-#'  \ldots,\sigma_{K})^{\top}} with \eqn{\boldsymbol\beta_{k}=
-#'  (\beta_{k1},\beta_{k2},\ldots,\beta_{kd})^{\top}}
-#'  and \eqn{0<\pi_{k}<1}
-#'  with \eqn{\sum_{k=1}^{K}\pi_{k}=1}.
-#'  The log-likelihood of a sample of size $n$ is formed
-#'  as \deqn{\ell_{n}(\boldsymbol\Psi) =
-#'  \sum\limits_{i=1}^{n}\log\sum\limits_{k=1}^{K}\pi_{k}\left[f_Y(t_{i},
-#'  \theta_{k}({\boldsymbol z}_{i}),\sigma_{k})  \right]^{\delta_{i}}
-#'  \left[S_Y(t_{i},\theta_{k}({\boldsymbol z}_{i}),
-#'  \sigma_{k})\right]^{1-\delta_{i}}.}
-#'  Note that we assume the censoring distribution is non-informative and
-#'  hence won't play any role in the estimation process. We use EM and
-#'  Newton-Raphson algorithms in our method to find the maximizer of
-#'  above Log-Likelihood.
+#'     follows. Let \eqn{X} be the survival time with non-negative values,
+#'     and \eqn{\boldsymbol{z} =(z_{1}, \ldots, z_{d})^{\top}}
+#'     be a \eqn{d}-dimensional vector of covariates that may have an effect
+#'     on \eqn{X}.
+#'     If the survival time is subject to right censoring, then the observed
+#'     response time is \eqn{T=\min \{Y, C\}},
+#'     where \eqn{Y=\log X}, \eqn{C} is  logarithm of  the censoring time
+#'     and \eqn{\delta=I_{\{y<c\}}} is the censoring indicator.
+#'     We say that \eqn{V=(T,\delta,\boldsymbol z)} follows a finite mixture
+#'     of AFT regression models of order \eqn{K} if the
+#'     conditional density of \eqn{(T,\delta)} given \eqn{\boldsymbol z}
+#'     has the form \deqn{f(t,\delta;\boldsymbol{z},\boldsymbol\Psi)
+#'     =\sum\limits_{k=1}^{K}\pi_{k}[f_Y(t;\theta_{k}(\boldsymbol z),
+#'     \sigma_{k})]^{\delta}[S_Y(t;\theta_{k}(\boldsymbol z)
+#'     ,\sigma_{k})]^{1-\delta}[f_{C}(t)]^{1-\delta}[S_{C}(t)]^{\delta}}
+#'     where \eqn{f_Y(.)} and \eqn{S_Y(.)} are respectively the density and
+#'     survival functions of \eqn{Y}, \eqn{f_C(.)} and \eqn{S_C(.)} are
+#'     respectively the density and survival functions of \eqn{C}; and
+#'     \eqn{{\theta}_{k}(\boldsymbol{z})=h(\beta_{0k}+\boldsymbol{z}^{\top}
+#'     \boldsymbol\beta_{k})} for a known link function \eqn{h(.)},
+#'     \eqn{\boldsymbol\Psi=(\pi_{1},\ldots,\pi_{K},\beta_{01},\ldots,
+#'     \beta_{0K},\boldsymbol\beta_{1},
+#'     \ldots,\boldsymbol\beta_{K},\sigma_{1},
+#'     \ldots,\sigma_{K})^{\top}} with \eqn{\boldsymbol\beta_{k}=
+#'     (\beta_{k1},\beta_{k2},\ldots,\beta_{kd})^{\top}}
+#'     and \eqn{0<\pi_{k}<1}
+#'     with \eqn{\sum_{k=1}^{K}\pi_{k}=1}.
+#'     The log-likelihood of a sample of size $n$ is formed
+#'     as \deqn{\ell_{n}(\boldsymbol\Psi) =
+#'     \sum\limits_{i=1}^{n}\log\sum\limits_{k=1}^{K}\pi_{k}\left[f_Y(t_{i},
+#'     \theta_{k}({\boldsymbol z}_{i}),\sigma_{k})  \right]^{\delta_{i}}
+#'     \left[S_Y(t_{i},\theta_{k}({\boldsymbol z}_{i}),
+#'     \sigma_{k})\right]^{1-\delta_{i}}.}
+#'     Note that we assume the censoring distribution is non-informative and
+#'     hence won't play any role in the estimation process. We use EM and
+#'     Newton-Raphson algorithms in our method to find the maximizer of
+#'     above Log-Likelihood.
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
-#'  (2017 submitted) Variable Selection in Mixture of Survival Models for
-#'  Biomedical Genomic Studies
+#'     (2016 submitted) Variable Selection in Mixture of Survival Models for
+#'     Biomedical Genomic Studies
 #' @return An \code{\link{fmrsfit-class}} that includes parameter
-#'  estimates of the specified \code{FMRs}
+#'     estimates of the specified \code{FMRs} model
 #' @examples
 #' set.seed(1980)
 #' nComp = 2
@@ -682,63 +679,62 @@ show.fmrstunpar <- function(object) {
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#'  coeff = c(coeff1, coeff2), dispersion = dispersion,
-#'  mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#'  nComp = nComp, disFamily = "lnorm",
-#'  initCoeff = rnorm(nComp*nCov+nComp),
-#'  initDispersion = rep(1, nComp),
-#'  initmixProp = rep(1/nComp, nComp))
+#'                     nComp = nComp, disFamily = "lnorm",
+#'                     initCoeff = rnorm(nComp*nCov+nComp),
+#'                     initDispersion = rep(1, nComp),
+#'                     initmixProp = rep(1/nComp, nComp))
 #' summary(res.mle)
 #' @exportMethod fmrs.mle
 setGeneric("fmrs.mle",
-    function(y,delta,x,nComp,...) standardGeneric("fmrs.mle"))
+           function(y,delta,x,nComp,...) standardGeneric("fmrs.mle"))
 
 #' @title  fmrs.tunsel method
-#' @description Provides component-wise tuning parameters using BIC for Finite
-#' Mixture of Accelerated Failure Time Regression Models and Finite Mixture
-#' of Regression Models.
+#' @description Provides component-wise tuning parameters using BIC for
+#'     Finite Mixture of Accelerated Failure Time Regression Models
+#'     and Finite Mixture of Regression Models.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
 #' @name fmrs.tunsel
 #' @rdname fmrs.tunsel-methods
-#' @param y Response vector
+#' @param y Responses (observations)
 #' @param x Design matrix (covariates)
 #' @param delta Censoring indicator vector
-#' @param nComp A numeric value represents the order of mixture in \code{FMRs}
-#' @param disFamily A component-wise distribution family. The options
-#'  are \code{"norm"} for FMR models,
-#'  \code{"lnorm"} for mixture of AFT regression models with Log-Normal
-#'  component-wise distributions, \code{"weibull"} for mixture of AFT
-#'  regression models with Weibull component-wise distribution
-#' @param initCoeff A vector of initial values for regression coefficients
-#'  including intercepts
-#' @param initDispersion A vector of initial values for standard deviations
-#' @param initmixProp A vector of initial values for proportion of components
+#' @param nComp Order (Number of components) of mixture model
+#' @param disFamily A sub-distribution family. The options
+#'     are \code{"norm"} for \code{FMR} models,
+#'     \code{"lnorm"} for mixture of AFT regression models with Log-Normal
+#'     sub-distributions, \code{"weibull"} for mixture of AFT regression
+#'     models with Weibull sub-distributions,
+#' @param initCoeff Vector of initial values for regression coefficients
+#'     including intercepts
+#' @param initDispersion Vector of initial values for standard deviations
+#' @param initmixProp Vector of initial values for proportion of components
 #' @param penFamily Penalty name that is used in variable selection method.
-#'  The available options are  \code{"lasso"}, \code{"adplasso"},
-#'  \code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.
+#'     The available options are  \code{"lasso"}, \code{"adplasso"},
+#'     \code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.
 #' @param lambRidge A positive value for tuniing parameter in Ridge
 #'     Regression or Elastic Net
 #' @param lambMCP A positive numbers for \code{mcp}'s extra tuning parameter
 #' @param lambSICA A positive numbers for \code{sica}'s extra tuning parameter
-#' @param nIterEM Maximum number of iterations for E-M algorithm
+#' @param nIterEM Maximum number of iterations for EM algorithm
 #' @param nIterNR Maximum number of iterations for Newton-Raphson algorithm
 #' @param conveps A positive value for avoiding NaN in computing divisions
 #' @param convepsEM A positive value for threshold of convergence in
-#'  E-M algorithm
+#'     EM algorithm
 #' @param convepsNR A positive value for threshold of convergence in
-#'  Newton-Raphson algorithm
+#'     NR algorithm
 #' @param porNR A positive interger for maximum number of searches in
 #' NR algorithm
 #' @param gamMixPor Proportion of mixing parameters in the penalty. The
-#'  value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
-#'  penalty structure is no longer mixture.
-#' @param oracle A matrix of zero-one that shows which intercepts and
-#' covariates are included in the fitted fmrs model
-#' @param cutpoint A positive integer for setting the estimates to zero
-#' if they are too small. The default is 0.1.
+#'     value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
+#'     penalty structure is no longer mixture.
+#' @param activeset A matrix of zero-one that shows which intercepts and
+#' covariates are active in the fitted fmrs model
 #' @param ... Other possible options
 #' @keywords FMRs AFT Censored Tuning Ridge Regression LASSO Adaptive MCP
 #' SCAD SICA
@@ -753,13 +749,13 @@ setGeneric("fmrs.mle",
 #'     (\hat{\boldsymbol\Psi}_{\lambda_{k}, k}) -
 #'     |d_{\lambda_{k},k}| \log (n)\right\},}
 #'     where \eqn{d_{\lambda_{k},k}=\{j:\hat{\beta}_{\lambda_{k},kj}\neq 0,
-#'     j=1,\ldots,d\}} is the oracle set
+#'     j=1,\ldots,d\}} is the active set  excluding the intercept
 #'     and \eqn{|d_{\lambda_{k},k}|}
 #'     is its size. This approach is much faster than using an \code{nComp}
 #'     by \code{nComp} grid to select the set \eqn{\boldsymbol\lambda} to
 #'     maximize the penallized Log-Likelihood.
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
-#'     (2017 submitted) Variable Selection in Mixture of Survival Models for
+#'     (2016 submitted) Variable Selection in Mixture of Survival Models for
 #'     Biomedical Genomic Studies
 #' @return An \code{\link{fmrstunpar-class}} that includes
 #'     component-wise tuning parameter estimates that can be used in
@@ -777,46 +773,48 @@ setGeneric("fmrs.mle",
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#'  coeff = c(coeff1, coeff2), dispersion = dispersion,
-#'  mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp = mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#'  nComp = nComp, disFamily = "lnorm",
-#'  initCoeff = rnorm(nComp*nCov+nComp),
-#'  initDispersion = rep(1, nComp),
-#'  initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #'
 #' res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
-#'  nComp = nComp, disFamily = "lnorm",
-#'  initCoeff = c(coefficients(res.mle)),
-#'  initDispersion = dispersion(res.mle),
-#'  initmixProp = mixProp(res.mle), penFamily = "adplasso")
+#'                       nComp = nComp, disFamily = "lnorm",
+#'                       initCoeff = c(coefficients(res.mle)),
+#'                       initDispersion = dispersion(res.mle),
+#'                       initmixProp = mixProp(res.mle),
+#'                       penFamily = "adplasso")
 #' show(res.lam)
 #' @exportMethod fmrs.tunsel
 setGeneric("fmrs.tunsel",
-    function(y,delta,x,nComp,...) standardGeneric("fmrs.tunsel"))
+           function(y,delta,x,nComp,...) standardGeneric("fmrs.tunsel"))
 
 #' @title fmrs.varsel method
-#' @description Provides variable selection and penalized MLE for Finite
-#' Mixture of Accelerated Failure Time Regression Models and Finite Mixture
-#' of Regression Models. It also provides Ridge Regression and Elastic Net.
+#' @description Provides variable selection and penalized MLE for
+#'     Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models
+#'     and Finite Mixture of Regression (\code{FMR}) Models.
+#'     It also provide Ridge Regression and Elastic Net.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
 #' @name fmrs.varsel
 #' @rdname fmrs.varsel-methods
-#' @param y Response vector
+#' @param y Responses (observations)
 #' @param x Design matrix (covariates)
-#' @param delta Censoring indicator vector
-#' @param nComp A numeric value represents the order of mixture in \code{FMRs}
-#' @param disFamily A component-wise distribution family. The options
-#'     are \code{"norm"} for FMR models, \code{"lnorm"} for mixture of AFT
-#'     regression models with Log-Normal component-wise distribution,
-#'     \code{"weibull"} for mixture of AFT regression models with Weibull
-#'     component-wise distributions
-#' @param initCoeff A vector of initial values for regression coefficients
+#' @param delta Censoring indicators
+#' @param nComp Order (Number of components) of mixture model
+#' @param disFamily A sub-distribution family. The options
+#'     are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of AFT
+#'     regression models with Log-Normal sub-distributions, \code{"weibull"}
+#'     for mixture of AFT regression models with Weibull sub-distributions
+#' @param initCoeff Vector of initial values for regression coefficients
 #'     including intercepts
-#' @param initDispersion A vector of initial values for standard deviations
-#' @param initmixProp A vector of initial values for proportion of components
+#' @param initDispersion Vector of initial values for standard deviations
+#' @param initmixProp Vector of initial values for proportion of components
 #' @param penFamily Penalty name that is used in variable selection method
 #'     The available options are  \code{"lasso"}, \code{"adplasso"},
 #'     \code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.
@@ -825,27 +823,22 @@ setGeneric("fmrs.tunsel",
 #'     Regression or Elastic Net
 #' @param lambMCP A positive numbers for \code{mcp}'s extra tuning parameter
 #' @param lambSICA A positive numbers for \code{sica}'s extra tuning parameter
-#' @param nIterEM Maximum number of iterations for E-M algorithm
+#' @param nIterEM Maximum number of iterations for EM algorithm
 #' @param nIterNR Maximum number of iterations for Newton-Raphson algorithm
 #' @param conveps A positive value for avoiding NaN in computing divisions
 #' @param convepsEM A positive value for threshold of convergence in
-#'     E-M algorithm
+#'     EM algorithm
 #' @param convepsNR A positive value for threshold of convergence in
-#'     Newton-Raphson algorithm
+#'     NR algorithm
 #' @param porNR A positive interger for maximum number of searches in
 #' NR algorithm
 #' @param gamMixPor Proportion of mixing parameters in the penalty. The
 #'     value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
 #'     penalty structure is no longer mixture.
-#' @param oracle A matrix of zero-one that shows which intercepts and
-#' covariates are included in the fitted fmrs model
-#' @param cutpoint A positive integer for setting the estimates to zero
-#' if they are too small. The default is 0.1.
-#' @param penVar default is FALSE. If it is chosen as TRUE then it
-#' penalizes the dispersions of components according to the penalty
-#' in Chen and Tau (2008 JMA) to avoid small values.
+#' @param activeset A matrix of zero-one that shows which intercepts and
+#' covariates are active in the fitted fmrs model
 #' @param ... Other possible options
-#' @keywords FMR AFT Censored E-M algorithm Ridge Regression
+#' @keywords FMR AFT Censored EM Algorithm Ridge Regression
 #' ElasticNet Selection LASSO MCP SCAD SICA Adaptive
 #' @concept fmr, aft, lasso, adplasso, mcp, scad, sica, ridge, elastic net
 #' @details The penalized likelihood of a finite mixture of AFT regression
@@ -855,7 +848,7 @@ setGeneric("fmrs.tunsel",
 #'     where \deqn{\mathbf{p}_{\boldsymbol\lambda_{n}}(\boldsymbol\Psi) =
 #'     \sum\limits_{k=1}^{K}\pi_{k}^\alpha\left\{
 #'     \sum\limits_{j=1}^{d}p_{\lambda_{n,k}}(\beta_{kj}) \right\}.}
-#'     In the M step of E-M algorithm the
+#'     In the M step of EM algorithm the
 #'     function \deqn{\tilde{Q}(\boldsymbol\Psi,\boldsymbol\Psi^{(m)})
 #'     =\sum\limits_{k=1}^{K} \tilde{Q}_{k}(\boldsymbol\Psi_k,
 #'     \boldsymbol\Psi^{(m)}_k) =
@@ -877,9 +870,9 @@ setGeneric("fmrs.tunsel",
 #'     \left[{Q}_{k}(\boldsymbol\Psi_k,\boldsymbol\Psi^{(m)}_k)-
 #'     \mathbf{p}^\ast_{k,\boldsymbol\lambda_{n}}(\boldsymbol\beta,
 #'     \boldsymbol\beta^{(m)})\right].}
-#'     In case of Log-Normal component-wise distribution, the maximizers of
-#'     \eqn{Q_k} functions are as follows. Given the data and current estimates
-#'      of parameters, the maximizers are \deqn{{\boldsymbol\beta}^{(m+1)}_{k}
+#'     In case of Log-Normal sub-distributions, the maximizers of \eqn{Q_k}
+#'     functions are as follows. Given the data and current estimates of
+#'     parameters, the maximizers are \deqn{{\boldsymbol\beta}^{(m+1)}_{k}
 #'     =({\boldsymbol z}^{\prime}\boldsymbol\tau^{(m)}_{k}{\boldsymbol z}+
 #'     \varpi_{k}(\boldsymbol\beta_{kj}^{(m)}))^{-1}{\boldsymbol z}^{\prime}
 #'     \boldsymbol\tau^{(m)}_{k}T^{(m)}_{k},}
@@ -903,7 +896,7 @@ setGeneric("fmrs.tunsel",
 #'     is the penalized version of vector of first derivatives evaluated
 #'     at \eqn{\tilde{\boldsymbol\Psi}_k^{(m)}}.
 #' @references Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
-#' (2017 submitted) Variable Selection in Mixture of Survival Models for
+#' (2016 submitted) Variable Selection in Mixture of Survival Models for
 #' Biomedical Genomic Studies
 #' @return \code{\link{fmrsfit-class}}
 #' @examples
@@ -919,62 +912,63 @@ setGeneric("fmrs.tunsel",
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#'  coeff = c(coeff1, coeff2), dispersion = dispersion,
-#'   mixProp =mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp =mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #'
 #' res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-#'  nComp = nComp, disFamily = "lnorm",
-#'  initCoeff = rnorm(nComp*nCov+nComp),
-#'  initDispersion = rep(1, nComp),
-#'  initmixProp = rep(1/nComp, nComp))
+#'                    nComp = nComp, disFamily = "lnorm",
+#'                    initCoeff = rnorm(nComp*nCov+nComp),
+#'                    initDispersion = rep(1, nComp),
+#'                    initmixProp = rep(1/nComp, nComp))
 #'
 #' res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
-#'  nComp = ncomp(res.mle), disFamily = "lnorm",
-#'  initCoeff=c(coefficients(res.mle)),
-#'  initDispersion = dispersion(res.mle),
-#'  initmixProp = mixProp(res.mle), penFamily = "adplasso")
+#'                       nComp = ncomp(res.mle), disFamily = "lnorm",
+#'                       initCoeff=c(coefficients(res.mle)),
+#'                       initDispersion = dispersion(res.mle),
+#'                       initmixProp = mixProp(res.mle),
+#'                       penFamily = "adplasso")
 #' res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
-#'  nComp = ncomp(res.mle), disFamily = "lnorm",
-#'  initCoeff=c(coefficients(res.mle)),
-#'  initDispersion = dispersion(res.mle),
-#'  initmixProp = mixProp(res.mle),
-#'  penFamily = "adplasso",
-#'  lambPen = slot(res.lam, "lambPen"))
+#'                       nComp = ncomp(res.mle), disFamily = "lnorm",
+#'                       initCoeff=c(coefficients(res.mle)),
+#'                       initDispersion = dispersion(res.mle),
+#'                       initmixProp = mixProp(res.mle),
+#'                       penFamily = "adplasso",
+#'                       lambPen = slot(res.lam, "lambPen"))
 #'
 #' coefficients(res.var)[-1,]
 #' round(coefficients(res.var)[-1,],5)
 #' @exportMethod fmrs.varsel
 setGeneric("fmrs.varsel",
-    function(y,delta,x,nComp,...) standardGeneric("fmrs.varsel"))
+           function(y,delta,x,nComp,...) standardGeneric("fmrs.varsel"))
 
 
 #' @title fmrs.gendata method
-#' @description Generates a data set from Finite Mixture of AFT regression
-#' models or Finite Mixture of Regression models under the specified setting.
+#' @description Generates a data set from Finite Mixture
+#'     of AFT regression models or Finite Mixture of Regression models under
+#'     the specified setting.
 #' @author Farhad Shokoohi <shokoohi@icloud.com>
 #' @family lnorm, norm, weibull
 #' @name fmrs.gendata
 #' @rdname fmrs.gendata-methods
-#' @param nObs A numeric value represents the number of observations
-#' (sample size)
-#' @param nComp A numeric value represents the order of mixture in \code{FMRs}
+#' @param nObs A numeric value represents sample size
+#' @param nComp A numeric value represents the order mixture in \code{FMRs} model
 #' @param nCov A numeric value represents the number of covariates in
-#'  design matrix
+#'     design matrix
 #' @param coeff A vector of all regression coefficients including
-#'  intercepts. It must be a vector of length
-#'  \code{nComp} *(\code{nCov+1}).
+#'     intercepts. It must be a vector of length
+#'     \code{nComp} *(\code{nCov+1}).
 #' @param dispersion A vector of positive values for dispersion parameters of
-#'  component-wise distributions in \code{FMRs}
+#'     sub-distributions in \code{FMRs} models
 #' @param mixProp A vector of mixing proportions which their sum must be one
 #' @param rho A numeric value in [-1, 1] which represents the correlation
-#'  between covariates of design matrix
+#'     between covariates of design matrix
 #' @param umax A numeric value represents the upper bound in Uniform
-#'  distribution for censoring
-#' @param disFamily A component-wise distribution family. The options
-#'  are \code{"norm"} for FMR models, \code{"lnorm"} for mixture of AFT
-#'  regression models with Log-Normal component-wise distribution,
-#'  \code{"weibull"} for mixture of AFT regression models with Weibull
-#'  component-wise distributions
+#'      distribution for censoring
+#' @param disFamily A sub-distribution family. The options
+#'     are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of AFT
+#'     regression models with Log-Normal sub-distributions,\code{"weibull"}
+#'     for mixture of AFT regression models with Weibull sub-distributions
 #' @param ... Other possible options
 #' @import stats
 #' @keywords FMRs AFT Censored Data Generation
@@ -994,11 +988,16 @@ setGeneric("fmrs.varsel",
 #' umax = 40
 #'
 #' dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-#' coeff = c(coeff1, coeff2), dispersion = dispersion,
-#' mixProp =mixProp, rho = rho,
-#' umax = umax, disFamily = "lnorm")
+#'                      coeff = c(coeff1, coeff2), dispersion = dispersion,
+#'                      mixProp =mixProp, rho = rho, umax = umax,
+#'                      disFamily = "lnorm")
 #' @exportMethod fmrs.gendata
 setGeneric("fmrs.gendata",
-    function(nObs, nComp, nCov, coeff, dispersion, mixProp, rho, umax,...)
-    standardGeneric("fmrs.gendata"))
-
+           function(nObs,
+                    nComp,
+                    nCov,
+                    coeff,
+                    dispersion,
+                    mixProp,
+                    rho,
+                    umax,...) standardGeneric("fmrs.gendata"))

@@ -26,35 +26,34 @@ fmrs.tunsel(y, delta, x, nComp, ...)
   convepsNR = 1e-08,
   porNR = 2,
   gamMixPor = 1,
-  oracle,
+  activeset,
   lambMCP,
-  lambSICA,
-  cutpoint = 0.1
+  lambSICA
 )
 }
 \arguments{
-\item{y}{Response vector}
+\item{y}{Responses (observations)}
 
 \item{delta}{Censoring indicator vector}
 
 \item{x}{Design matrix (covariates)}
 
-\item{nComp}{A numeric value represents the order of mixture in \code{FMRs}}
+\item{nComp}{Order (Number of components) of mixture model}
 
 \item{...}{Other possible options}
 
-\item{disFamily}{A component-wise distribution family. The options
-are \code{"norm"} for FMR models,
+\item{disFamily}{A sub-distribution family. The options
+are \code{"norm"} for \code{FMR} models,
 \code{"lnorm"} for mixture of AFT regression models with Log-Normal
-component-wise distributions, \code{"weibull"} for mixture of AFT
-regression models with Weibull component-wise distribution}
+sub-distributions, \code{"weibull"} for mixture of AFT regression
+models with Weibull sub-distributions,}
 
-\item{initCoeff}{A vector of initial values for regression coefficients
+\item{initCoeff}{Vector of initial values for regression coefficients
 including intercepts}
 
-\item{initDispersion}{A vector of initial values for standard deviations}
+\item{initDispersion}{Vector of initial values for standard deviations}
 
-\item{initmixProp}{A vector of initial values for proportion of components}
+\item{initmixProp}{Vector of initial values for proportion of components}
 
 \item{penFamily}{Penalty name that is used in variable selection method.
 The available options are  \code{"lasso"}, \code{"adplasso"},
@@ -63,17 +62,17 @@ The available options are  \code{"lasso"}, \code{"adplasso"},
 \item{lambRidge}{A positive value for tuniing parameter in Ridge
 Regression or Elastic Net}
 
-\item{nIterEM}{Maximum number of iterations for E-M algorithm}
+\item{nIterEM}{Maximum number of iterations for EM algorithm}
 
 \item{nIterNR}{Maximum number of iterations for Newton-Raphson algorithm}
 
 \item{conveps}{A positive value for avoiding NaN in computing divisions}
 
 \item{convepsEM}{A positive value for threshold of convergence in
-E-M algorithm}
+EM algorithm}
 
 \item{convepsNR}{A positive value for threshold of convergence in
-Newton-Raphson algorithm}
+NR algorithm}
 
 \item{porNR}{A positive interger for maximum number of searches in
 NR algorithm}
@@ -82,15 +81,12 @@ NR algorithm}
 value must be in the interval [0,1]. If \code{gamMixPor = 0}, the
 penalty structure is no longer mixture.}
 
-\item{oracle}{A matrix of zero-one that shows which intercepts and
-covariates are included in the fitted fmrs model}
+\item{activeset}{A matrix of zero-one that shows which intercepts and
+covariates are active in the fitted fmrs model}
 
 \item{lambMCP}{A positive numbers for \code{mcp}'s extra tuning parameter}
 
 \item{lambSICA}{A positive numbers for \code{sica}'s extra tuning parameter}
-
-\item{cutpoint}{A positive integer for setting the estimates to zero
-if they are too small. The default is 0.1.}
 }
 \value{
 An \code{\link{fmrstunpar-class}} that includes
@@ -98,9 +94,9 @@ An \code{\link{fmrstunpar-class}} that includes
     variable selection procedure.
 }
 \description{
-Provides component-wise tuning parameters using BIC for Finite
-Mixture of Accelerated Failure Time Regression Models and Finite Mixture
-of Regression Models.
+Provides component-wise tuning parameters using BIC for
+    Finite Mixture of Accelerated Failure Time Regression Models
+    and Finite Mixture of Regression Models.
 }
 \details{
 The maximizer of penalized Log-Likelihood depends on selecting a
@@ -113,7 +109,7 @@ The maximizer of penalized Log-Likelihood depends on selecting a
     (\hat{\boldsymbol\Psi}_{\lambda_{k}, k}) -
     |d_{\lambda_{k},k}| \log (n)\right\},}
     where \eqn{d_{\lambda_{k},k}=\{j:\hat{\beta}_{\lambda_{k},kj}\neq 0,
-    j=1,\ldots,d\}} is the oracle set
+    j=1,\ldots,d\}} is the active set  excluding the intercept
     and \eqn{|d_{\lambda_{k},k}|}
     is its size. This approach is much faster than using an \code{nComp}
     by \code{nComp} grid to select the set \eqn{\boldsymbol\lambda} to
@@ -132,25 +128,27 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
- coeff = c(coeff1, coeff2), dispersion = dispersion,
- mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+                     coeff = c(coeff1, coeff2), dispersion = dispersion,
+                     mixProp = mixProp, rho = rho, umax = umax,
+                     disFamily = "lnorm")
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
- nComp = nComp, disFamily = "lnorm",
- initCoeff = rnorm(nComp*nCov+nComp),
- initDispersion = rep(1, nComp),
- initmixProp = rep(1/nComp, nComp))
+                   nComp = nComp, disFamily = "lnorm",
+                   initCoeff = rnorm(nComp*nCov+nComp),
+                   initDispersion = rep(1, nComp),
+                   initmixProp = rep(1/nComp, nComp))
 
 res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
- nComp = nComp, disFamily = "lnorm",
- initCoeff = c(coefficients(res.mle)),
- initDispersion = dispersion(res.mle),
- initmixProp = mixProp(res.mle), penFamily = "adplasso")
+                      nComp = nComp, disFamily = "lnorm",
+                      initCoeff = c(coefficients(res.mle)),
+                      initDispersion = dispersion(res.mle),
+                      initmixProp = mixProp(res.mle),
+                      penFamily = "adplasso")
 show(res.lam)
 }
 \references{
 Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
-    (2017 submitted) Variable Selection in Mixture of Survival Models for
+    (2016 submitted) Variable Selection in Mixture of Survival Models for
     Biomedical Genomic Studies
 }
 \seealso{

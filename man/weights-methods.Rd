@@ -19,8 +19,8 @@ weights(object, ...)
 A numeric array of dimension-\code{nObs}-\code{nComp}
 }
 \description{
-Provides the posterior probabilities that observations belong
-to the components of an \code{FMRs}
+Provides the weights of fitted observations for
+each observation under all components of an \code{FMRs} model
 }
 \examples{
 set.seed(1980)
@@ -35,14 +35,15 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-coeff = c(coeff1, coeff2), dispersion = dispersion,
-mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+                     coeff = c(coeff1, coeff2), dispersion = dispersion,
+                     mixProp = mixProp, rho = rho, umax = umax,
+                     disFamily = "lnorm")
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-nComp = nComp, disFamily = "lnorm",
-initCoeff = rnorm(nComp*nCov+nComp),
-initDispersion = rep(1, nComp),
-initmixProp = rep(1/nComp, nComp))
+                   nComp = nComp, disFamily = "lnorm",
+                   initCoeff = rnorm(nComp*nCov+nComp),
+                   initDispersion = rep(1, nComp),
+                   initmixProp = rep(1/nComp, nComp))
 head(weights(res.mle))
 }
 \author{

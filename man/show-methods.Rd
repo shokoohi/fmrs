@@ -16,18 +16,17 @@ show(object)
 \S4method{show}{fmrstunpar}(object)
 }
 \arguments{
-\item{object}{An \code{\link{fmrsfit-class}}
-or \code{\link{fmrstunpar-class}}}
+\item{object}{An \code{\link{fmrsfit-class}} or  \code{\link{fmrstunpar-class}}}
 
 \item{...}{Other possible arguments}
 }
 \value{
-Information about the fitted \code{FMRs}
+Information about the fitted \code{FMRs} model
 
 Information about the selected tuning parameters
 }
 \description{
-Provides information about the fitted \code{FMRs}
+Provides information about the fitted \code{FMRs} model
 
 Provides information about the selected tuning parameters
 }
@@ -44,20 +43,22 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
- coeff = c(coeff1, coeff2), dispersion = dispersion,
- mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+                     coeff = c(coeff1, coeff2), dispersion = dispersion,
+                     mixProp = mixProp, rho = rho, umax = umax,
+                     disFamily = "lnorm")
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
- nComp = nComp, disFamily = "lnorm",
- initCoeff = rnorm(nComp*nCov+nComp),
- initDispersion = rep(1, nComp),
- initmixProp = rep(1/nComp, nComp))
+                   nComp = nComp, disFamily = "lnorm",
+                   initCoeff = rnorm(nComp*nCov+nComp),
+                   initDispersion = rep(1, nComp),
+                   initmixProp = rep(1/nComp, nComp))
 show(res.mle)
 res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
- nComp = nComp, disFamily = "lnorm",
- initCoeff = c(coefficients(res.mle)),
- initDispersion = dispersion(res.mle),
- initmixProp = mixProp(res.mle), penFamily = "adplasso")
+                      nComp = nComp, disFamily = "lnorm",
+                      initCoeff = c(coefficients(res.mle)),
+                      initDispersion = dispersion(res.mle),
+                      initmixProp = mixProp(res.mle),
+                      penFamily = "adplasso")
 show(res.lam)
 }
 \author{

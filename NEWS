@@ -1,29 +1,5 @@
 
 ------------------------
-CHANGES IN VERSION 1.1-0
-----------------------
-CHANGES SINCE LAST TIME
-    o The 'activeset' in the arguments of functions is changed to 'oracle'
-    which shows those covariates and intercepts that are selected by the user
-    to be in the variable selection process. The 'activeset' in classes now
-    represent the set of those covariates and intercepts that are active in
-    the model after varible selection, those which are below the 'cutpoint'
-    argument.
-    o The 'cutpoint' argument is added to the classes and fmrs.varsel and
-    fmrs.tunsel functions that enables the user to choose the thresholding
-    value for setting small estimates to zero.
-    o The argument "penVar" is added to fmrs.mle, fmrs.fmrs.tunsel and
-    fmrs.varsel giving the option for penalizing small variances of
-    components.
-    o We change the formula of BIC to the original definition so that it
-    removes the confusion. Now in selecting the best model, user should select
-    the model that minimizes the BIC.
-
- BUG FIXES
-    o None reported.
-
-
-------------------------
 CHANGES IN VERSION 1.0-9
 ----------------------
 CHANGES SINCE LAST TIME

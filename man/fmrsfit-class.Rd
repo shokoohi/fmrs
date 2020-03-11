@@ -57,11 +57,7 @@ is an S4 class represents a fitted of FMRs model
 
 \item{\code{weights}}{A dimension-\code{nobs}-\code{ncomp} numeric matrix}
 
-\item{\code{oracleset}}{A dimension-\code{(ncov+1)}-\code{ncomp} 0-1 matrix}
-
-\item{\code{activeset}}{A dimension-\code{(ncov+1)}-\code{ncomp} 0-1 matrix}
-
-\item{\code{cutpoint}}{A length-one numeric vector}
+\item{\code{activeset}}{A dimension-\code{nobs}-\code{ncomp} 0-1 matrix}
 }}
 
 \keyword{object}

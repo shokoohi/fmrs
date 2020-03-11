@@ -4,23 +4,23 @@ author: "Farhad Shokoohi"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteEngine{knitr::knitr}
-  %\VignetteIndexEntry{Sending Messages With Gmailr}
-  %\usepackage[utf8]{inputenc}
+  %\VignetteIndexEntry{Using fmrs package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 
 # fmrs package in action
 
 ## Data generation
-The function `fmrs.gendata` generates a data set from an FMRs. 
+The function `fmrs.gendata` generates a data set from an FMRs model. 
 It has the form
 
 ````
 fmrs.gendata(nObs, nComp, nCov, coeff, dispersion, mixProp, rho, umax, ...)
 ````
 
-where `n` is the sample size, `nComp` is the order of FMRs, `nCov` is 
+where `n` is the sample size, `nComp` is the order of FMRs model, `nCov` is 
 the number of regression covariates, `coeff`, `dispersion` and `mixProp` are 
 the parameters of regression models, i.e. regression coefficients, 
 dispersion (standard deviation) of the errors (sub-distributions) and 
@@ -30,7 +30,7 @@ simulating the design matrix `x`, and `umax` is the upper bound for
 Uniform distribution for generating censoring times. 
 
 Depending on the choice of `disFamily`, the function `fmrs.gendata` generates 
-a simulated data from FMRs . For instance, if we choose 
+a simulated data from FMRs models. For instance, if we choose 
 `disFamily = "norm"`, the function ignores the censoring parameter `umax` 
 and generates a data set from an FMR model with Normal sub-distributions. 
 However, if we choose `disFamily = "lnorm"` or `disFamily = "weibull"`, the 
@@ -43,10 +43,10 @@ indicators `$delta` as well as the name of sub-distribution of the
 mixture model.
 
 
-## MLE of FMRs
+## MLE of FMRs models
 
 The function `fmrs.mle` in fmrs package provides maximum likelihood 
-estimation for the parameters of an FMRs. The function has the 
+estimation for the parameters of an FMRs model. The function has the 
 following form,
 
 ````
@@ -57,7 +57,7 @@ where `y`, `x` and `delta` are observations, covariates and censoring
 indicators respectively, and `nComp` is the order of FMRs, `initCoeff`, 
 `initDispersion` and `initmixProp` are initial values for EM and NR 
 algorithms, and the rest of arguments of the function are controlling 
-parameres. The function returns a fitted FMRs with estimates of 
+parameres. The function returns a fitted FMRs model with estimates of 
 regression parameters, standard deviations and mixing proportions of the 
 mixture model.
 It also returns the log-likelihood and BIC under the estimated model, the 
@@ -68,7 +68,7 @@ Note that one can do ridge regression by setting a value for tuning
 parameter of the ridge penalty  other than zero in the argument `lambRidge`. 
 
 
-## Variable selection in FMRs 
+## Variable selection in FMRs models
 
 To do the variable selection we provided the function `fmrs.varsel` 
 with the form
@@ -91,7 +91,7 @@ parameter, we can use the BIC criteria to search through the a set of
 candidate values in the interval $(0,\lambda_M)$, where $\lambda_M$ is a 
 prespecified number. The BIC is provided by the function `fmrs.varsel` for 
 each candidate point and we choose the optimal $\hat\lambda$, the one that 
-minimizes BIC. This approach will be good for the situations with enough 
+maximizes BIC. This approach will be good for the situations with enough 
 samples sizes. It also reduces the computational burden. 
 
 On the other hand, if we consider choosing component-wise tuning parameters 

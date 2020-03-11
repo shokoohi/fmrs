@@ -18,51 +18,49 @@ fmrs.mle(y, delta, x, nComp, ...)
   initDispersion,
   initmixProp,
   lambRidge = 0,
-  nIterEM = 2000,
+  nIterEM = 400,
   nIterNR = 2,
   conveps = 1e-08,
   convepsEM = 1e-08,
   convepsNR = 1e-08,
   porNR = 2,
-  oracle,
-  penVar = FALSE
+  activeset
 )
 }
 \arguments{
-\item{y}{Response vector}
+\item{y}{Responses (observations)}
 
 \item{delta}{Censoring indicator vector}
 
 \item{x}{Design matrix (covariates)}
 
-\item{nComp}{A numeric value represents the order of mixture in \code{FMRs}}
+\item{nComp}{Order (Number of components) of mixture model}
 
 \item{...}{Other possible options}
 
-\item{disFamily}{A component-wise distribution family. The options
-are \code{"norm"} for FMR models, \code{"lnorm"} for mixture of AFT
-regression models with Log-Normal component-wise distribution,
-\code{"weibull"} for mixture of AFT regression models with Weibull
-component-wise distribution}
+\item{disFamily}{A sub-distribution family. The options
+are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of AFT
+regression models with Log-Normal sub-distributions,\code{"weibull"}
+for mixture of AFT regression models with Weibull sub-distributions}
 
-\item{initCoeff}{A vector of initial values for regression coefficients
+\item{initCoeff}{Vector of initial values for regression coefficients
 including intercepts}
 
-\item{initDispersion}{A vector of initial values for standard deviations}
+\item{initDispersion}{Vector of initial values for standard deviations}
 
-\item{initmixProp}{A vector of initial values for proportion of components}
+\item{initmixProp}{Vector of initial values for proportion of components}
 
 \item{lambRidge}{A positive value for tuning parameter in Ridge
 Regression or Elastic Net}
 
-\item{nIterEM}{Maximum number of iterations for E-M algorithm}
+\item{nIterEM}{Maximum number of iterations for EM algorithm}
 
 \item{nIterNR}{Maximum number of iterations for Newton-Raphson algorithm}
 
 \item{conveps}{A positive value for avoiding NaN in computing divisions}
 
 \item{convepsEM}{A positive value for threshold of convergence in
-E-M algorithm}
+EM algorithm}
 
 \item{convepsNR}{A positive value for threshold of convergence in
 Newton-Raphson algorithm}
@@ -70,60 +68,57 @@ Newton-Raphson algorithm}
 \item{porNR}{A positive integer for maximum number of searches in
 NR algorithm}
 
-\item{oracle}{A matrix of zero-one that shows which intercepts and
-covariates are included in the fitted fmrs model}
-
-\item{penVar}{default is FALSE. If it is chosen as TRUE then it
-penalizes the dispersions of components according to penalty
-in Chen and Tau (2008 JMA) to avoid small values.}
+\item{activeset}{A matrix of zero-one that shows which intercepts and
+covariates are active in the fitted fmrs model}
 }
 \value{
 An \code{\link{fmrsfit-class}} that includes parameter
- estimates of the specified \code{FMRs}
+    estimates of the specified \code{FMRs} model
 }
 \description{
-Provides MLE for Finite Mixture of Accelerated Failure Time
-Regression Models or Finite Mixture of Regression Models.
+Provides MLE for Finite Mixture of
+    Accelerated Failure Time Regression Models or Finite Mixture of
+    Regression Models. It also provides Ridge Regression.
 }
 \details{
 Finite mixture of AFT regression models are represented as
- follows. Let \eqn{X} be the survival time with non-negative values,
- and \eqn{\boldsymbol{z} =(z_{1}, \ldots, z_{d})^{\top}}
- be a \eqn{d}-dimensional vector of covariates that may have an effect
- on \eqn{X}.
- If the survival time is subject to right censoring, then the observed
- response time is \eqn{T=\min \{Y, C\}},
- where \eqn{Y=\log X}, \eqn{C} is  logarithm of  the censoring time
- and \eqn{\delta=I_{\{y<c\}}} is the censoring indicator.
- We say that \eqn{V=(T,\delta,\boldsymbol z)} follows a finite mixture
- of AFT regression models of order \eqn{K} if the
- conditional density of \eqn{(T,\delta)} given \eqn{\boldsymbol z}
- has the form \deqn{f(t,\delta;\boldsymbol{z},\boldsymbol\Psi)
- =\sum\limits_{k=1}^{K}\pi_{k}[f_Y(t;\theta_{k}(\boldsymbol z),
- \sigma_{k})]^{\delta}[S_Y(t;\theta_{k}(\boldsymbol z)
- ,\sigma_{k})]^{1-\delta}[f_{C}(t)]^{1-\delta}[S_{C}(t)]^{\delta}}
- where \eqn{f_Y(.)} and \eqn{S_Y(.)} are respectively the density and
- survival functions of \eqn{Y}, \eqn{f_C(.)} and \eqn{S_C(.)} are
- respectively the density and survival functions of \eqn{C}; and
- \eqn{{\theta}_{k}(\boldsymbol{z})=h(\beta_{0k}+\boldsymbol{z}^{\top}
- \boldsymbol\beta_{k})} for a known link function \eqn{h(.)},
- \eqn{\boldsymbol\Psi=(\pi_{1},\ldots,\pi_{K},\beta_{01},\ldots,
- \beta_{0K},\boldsymbol\beta_{1},
- \ldots,\boldsymbol\beta_{K},\sigma_{1},
- \ldots,\sigma_{K})^{\top}} with \eqn{\boldsymbol\beta_{k}=
- (\beta_{k1},\beta_{k2},\ldots,\beta_{kd})^{\top}}
- and \eqn{0<\pi_{k}<1}
- with \eqn{\sum_{k=1}^{K}\pi_{k}=1}.
- The log-likelihood of a sample of size $n$ is formed
- as \deqn{\ell_{n}(\boldsymbol\Psi) =
- \sum\limits_{i=1}^{n}\log\sum\limits_{k=1}^{K}\pi_{k}\left[f_Y(t_{i},
- \theta_{k}({\boldsymbol z}_{i}),\sigma_{k})  \right]^{\delta_{i}}
- \left[S_Y(t_{i},\theta_{k}({\boldsymbol z}_{i}),
- \sigma_{k})\right]^{1-\delta_{i}}.}
- Note that we assume the censoring distribution is non-informative and
- hence won't play any role in the estimation process. We use EM and
- Newton-Raphson algorithms in our method to find the maximizer of
- above Log-Likelihood.
+    follows. Let \eqn{X} be the survival time with non-negative values,
+    and \eqn{\boldsymbol{z} =(z_{1}, \ldots, z_{d})^{\top}}
+    be a \eqn{d}-dimensional vector of covariates that may have an effect
+    on \eqn{X}.
+    If the survival time is subject to right censoring, then the observed
+    response time is \eqn{T=\min \{Y, C\}},
+    where \eqn{Y=\log X}, \eqn{C} is  logarithm of  the censoring time
+    and \eqn{\delta=I_{\{y<c\}}} is the censoring indicator.
+    We say that \eqn{V=(T,\delta,\boldsymbol z)} follows a finite mixture
+    of AFT regression models of order \eqn{K} if the
+    conditional density of \eqn{(T,\delta)} given \eqn{\boldsymbol z}
+    has the form \deqn{f(t,\delta;\boldsymbol{z},\boldsymbol\Psi)
+    =\sum\limits_{k=1}^{K}\pi_{k}[f_Y(t;\theta_{k}(\boldsymbol z),
+    \sigma_{k})]^{\delta}[S_Y(t;\theta_{k}(\boldsymbol z)
+    ,\sigma_{k})]^{1-\delta}[f_{C}(t)]^{1-\delta}[S_{C}(t)]^{\delta}}
+    where \eqn{f_Y(.)} and \eqn{S_Y(.)} are respectively the density and
+    survival functions of \eqn{Y}, \eqn{f_C(.)} and \eqn{S_C(.)} are
+    respectively the density and survival functions of \eqn{C}; and
+    \eqn{{\theta}_{k}(\boldsymbol{z})=h(\beta_{0k}+\boldsymbol{z}^{\top}
+    \boldsymbol\beta_{k})} for a known link function \eqn{h(.)},
+    \eqn{\boldsymbol\Psi=(\pi_{1},\ldots,\pi_{K},\beta_{01},\ldots,
+    \beta_{0K},\boldsymbol\beta_{1},
+    \ldots,\boldsymbol\beta_{K},\sigma_{1},
+    \ldots,\sigma_{K})^{\top}} with \eqn{\boldsymbol\beta_{k}=
+    (\beta_{k1},\beta_{k2},\ldots,\beta_{kd})^{\top}}
+    and \eqn{0<\pi_{k}<1}
+    with \eqn{\sum_{k=1}^{K}\pi_{k}=1}.
+    The log-likelihood of a sample of size $n$ is formed
+    as \deqn{\ell_{n}(\boldsymbol\Psi) =
+    \sum\limits_{i=1}^{n}\log\sum\limits_{k=1}^{K}\pi_{k}\left[f_Y(t_{i},
+    \theta_{k}({\boldsymbol z}_{i}),\sigma_{k})  \right]^{\delta_{i}}
+    \left[S_Y(t_{i},\theta_{k}({\boldsymbol z}_{i}),
+    \sigma_{k})\right]^{1-\delta_{i}}.}
+    Note that we assume the censoring distribution is non-informative and
+    hence won't play any role in the estimation process. We use EM and
+    Newton-Raphson algorithms in our method to find the maximizer of
+    above Log-Likelihood.
 }
 \examples{
 set.seed(1980)
@@ -138,20 +133,21 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
- coeff = c(coeff1, coeff2), dispersion = dispersion,
- mixProp = mixProp, rho = rho, umax = umax, disFamily = "lnorm")
+                     coeff = c(coeff1, coeff2), dispersion = dispersion,
+                     mixProp = mixProp, rho = rho, umax = umax,
+                     disFamily = "lnorm")
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
- nComp = nComp, disFamily = "lnorm",
- initCoeff = rnorm(nComp*nCov+nComp),
- initDispersion = rep(1, nComp),
- initmixProp = rep(1/nComp, nComp))
+                    nComp = nComp, disFamily = "lnorm",
+                    initCoeff = rnorm(nComp*nCov+nComp),
+                    initDispersion = rep(1, nComp),
+                    initmixProp = rep(1/nComp, nComp))
 summary(res.mle)
 }
 \references{
 Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
- (2017 submitted) Variable Selection in Mixture of Survival Models for
- Biomedical Genomic Studies
+    (2016 submitted) Variable Selection in Mixture of Survival Models for
+    Biomedical Genomic Studies
 }
 \seealso{
 Other lnorm, norm, weibull: 
