@@ -44,8 +44,8 @@ fmrs.varsel(y, delta, x, nComp, ...)
 \item{...}{Other possible options}
 
 \item{disFamily}{A sub-distribution family. The options
-are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of AFT
-regression models with Log-Normal sub-distributions, \code{"weibull"}
+are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of
+AFT regression models with Log-Normal sub-distributions, \code{"weibull"}
 for mixture of AFT regression models with Weibull sub-distributions}
 
 \item{initCoeff}{Vector of initial values for regression coefficients
@@ -95,65 +95,65 @@ covariates are active in the fitted fmrs model}
 }
 \description{
 Provides variable selection and penalized MLE for
-    Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models
-    and Finite Mixture of Regression (\code{FMR}) Models.
-    It also provide Ridge Regression and Elastic Net.
+  Finite Mixture of Accelerated Failure Time Regression (FMAFTR) Models
+  and Finite Mixture of Regression (\code{FMR}) Models.
+  It also provide Ridge Regression and Elastic Net.
 }
 \details{
 The penalized likelihood of a finite mixture of AFT regression
-    models is written as \deqn{\tilde\ell_{n}(\boldsymbol\Psi)
-    =\ell_{n}(\boldsymbol\Psi) -
-    \mathbf{p}_{\boldsymbol\lambda_{n}}(\boldsymbol\Psi)}
-    where \deqn{\mathbf{p}_{\boldsymbol\lambda_{n}}(\boldsymbol\Psi) =
-    \sum\limits_{k=1}^{K}\pi_{k}^\alpha\left\{
-    \sum\limits_{j=1}^{d}p_{\lambda_{n,k}}(\beta_{kj}) \right\}.}
-    In the M step of EM algorithm the
-    function \deqn{\tilde{Q}(\boldsymbol\Psi,\boldsymbol\Psi^{(m)})
-    =\sum\limits_{k=1}^{K} \tilde{Q}_{k}(\boldsymbol\Psi_k,
-    \boldsymbol\Psi^{(m)}_k) =
-    \sum\limits_{k=1}^{K} \left[{Q}_{k}(\boldsymbol\Psi_k,
-    \boldsymbol\Psi^{(m)}_k) - \pi_{k}^\alpha\left\{
-    \sum\limits_{j=1}^{d}p_{\lambda_{n,k}}(\beta_{kj}) \right\}\right]}
-    is maximized. Since the penalty function is singular at origin, we
-    use a local quadratic approximation (LQA) for the penalty as
-    follows, \deqn{\mathbf{p}^\ast_{k,\boldsymbol\lambda_{n}}
-    (\boldsymbol\beta,\boldsymbol\beta^{(m)})
-    =(\pi_{k}^{(m)})^{\alpha}\sum\limits_{j=1}^{d}\left\{
-    p_{\lambda_{n,k}}(\beta_{kj}^{(m)}) + { p^{\prime}_{\lambda_{n,k}}
-    (\beta_{kj}^{(m)})  \over 2\beta_{kj}^{(m)}}(\beta_{kj}^{2} -
-    {\beta_{kj}^{(m)}}^{2}) \right\}.} Therefore maximizing \eqn{Q} is
-    equivalent to maximizing the
-    function \deqn{ {Q}^\ast(\boldsymbol\Psi,\boldsymbol\Psi^{(m)})
-    =\sum\limits_{k=1}^{K} {Q}^\ast_{k}(\boldsymbol\Psi_k,
-    \boldsymbol\Psi^{(m)}_k) = \sum\limits_{k=1}^{K}
-    \left[{Q}_{k}(\boldsymbol\Psi_k,\boldsymbol\Psi^{(m)}_k)-
-    \mathbf{p}^\ast_{k,\boldsymbol\lambda_{n}}(\boldsymbol\beta,
-    \boldsymbol\beta^{(m)})\right].}
-    In case of Log-Normal sub-distributions, the maximizers of \eqn{Q_k}
-    functions are as follows. Given the data and current estimates of
-    parameters, the maximizers are \deqn{{\boldsymbol\beta}^{(m+1)}_{k}
-    =({\boldsymbol z}^{\prime}\boldsymbol\tau^{(m)}_{k}{\boldsymbol z}+
-    \varpi_{k}(\boldsymbol\beta_{kj}^{(m)}))^{-1}{\boldsymbol z}^{\prime}
-    \boldsymbol\tau^{(m)}_{k}T^{(m)}_{k},}
-    where \eqn{\varpi_{k}(\boldsymbol\beta_{kj}^{(m)})={diag}
-    \left(\left(\pi_{k}^{(m+1)}\right)^\alpha
-    \frac{{p}^{\prime}_{\lambda_{n},k}(\boldsymbol\beta_{kj}^{(m)})}
-    {\boldsymbol\beta_{kj}^{(m)}}\right)}
-    and \eqn{\sigma_{k}^{(m+1)}} is equal to \deqn{\sigma_{k}^{(m+1)}
-    =\sqrt{\frac{\sum\limits_{i=1}^{n}\tau^{(m)}_{ik} (t^{(m)}_{ik}
-    -{\boldsymbol z}_{i}\boldsymbol\beta^{(m)}_{k})^{2}}
-    {\sum\limits_{i=1}^{n}\tau^{(m)}_{ik} {\left[\delta_{i}
-    +(1-\delta_{i})\{A(w^{(m)}_{ik})[A(w^{(m)}_{ik})-
-    w^{(m)}_{ik}]\}\right]}}}.}
-    For the Weibull distribution, on the other hand,  we have
-    \eqn{\tilde{\boldsymbol\Psi}^{(m+1)}_k
-    =\tilde{\boldsymbol\Psi}^{(m)}_k
-    - 0.5^{\kappa}\left[{H_{k}^{p,(m)}}\right]^{-1}I_{k}^{p,(m)}},
-    where \eqn{H^p_{k}=H_k+h(\boldsymbol\Psi_k)}
-    is the penalized version of hessian matrix
-    and \eqn{I^p_{k}=I_k+h(\boldsymbol\Psi_k)\boldsymbol\Psi_k}
-    is the penalized version of vector of first derivatives evaluated
-    at \eqn{\tilde{\boldsymbol\Psi}_k^{(m)}}.
+  models is written as \deqn{\tilde\ell_{n}(\boldsymbol\Psi)
+  =\ell_{n}(\boldsymbol\Psi) -
+  \mathbf{p}_{\boldsymbol\lambda_{n}}(\boldsymbol\Psi)}
+  where \deqn{\mathbf{p}_{\boldsymbol\lambda_{n}}(\boldsymbol\Psi) =
+  \sum\limits_{k=1}^{K}\pi_{k}^\alpha\left\{
+  \sum\limits_{j=1}^{d}p_{\lambda_{n,k}}(\beta_{kj}) \right\}.}
+  In the M step of EM algorithm the
+  function \deqn{\tilde{Q}(\boldsymbol\Psi,\boldsymbol\Psi^{(m)})
+  =\sum\limits_{k=1}^{K} \tilde{Q}_{k}(\boldsymbol\Psi_k,
+  \boldsymbol\Psi^{(m)}_k) =
+  \sum\limits_{k=1}^{K} \left[{Q}_{k}(\boldsymbol\Psi_k,
+  \boldsymbol\Psi^{(m)}_k) - \pi_{k}^\alpha\left\{
+  \sum\limits_{j=1}^{d}p_{\lambda_{n,k}}(\beta_{kj}) \right\}\right]}
+  is maximized. Since the penalty function is singular at origin, we
+  use a local quadratic approximation (LQA) for the penalty as
+  follows, \deqn{\mathbf{p}^\ast_{k,\boldsymbol\lambda_{n}}
+  (\boldsymbol\beta,\boldsymbol\beta^{(m)})
+  =(\pi_{k}^{(m)})^{\alpha}\sum\limits_{j=1}^{d}\left\{
+  p_{\lambda_{n,k}}(\beta_{kj}^{(m)}) + { p^{\prime}_{\lambda_{n,k}}
+  (\beta_{kj}^{(m)})  \over 2\beta_{kj}^{(m)}}(\beta_{kj}^{2} -
+  {\beta_{kj}^{(m)}}^{2}) \right\}.} Therefore maximizing \eqn{Q} is
+  equivalent to maximizing the
+  function \deqn{ {Q}^\ast(\boldsymbol\Psi,\boldsymbol\Psi^{(m)})
+  =\sum\limits_{k=1}^{K} {Q}^\ast_{k}(\boldsymbol\Psi_k,
+  \boldsymbol\Psi^{(m)}_k) = \sum\limits_{k=1}^{K}
+  \left[{Q}_{k}(\boldsymbol\Psi_k,\boldsymbol\Psi^{(m)}_k)-
+  \mathbf{p}^\ast_{k,\boldsymbol\lambda_{n}}(\boldsymbol\beta,
+  \boldsymbol\beta^{(m)})\right].}
+  In case of Log-Normal sub-distributions, the maximizers of \eqn{Q_k}
+  functions are as follows. Given the data and current estimates of
+  parameters, the maximizers are \deqn{{\boldsymbol\beta}^{(m+1)}_{k}
+  =({\boldsymbol z}^{\prime}\boldsymbol\tau^{(m)}_{k}{\boldsymbol z}+
+  \varpi_{k}(\boldsymbol\beta_{kj}^{(m)}))^{-1}{\boldsymbol z}^{\prime}
+  \boldsymbol\tau^{(m)}_{k}T^{(m)}_{k},}
+  where \eqn{\varpi_{k}(\boldsymbol\beta_{kj}^{(m)})={diag}
+  \left(\left(\pi_{k}^{(m+1)}\right)^\alpha
+  \frac{{p}^{\prime}_{\lambda_{n},k}(\boldsymbol\beta_{kj}^{(m)})}
+  {\boldsymbol\beta_{kj}^{(m)}}\right)}
+  and \eqn{\sigma_{k}^{(m+1)}} is equal to \deqn{\sigma_{k}^{(m+1)}
+  =\sqrt{\frac{\sum\limits_{i=1}^{n}\tau^{(m)}_{ik} (t^{(m)}_{ik}
+  -{\boldsymbol z}_{i}\boldsymbol\beta^{(m)}_{k})^{2}}
+  {\sum\limits_{i=1}^{n}\tau^{(m)}_{ik} {\left[\delta_{i}
+  +(1-\delta_{i})\{A(w^{(m)}_{ik})[A(w^{(m)}_{ik})-
+  w^{(m)}_{ik}]\}\right]}}}.}
+  For the Weibull distribution, on the other hand,  we have
+  \eqn{\tilde{\boldsymbol\Psi}^{(m+1)}_k
+  =\tilde{\boldsymbol\Psi}^{(m)}_k
+  - 0.5^{\kappa}\left[{H_{k}^{p,(m)}}\right]^{-1}I_{k}^{p,(m)}},
+  where \eqn{H^p_{k}=H_k+h(\boldsymbol\Psi_k)}
+  is the penalized version of hessian matrix
+  and \eqn{I^p_{k}=I_k+h(\boldsymbol\Psi_k)\boldsymbol\Psi_k}
+  is the penalized version of vector of first derivatives evaluated
+  at \eqn{\tilde{\boldsymbol\Psi}_k^{(m)}}.
 }
 \examples{
 set.seed(1980)
@@ -168,29 +168,29 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-                     coeff = c(coeff1, coeff2), dispersion = dispersion,
-                     mixProp =mixProp, rho = rho, umax = umax,
-                     disFamily = "lnorm")
+ coeff = c(coeff1, coeff2), dispersion = dispersion,
+ mixProp =mixProp, rho = rho, umax = umax,
+ disFamily = "lnorm")
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-                   nComp = nComp, disFamily = "lnorm",
-                   initCoeff = rnorm(nComp*nCov+nComp),
-                   initDispersion = rep(1, nComp),
-                   initmixProp = rep(1/nComp, nComp))
+ nComp = nComp, disFamily = "lnorm",
+ initCoeff = rnorm(nComp*nCov+nComp),
+ initDispersion = rep(1, nComp),
+ initmixProp = rep(1/nComp, nComp))
 
 res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
-                      nComp = ncomp(res.mle), disFamily = "lnorm",
-                      initCoeff=c(coefficients(res.mle)),
-                      initDispersion = dispersion(res.mle),
-                      initmixProp = mixProp(res.mle),
-                      penFamily = "adplasso")
+  nComp = ncomp(res.mle), disFamily = "lnorm",
+  initCoeff=c(coefficients(res.mle)),
+  initDispersion = dispersion(res.mle),
+  initmixProp = mixProp(res.mle),
+  penFamily = "adplasso")
 res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
-                      nComp = ncomp(res.mle), disFamily = "lnorm",
-                      initCoeff=c(coefficients(res.mle)),
-                      initDispersion = dispersion(res.mle),
-                      initmixProp = mixProp(res.mle),
-                      penFamily = "adplasso",
-                      lambPen = slot(res.lam, "lambPen"))
+  nComp = ncomp(res.mle), disFamily = "lnorm",
+  initCoeff=c(coefficients(res.mle)),
+  initDispersion = dispersion(res.mle),
+  initmixProp = mixProp(res.mle),
+  penFamily = "adplasso",
+  lambPen = slot(res.lam, "lambPen"))
 
 coefficients(res.var)[-1,]
 round(coefficients(res.var)[-1,],5)

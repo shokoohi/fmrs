@@ -23,7 +23,7 @@ fmrs.gendata(nObs, nComp, nCov, coeff, dispersion, mixProp, rho, umax, ...)
 \arguments{
 \item{nObs}{A numeric value represents sample size}
 
-\item{nComp}{A numeric value represents the order mixture in \code{FMRs} model}
+\item{nComp}{A numeric value represents the order mixture in \code{FMRs}}
 
 \item{nCov}{A numeric value represents the number of covariates in
 design matrix}
@@ -46,8 +46,8 @@ distribution for censoring}
 \item{...}{Other possible options}
 
 \item{disFamily}{A sub-distribution family. The options
-are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of AFT
-regression models with Log-Normal sub-distributions,\code{"weibull"}
+are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of
+AFT regression models with Log-Normal sub-distributions,\code{"weibull"}
 for mixture of AFT regression models with Weibull sub-distributions}
 }
 \value{
@@ -55,8 +55,8 @@ A list including reponse, covariates and cenroing variables
 }
 \description{
 Generates a data set from Finite Mixture
-    of AFT regression models or Finite Mixture of Regression models under
-    the specified setting.
+  of AFT regression models or Finite Mixture of Regression models under
+  the specified setting.
 }
 \examples{
 set.seed(1980)
@@ -72,9 +72,9 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-                     coeff = c(coeff1, coeff2), dispersion = dispersion,
-                     mixProp =mixProp, rho = rho, umax = umax,
-                     disFamily = "lnorm")
+ coeff = c(coeff1, coeff2), dispersion = dispersion,
+ mixProp =mixProp, rho = rho, umax = umax,
+ disFamily = "lnorm")
 }
 \seealso{
 Other lnorm, norm, weibull: 

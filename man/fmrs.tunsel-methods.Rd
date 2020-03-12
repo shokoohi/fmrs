@@ -90,30 +90,30 @@ covariates are active in the fitted fmrs model}
 }
 \value{
 An \code{\link{fmrstunpar-class}} that includes
-    component-wise tuning parameter estimates that can be used in
-    variable selection procedure.
+  component-wise tuning parameter estimates that can be used in
+  variable selection procedure.
 }
 \description{
 Provides component-wise tuning parameters using BIC for
-    Finite Mixture of Accelerated Failure Time Regression Models
-    and Finite Mixture of Regression Models.
+  Finite Mixture of Accelerated Failure Time Regression Models
+  and Finite Mixture of Regression Models.
 }
 \details{
 The maximizer of penalized Log-Likelihood depends on selecting a
-    set of good tuning parameters which is a rather thorny issue. We
-    choose a value in an equally spaced set of values in
-    \eqn{(0, \lambda_{max})} for a pre-specified \eqn{\lambda_{max}}
-    that maximize the component-wise
-    BIC, \deqn{\hat\lambda_{k} ={argmax}_{\lambda_{k}}BIC_k(\lambda_{k})=
-    {argmax}_{\lambda_{k}}\left\{\ell^{c}_{k, n}
-    (\hat{\boldsymbol\Psi}_{\lambda_{k}, k}) -
-    |d_{\lambda_{k},k}| \log (n)\right\},}
-    where \eqn{d_{\lambda_{k},k}=\{j:\hat{\beta}_{\lambda_{k},kj}\neq 0,
-    j=1,\ldots,d\}} is the active set  excluding the intercept
-    and \eqn{|d_{\lambda_{k},k}|}
-    is its size. This approach is much faster than using an \code{nComp}
-    by \code{nComp} grid to select the set \eqn{\boldsymbol\lambda} to
-    maximize the penallized Log-Likelihood.
+set of good tuning parameters which is a rather thorny issue. We
+  choose a value in an equally spaced set of values in
+  \eqn{(0, \lambda_{max})} for a pre-specified \eqn{\lambda_{max}}
+  that maximize the component-wise
+  BIC, \deqn{\hat\lambda_{k} ={argmax}_{\lambda_{k}}BIC_k(\lambda_{k})=
+  {argmax}_{\lambda_{k}}\left\{\ell^{c}_{k, n}
+  (\hat{\boldsymbol\Psi}_{\lambda_{k}, k}) -
+  |d_{\lambda_{k},k}| \log (n)\right\},}
+  where \eqn{d_{\lambda_{k},k}=\{j:\hat{\beta}_{\lambda_{k},kj}\neq 0,
+  j=1,\ldots,d\}} is the active set  excluding the intercept
+  and \eqn{|d_{\lambda_{k},k}|}
+  is its size. This approach is much faster than using an \code{nComp}
+  by \code{nComp} grid to select the set \eqn{\boldsymbol\lambda} to
+  maximize the penallized Log-Likelihood.
 }
 \examples{
 set.seed(1980)
@@ -128,28 +128,28 @@ coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
 umax = 40
 
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
-                     coeff = c(coeff1, coeff2), dispersion = dispersion,
-                     mixProp = mixProp, rho = rho, umax = umax,
-                     disFamily = "lnorm")
+ coeff = c(coeff1, coeff2), dispersion = dispersion,
+ mixProp = mixProp, rho = rho, umax = umax,
+ disFamily = "lnorm")
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-                   nComp = nComp, disFamily = "lnorm",
-                   initCoeff = rnorm(nComp*nCov+nComp),
-                   initDispersion = rep(1, nComp),
-                   initmixProp = rep(1/nComp, nComp))
+ nComp = nComp, disFamily = "lnorm",
+ initCoeff = rnorm(nComp*nCov+nComp),
+ initDispersion = rep(1, nComp),
+ initmixProp = rep(1/nComp, nComp))
 
 res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
-                      nComp = nComp, disFamily = "lnorm",
-                      initCoeff = c(coefficients(res.mle)),
-                      initDispersion = dispersion(res.mle),
-                      initmixProp = mixProp(res.mle),
-                      penFamily = "adplasso")
+  nComp = nComp, disFamily = "lnorm",
+  initCoeff = c(coefficients(res.mle)),
+  initDispersion = dispersion(res.mle),
+  initmixProp = mixProp(res.mle),
+  penFamily = "adplasso")
 show(res.lam)
 }
 \references{
 Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.
-    (2016 submitted) Variable Selection in Mixture of Survival Models for
-    Biomedical Genomic Studies
+  (2016 submitted) Variable Selection in Mixture of Survival Models for
+  Biomedical Genomic Studies
 }
 \seealso{
 Other lnorm, norm, weibull: 

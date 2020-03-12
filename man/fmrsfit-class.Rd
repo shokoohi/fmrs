@@ -7,8 +7,8 @@
 \title{An S4 class to represent a fitted FMRs model}
 \description{
 is an S4 class represents a fitted of FMRs model
-    resulted from running \code{\link{fmrs.mle}}
-    or \code{\link{fmrs.varsel}}
+   resulted from running \code{\link{fmrs.mle}}
+   or \code{\link{fmrs.varsel}}
 }
 \section{Slots}{
 
