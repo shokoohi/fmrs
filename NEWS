@@ -1,62 +1,15 @@
 
 ------------------------
-CHANGES IN VERSION 1.0-9
+CHANGES IN VERSION 0.99.0
 ----------------------
-CHANGES SINCE LAST TIME
-    o The argument 'activeset' is added which allow flexiblity in defining
-    customized fmrs models in terms of which covariates and intercepts
-    should be included in each component.
-    o A bug regarding calculating residuals and fitted values is fixed.
-    o An alternative code is added and will be activated when the results of
-    MLE of weibull distribution create 'NaN'. It is based on a component-wise
-    algorithm and using survreg function in survival package to find MLE.
 
  BUG FIXES
-    o Fixed a bug related to calculating fitted values and residuals.
+
+    o Package moved to bioconductor.
+    o Fixed several bugs.
 
 ------------------------
-CHANGES IN VERSION 1.0-8
-----------------------
-CHANGES SINCE LAST TIME
-    o We have implemented the Zhang(2010)'s suggestion for selecting extra
-    tuning parameter in MCP penalty.
-    o We have added an option for choosing extra tuning parameter in SICA
-    penalty.
-
-------------------------
-CHANGES IN VERSION 1.0-7
-----------------------
-IMPROVEMENTS SINCE LAST TIME
-    o We have implemented S4 classes and methods in this release.
-
-CHANGES SINCE LAST TIME
-    o Since S4 methods are implemented we have changed some arguments and
-    definitions in this release.
-    o fmrs object is changed to fmrsfit.
-    o tunpar object is changed to fmrstunpar
-    o You can no longer use $ to call the arguments of objects since they are
-    written in S4 classes. Use @ instead.
-    o New methods added to the package (see the manual).
-
-------------------------
-CHANGES IN VERSION 1.0-5
-----------------------
-IMPROVEMENTS SINCE LAST TIME
-    o We have refined some of the codes to speed up the package.
-
-FUTURE DEVELOPMENT
-    o We intend to make some refinements to the package by introducing better
-    S4 classes and methods.
-    o We will add more distributions to the package including Generalized Gamma
-    and Gompertz.
-    o Since we are working on length-biased models, these models will be added
-    to the package.
-
-BUG FIXES
-    o None reported so far.
-
-------------------------
-CHANGES IN VERSION 1.0-4
+CHANGES IN VERSION 0.99.3
 ------------------------
 
 IMPROVEMENTS SINCE LAST TIME

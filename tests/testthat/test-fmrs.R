@@ -20,5 +20,5 @@ test_that("test fmrs", {
         initCoeff = rnorm(nComp*nCov+nComp),
         initDispersion = rep(1, nComp),
         initmixProp = rep(1/nComp, nComp))
-        expect_equal(res.mle@y[1], 2.486618)
+        expect_equal(round(coefficients(res.mle)[1],1), -1)
         })
