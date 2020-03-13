@@ -18,8 +18,6 @@ show(object)
 \arguments{
 \item{object}{An \code{\link{fmrsfit-class}} or
 \code{\link{fmrstunpar-class}}}
-
-\item{...}{Other possible arguments}
 }
 \value{
 Information about the fitted \code{FMRs} model

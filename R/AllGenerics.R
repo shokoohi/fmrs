@@ -511,7 +511,6 @@ setGeneric("summary", function(object, ...) standardGeneric("summary"))
 #' @rdname show-methods
 #' @param object An \code{\link{fmrsfit-class}} or
 #' \code{\link{fmrstunpar-class}}
-#' @param ... Other possible arguments
 #' @return Information about the fitted \code{FMRs} model
 #' @examples
 #' set.seed(1980)
