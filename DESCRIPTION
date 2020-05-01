@@ -1,8 +1,8 @@
 Package: fmrs
 Type: Package
 Title: Variable Selection in Finite Mixture of AFT Regression and FMR
-Version: 0.99.8
-Date: 2020-03-08
+Version: 0.99.9
+Date: 2020-05-01
 Author: Farhad Shokoohi <shokoohi@icloud.com>
 Maintainer: Farhad Shokoohi <shokoohi@icloud.com>
 Depends: R (>= 4.0.0)
@@ -17,7 +17,7 @@ License: GPL (>= 3)
 LazyData: TRUE
 VignetteBuilder: knitr
 BugReports: https://github.com/shokoohi/fmrs/issues
-Packaged: 2020-05-01 18:49:07 UTC; farhad
+Packaged: 2020-05-01 21:05:54 UTC; farhad
 RoxygenNote: 7.1.0
 Encoding: UTF-8
 NeedsCompilation: yes

@@ -363,24 +363,24 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <a class="sourceLine" id="cb9-4" data-line-number="4">                   <span class="dt">initDispersion =</span> <span class="kw">rep</span>(<span class="dv">1</span>, nComp),</a>
 <a class="sourceLine" id="cb9-5" data-line-number="5">                   <span class="dt">initmixProp =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">/</span>nComp, nComp))</a>
 <a class="sourceLine" id="cb9-6" data-line-number="6"><span class="kw">coefficients</span>(res.mle)</a></code></pre></div>
-<pre><code>##                Comp.1      Comp.2
-## Intercept -1.02359458  2.16213352
-## X.1       -0.94785268  1.88477719
-## X.2        0.78970579 -0.87406523
-## X.3        2.15026372 -2.14019450
-## X.4        0.00675531  0.98534037
-## X.5        0.05740064  1.97234005
-## X.6       -0.05950991  0.25060224
-## X.7       -0.12997802  0.03928841
-## X.8       -0.87829195 -0.05872175
-## X.9        1.92829950 -0.04921801
-## X.10      -2.04808336  0.06100638</code></pre>
+<pre><code>##                Comp.1     Comp.2
+## Intercept -0.26344394  0.9976953
+## X.1        0.32900425 -1.2803480
+## X.2        0.06690871  0.1928663
+## X.3        0.69669344  0.7978279
+## X.4        0.51597721  0.4171002
+## X.5       -0.09399042  0.1369026
+## X.6        0.26679989 -0.1871274
+## X.7       -0.17686523 -0.7404996
+## X.8       -0.63562498  1.2610768
+## X.9        1.23776252  1.1937360
+## X.10      -2.20704095 -0.1349468</code></pre>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">dispersion</span>(res.mle)</a></code></pre></div>
-<pre><code>##         Comp.1    Comp.2
-## [1,] 0.8846202 0.9351784</code></pre>
+<pre><code>##        Comp.1   Comp.2
+## [1,] 2.572907 3.213501</code></pre>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">mixProp</span>(res.mle)</a></code></pre></div>
 <pre><code>##         Comp.1    Comp.2
-## [1,] 0.5831783 0.4168217</code></pre>
+## [1,] 0.5693449 0.4306551</code></pre>
 <p>As we see the ML estimates of regression coefficients are not zero. Therefore MLE cannot provide a sparse solution. In order to provide a sparse solution, we use the variable selection methods developed by Shokoohi et. ale. (2016). First we need to find a good set of tuning parameters. It can be done by using component-wise tuning parameter selection function implemented in <code>fmrs</code> as follows. In some settings, however, it is better to investigate if common tuning parameter performs better.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">res.lam &lt;-<span class="st"> </span><span class="kw">fmrs.tunsel</span>(<span class="dt">y =</span> dat<span class="op">$</span>y, <span class="dt">x =</span> dat<span class="op">$</span>x, <span class="dt">delta =</span> dat<span class="op">$</span>delta,</a>
 <a class="sourceLine" id="cb15-2" data-line-number="2">                      <span class="dt">nComp =</span> nComp, <span class="dt">disFamily =</span> <span class="st">&quot;lnorm&quot;</span>,</a>
@@ -403,36 +403,36 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <a class="sourceLine" id="cb17-7" data-line-number="7">                      <span class="dt">lambPen =</span> <span class="kw">slot</span>(res.lam, <span class="st">&quot;lambPen&quot;</span>))</a>
 <a class="sourceLine" id="cb17-8" data-line-number="8"><span class="kw">coefficients</span>(res.var)</a></code></pre></div>
 <pre><code>##                  Comp.1        Comp.2
-## Intercept -1.060114e+00  2.064935e+00
-## X.1       -9.200048e-01  1.688964e+00
-## X.2        7.482208e-01 -6.349707e-01
-## X.3        2.142718e+00 -1.965594e+00
-## X.4        1.900241e-14  7.618512e-01
-## X.5        7.035680e-14  2.055048e+00
-## X.6       -1.873885e-12  4.144778e-12
-## X.7       -1.367806e-07  2.766242e-13
-## X.8       -9.143568e-01  2.586690e-13
-## X.9        1.902812e+00  8.105115e-14
-## X.10      -2.038172e+00  1.239628e-13</code></pre>
+## Intercept -1.094294e+00  1.931116e+00
+## X.1       -7.570549e-01  1.572518e+00
+## X.2        4.394213e-01 -3.881668e-01
+## X.3        2.240087e+00 -1.973916e+00
+## X.4        3.932115e-11  8.663719e-01
+## X.5        1.229817e-12  1.571044e+00
+## X.6       -3.536022e-02  9.681637e-02
+## X.7       -7.421803e-04  1.021068e-01
+## X.8       -9.202368e-01  4.252604e-02
+## X.9        1.941751e+00  1.570780e-09
+## X.10      -2.035064e+00  1.132283e-11</code></pre>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">dispersion</span>(res.var)</a></code></pre></div>
 <pre><code>##         Comp.1   Comp.2
-## [1,] 0.8856218 1.009566</code></pre>
+## [1,] 0.9063641 1.116175</code></pre>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">mixProp</span>(res.var)</a></code></pre></div>
 <pre><code>##         Comp.1    Comp.2
-## [1,] 0.5766631 0.4233369</code></pre>
+## [1,] 0.5674864 0.4325136</code></pre>
 <p>The final variables that are selected using this procedure are those with non-zero coefficients. Note that a switching between components of mixture has happened here.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">round</span>(<span class="kw">coefficients</span>(res.var)[<span class="op">-</span><span class="dv">1</span>,],<span class="dv">3</span>)</a></code></pre></div>
 <pre><code>##      Comp.1 Comp.2
-## X.1  -0.920  1.689
-## X.2   0.748 -0.635
-## X.3   2.143 -1.966
-## X.4   0.000  0.762
-## X.5   0.000  2.055
-## X.6   0.000  0.000
-## X.7   0.000  0.000
-## X.8  -0.914  0.000
-## X.9   1.903  0.000
-## X.10 -2.038  0.000</code></pre>
+## X.1  -0.757  1.573
+## X.2   0.439 -0.388
+## X.3   2.240 -1.974
+## X.4   0.000  0.866
+## X.5   0.000  1.571
+## X.6  -0.035  0.097
+## X.7  -0.001  0.102
+## X.8  -0.920  0.043
+## X.9   1.942  0.000
+## X.10 -2.035  0.000</code></pre>
 <p>Therefore the variable selection and parameter estimation is done simultaneously using the fmrs package.</p>
 </div>
 </div>

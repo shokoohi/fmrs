@@ -17,7 +17,7 @@ test_that("test fmrs", {
 
         res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
         nComp = nComp, disFamily = "lnorm",
-        initCoeff = rnorm(nComp*nCov+nComp),
+        initCoeff = c(coeff1, coeff2),
         initDispersion = rep(1, nComp),
         initmixProp = rep(1/nComp, nComp))
 
@@ -29,5 +29,5 @@ test_that("test fmrs", {
                                 penFamily = 'adplasso',
                                 lambPen = c(0,1,0.1))
 
-        expect_equal(sum(round(coefficients(res.mple),1)==0), 10)
+        expect_equal(sum(round(coefficients(res.mple),1)==0), 8)
         })
