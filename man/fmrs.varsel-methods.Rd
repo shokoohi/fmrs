@@ -44,8 +44,8 @@ fmrs.varsel(y, delta, x, nComp, ...)
 \item{...}{Other possible options}
 
 \item{disFamily}{A sub-distribution family. The options
-are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of
-AFT regression models with Log-Normal sub-distributions, \code{"weibull"}
+are \code{'norm'} for \code{FMR} models, \code{'lnorm'} for mixture of
+AFT regression models with Log-Normal sub-distributions, \code{'weibull'}
 for mixture of AFT regression models with Weibull sub-distributions}
 
 \item{initCoeff}{Vector of initial values for regression coefficients
@@ -56,8 +56,8 @@ including intercepts}
 \item{initmixProp}{Vector of initial values for proportion of components}
 
 \item{penFamily}{Penalty name that is used in variable selection method
-The available options are  \code{"lasso"}, \code{"adplasso"},
-\code{"mcp"}, \code{"scad"}, \code{"sica"} and \code{"hard"}.}
+The available options are  \code{'lasso'}, \code{'adplasso'},
+\code{'mcp'}, \code{'scad'}, \code{'sica'} and \code{'hard'}.}
 
 \item{lambPen}{A vector of positive numbers for tuning parameters}
 
@@ -170,27 +170,27 @@ umax = 40
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
  coeff = c(coeff1, coeff2), dispersion = dispersion,
  mixProp =mixProp, rho = rho, umax = umax,
- disFamily = "lnorm")
+ disFamily = 'lnorm')
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
- nComp = nComp, disFamily = "lnorm",
+ nComp = nComp, disFamily = 'lnorm',
  initCoeff = rnorm(nComp*nCov+nComp),
  initDispersion = rep(1, nComp),
  initmixProp = rep(1/nComp, nComp))
 
 res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
-  nComp = ncomp(res.mle), disFamily = "lnorm",
+  nComp = ncomp(res.mle), disFamily = 'lnorm',
   initCoeff=c(coefficients(res.mle)),
   initDispersion = dispersion(res.mle),
   initmixProp = mixProp(res.mle),
-  penFamily = "adplasso")
+  penFamily = 'adplasso')
 res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
-  nComp = ncomp(res.mle), disFamily = "lnorm",
+  nComp = ncomp(res.mle), disFamily = 'lnorm',
   initCoeff=c(coefficients(res.mle)),
   initDispersion = dispersion(res.mle),
   initmixProp = mixProp(res.mle),
-  penFamily = "adplasso",
-  lambPen = slot(res.lam, "lambPen"))
+  penFamily = 'adplasso',
+  lambPen = slot(res.lam, 'lambPen'))
 
 coefficients(res.var)[-1,]
 round(coefficients(res.var)[-1,],5)

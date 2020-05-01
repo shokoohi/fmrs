@@ -39,8 +39,8 @@ fmrs.mle(y, delta, x, nComp, ...)
 \item{...}{Other possible options}
 
 \item{disFamily}{A sub-distribution family. The options
-are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of
-AFT regression models with Log-Normal sub-distributions,\code{"weibull"}
+are \code{'norm'} for \code{FMR} models, \code{'lnorm'} for mixture of
+AFT regression models with Log-Normal sub-distributions,\code{'weibull'}
 for mixture of AFT regression models with Weibull sub-distributions}
 
 \item{initCoeff}{Vector of initial values for regression coefficients
@@ -135,10 +135,10 @@ umax = 40
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
  coeff = c(coeff1, coeff2), dispersion = dispersion,
  mixProp = mixProp, rho = rho, umax = umax,
- disFamily = "lnorm")
+ disFamily = 'lnorm')
 
 res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
-     nComp = nComp, disFamily = "lnorm",
+     nComp = nComp, disFamily = 'lnorm',
      initCoeff = rnorm(nComp*nCov+nComp),
      initDispersion = rep(1, nComp),
      initmixProp = rep(1/nComp, nComp))

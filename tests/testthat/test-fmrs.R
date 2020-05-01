@@ -20,5 +20,14 @@ test_that("test fmrs", {
         initCoeff = rnorm(nComp*nCov+nComp),
         initDispersion = rep(1, nComp),
         initmixProp = rep(1/nComp, nComp))
-        expect_equal(round(coefficients(res.mle)[1],1), -1)
+
+        res.mple <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
+                                nComp = ncomp(res.mle), disFamily = 'lnorm',
+                                initCoeff=c(coefficients(res.mle)),
+                                initDispersion = dispersion(res.mle),
+                                initmixProp = mixProp(res.mle),
+                                penFamily = 'adplasso',
+                                lambPen = c(0,1,0.1))
+
+        expect_equal(sum(round(coefficients(res.mple),1)==0), 10)
         })

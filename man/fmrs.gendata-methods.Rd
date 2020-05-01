@@ -46,8 +46,8 @@ distribution for censoring}
 \item{...}{Other possible options}
 
 \item{disFamily}{A sub-distribution family. The options
-are \code{"norm"} for \code{FMR} models, \code{"lnorm"} for mixture of
-AFT regression models with Log-Normal sub-distributions,\code{"weibull"}
+are \code{'norm'} for \code{FMR} models, \code{'lnorm'} for mixture of
+AFT regression models with Log-Normal sub-distributions,\code{'weibull'}
 for mixture of AFT regression models with Weibull sub-distributions}
 }
 \value{
@@ -74,7 +74,7 @@ umax = 40
 dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
  coeff = c(coeff1, coeff2), dispersion = dispersion,
  mixProp =mixProp, rho = rho, umax = umax,
- disFamily = "lnorm")
+ disFamily = 'lnorm')
 }
 \seealso{
 Other lnorm, norm, weibull: 

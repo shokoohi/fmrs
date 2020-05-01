@@ -18,28 +18,9 @@
 #' @rdname fmrstunpar-class
 #' @keywords object
 #' @export
-fmrstunpar <- setClass("fmrstunpar",
-    representation(ncomp = "numeric",
-    lambPen = "array",
-    lambRidge = "numeric",
-    MCPGam = "numeric",
-    SICAGam = "numeric",
-    disFamily = "character",
-    penFamily = "character",
-    model = "character",
-    activeset = "matrix"
-    ),
-    prototype (ncomp = numeric(length = 1L),
-    lambPen = array(),
-    lambRidge = numeric(length = 1L),
-    MCPGam = numeric(length = 1L),
-    SICAGam = numeric(length = 1L),
-    disFamily = character(),
-    penFamily = character(),
-    model = character(),
-    activeset = matrix()
-    )
-)
+fmrstunpar <- setClass("fmrstunpar", representation(ncomp = "numeric", lambPen = "array", lambRidge = "numeric", MCPGam = "numeric", SICAGam = "numeric", disFamily = "character",
+    penFamily = "character", model = "character", activeset = "matrix"), prototype(ncomp = numeric(length = 1L), lambPen = array(), lambRidge = numeric(length = 1L),
+    MCPGam = numeric(length = 1L), SICAGam = numeric(length = 1L), disFamily = character(), penFamily = character(), model = character(), activeset = matrix()))
 
 #' @title An S4 class to represent a fitted FMRs model
 #'
@@ -75,65 +56,18 @@ fmrstunpar <- setClass("fmrstunpar",
 #' @keywords object
 #' @rdname fmrsfit-class
 #' @exportClass fmrsfit
-frmsfit <- setClass("fmrsfit",
-    representation(y = "vector",
-    delta = "vector",
-    x = "matrix",
-    nobs = "numeric",
-    ncov = "numeric",
-    ncomp = "numeric",
-    coefficients = "matrix",
-    dispersion = "array",
-    mixProp = "array",
-    logLik = "numeric",
-    BIC = "numeric",
-    nIterEMconv = "numeric",
-    disFamily = "character",
-    penFamily = "character",
-    lambPen = "array",
-    lambRidge = "numeric",
-    MCPGam = "numeric",
-    SICAGam = "numeric",
-    model = "character",
-    fitted = "matrix",
-    residuals = "matrix",
-    weights = "matrix",
-    activeset = "matrix"
-    ),
-    prototype (y = vector(),
-    delta = vector(),
-    x = matrix(),
-    nobs = numeric(length = 1L),
-    ncov = numeric(length = 1L),
-    ncomp = numeric(length = 1L),
-    coefficients = matrix(),
-    dispersion = array(),
-    mixProp = array(),
-    logLik = numeric(length = 1L),
-    BIC = numeric(length = 1L),
-    nIterEMconv = numeric(length = 1L),
-    disFamily = character(),
-    penFamily = character(),
-    lambPen = array(),
-    lambRidge = numeric(length = 1L),
-    MCPGam = numeric(length = 1L),
-    SICAGam = numeric(length = 1L),
-    model = character(),
-    fitted = matrix(),
-    residuals = matrix(),
-    weights = matrix(),
-    activeset = matrix()
-    ),
-    contains = "fmrstunpar"
-)
-
-
+frmsfit <- setClass("fmrsfit", representation(y = "vector", delta = "vector", x = "matrix", nobs = "numeric", ncov = "numeric", ncomp = "numeric", coefficients = "matrix",
+    dispersion = "array", mixProp = "array", logLik = "numeric", BIC = "numeric", nIterEMconv = "numeric", disFamily = "character", penFamily = "character", lambPen = "array",
+    lambRidge = "numeric", MCPGam = "numeric", SICAGam = "numeric", model = "character", fitted = "matrix", residuals = "matrix", weights = "matrix", activeset = "matrix"),
+    prototype(y = vector(), delta = vector(), x = matrix(), nobs = numeric(length = 1L), ncov = numeric(length = 1L), ncomp = numeric(length = 1L), coefficients = matrix(),
+        dispersion = array(), mixProp = array(), logLik = numeric(length = 1L), BIC = numeric(length = 1L), nIterEMconv = numeric(length = 1L), disFamily = character(),
+        penFamily = character(), lambPen = array(), lambRidge = numeric(length = 1L), MCPGam = numeric(length = 1L), SICAGam = numeric(length = 1L), model = character(),
+        fitted = matrix(), residuals = matrix(), weights = matrix(), activeset = matrix()), contains = "fmrstunpar")
 
 validity.fmrsfit <- function(object) {
-    if( (length(object@y)!= object@nobs) | (dim(object@x)[1]!= object@nobs) |
-    (dim(object@x)[1]!=length(object@y)) ) {
-    return("data do not match")
-    }else return(TRUE)
+    if ((length(object@y) != object@nobs) | (dim(object@x)[1] != object@nobs) | (dim(object@x)[1] != length(object@y))) {
+        return("data do not match")
+    } else return(TRUE)
 }
 
 
