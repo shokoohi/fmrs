@@ -159,17 +159,13 @@ setMethod(f = "fmrs.mle", definition = function(y, delta, x, nComp = 2, disFamil
                       phi[i, k1] = pi0[k1] * deni
                       sumi = sumi + phi[i, k1]
                     }
-                    for (k1 in seq_len(Num.Comp)) {
-                      W[i, k1] = phi[i, k1]/sumi
-                      if (W[i, k1] < 1e-10)
-                        W[i, k1] = 1e-10
-                      sumwi[k1] = sumwi[k1] + W[i, k1]
-                    }
+
+                    W[i,] = phi[i,]/sumi
+                    W[i,W[i,] < 1e-10] <- 1e-10
+                    sumwi = sumwi +  W[i,]
                   }
 
-                  for (k1 in seq_len(Num.Comp)) {
-                    new_pi0[k1] = sumwi[k1]/Sample.Size
-                  }
+                    new_pi0 = sumwi/Sample.Size
 
                   for (k1 in seq_len(Num.Comp)) {
                     newX = x[, acs[-1, k1] == 1]
@@ -215,7 +211,6 @@ setMethod(f = "fmrs.mle", definition = function(y, delta, x, nComp = 2, disFamil
 
                 loglike1 = 0
 
-
                 for (i in seq_len(Sample.Size)) {
                   sumi = 0
                   for (k1 in seq_len(Num.Comp)) {
@@ -245,9 +240,7 @@ setMethod(f = "fmrs.mle", definition = function(y, delta, x, nComp = 2, disFamil
                     phi[i, k1] = new_pi0[k1] * deni
                     sumi = sumi + phi[i, k1]
                   }
-                  for (k1 in seq_len(Num.Comp)) {
-                    W[i, k1] = phi[i, k1]/sumi
-                  }
+                    W[i, ] = phi[i, ]/sumi
                 }
 
 
@@ -258,7 +251,6 @@ setMethod(f = "fmrs.mle", definition = function(y, delta, x, nComp = 2, disFamil
                     residual[i, k1] = y[i] - exp(mui)
                   }
                 }
-
 
                 list(Intecept.Hat = c(new_alpha0), Coefficient.Hat = c(new_beta0), Dispersion.Hat = c(new_sigma0), mixProp.Hat = c(new_pi0), LogLikelihood = loglike1,
                   BIC = BIC, AIC = AIC, GCV = GCV, EBIC1 = EBIC1, EBIC5 = EBIC5, GIC = GIC, predict = c(predict), residual = c(residual), tau = c(W), Max.iterEM.used = MaxEMiter)
@@ -503,13 +495,8 @@ setMethod(f = "fmrs.gendata", definition = function(nObs, nComp, nCov, coeff, di
         stop("The correlation cannot be less than -1 or greater thatn 1.")
 
     mu <- rep(0, nCov)
-    Sigma <- diag(nCov)
-
-    for (i in seq_len(nCov)) {
-        for (j in seq_len(nCov)) {
-            Sigma[i, j] <- rho^abs(i - j)
-        }
-    }
+    Sigma <- matrix(seq_len(nCov), nCov, nCov)
+    Sigma <- rho^abs(Sigma-t(Sigma))
 
     X <- matrix(rnorm(nCov * nObs), nObs)
     X <- scale(X, TRUE, FALSE)
@@ -530,45 +517,29 @@ setMethod(f = "fmrs.gendata", definition = function(nObs, nComp, nCov, coeff, di
     coef0 <- matrix(coeff, nrow = nComp, ncol = nCov + 1, byrow = TRUE)
     mixProp0 <- cumsum(mixProp)
 
-    yobs <- c()
-    c <- rep()
-    dlt <- c()
-    u <- c()
-    tobs <- c()
-
     if (disFamily == "lnorm") {
-        for (i in seq_len(nObs)) {
-            epss <- rnorm(1)
-            u1 <- runif(1)
-            k = length(which(mixProp0 <= u1)) + 1
-            u[i] = k
-            yobs[i] <- coef0[k, 1] + coef0[k, -1] %*% cX[i, ] + dispersion[k] * epss
-
-            c[i] <- log(runif(1, 0, umax))
-            tobs[i] <- exp(min(yobs[i], c[i]))
-            dlt[i] <- (yobs[i] < c[i]) * 1
-        }
+        epss = rnorm(nObs)
+        u1 = runif(nObs)
+        u = sapply(seq_len(nObs), function(i){length(which(mixProp0 <= u1[i])) + 1})
+        yobs <- coef0[u, 1] + rowSums(cX * coef0[u, -1]) + dispersion[u] * epss
+        c <- log(runif(nObs, 0, umax))
+        tobs = sapply(seq_len(nObs), function(i){ifelse(yobs[i]<=c[i], yobs[i], c[i])})
+        dlt = sapply(seq_len(nObs), function(i){ifelse(yobs[i]<=c[i], 1, 0)})
     } else if (disFamily == "norm") {
-        for (i in seq_len(nObs)) {
-            epss <- rnorm(1)
-            u1 <- runif(1)
-            k = length(which(mixProp0 <= u1)) + 1
-            u[i] = k
-            yobs[i] <- coef0[k, 1] + coef0[k, -1] %*% cX[i, ] + dispersion[k] * epss
-            tobs[i] <- yobs[i]
-            dlt[i] <- 1
-        }
-    } else if (disFamily == "weibull") {
-        for (i in seq_len(nObs)) {
-            ext <- log(rexp(1))
-            u1 <- runif(1)
-            k = length(which(mixProp0 <= u1)) + 1
-            yobs[i] <- coef0[k, 1] + coef0[k, -1] %*% cX[i, ] + dispersion[k] * ext
-
-            c[i] <- log(runif(1, 0, umax))
-            tobs[i] <- exp(min(yobs[i], c[i]))
-            dlt[i] <- (yobs[i] < c[i]) * 1
-        }
+        epss = rnorm(nObs)
+        u1 = runif(nObs)
+        u = sapply(seq_len(nObs), function(i){length(which(mixProp0 <= u1[i])) + 1})
+        yobs <- coef0[u, 1] + rowSums(cX * coef0[u, -1]) + dispersion[u] * epss
+        tobs = yobs
+        dlt = rep(1,nObs)
+     } else if (disFamily == "weibull") {
+         ext = log(rexp(nObs))
+         u1 = runif(nObs)
+         u = sapply(seq_len(nObs), function(i){length(which(mixProp0 <= u1[i])) + 1})
+         yobs <- coef0[u, 1] + rowSums(cX * coef0[u, -1]) + dispersion[u] * ext
+         c <- log(runif(nObs, 0, umax))
+         tobs = sapply(seq_len(nObs), function(i){ifelse(yobs[i]<=c[i], yobs[i], c[i])})
+         dlt = sapply(seq_len(nObs), function(i){ifelse(yobs[i]<=c[i], 1, 0)})
     } else {
         stop("The family of sub-distributions are not specified correctly.")
     }
