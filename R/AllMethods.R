@@ -159,12 +159,10 @@ setMethod(f = "fmrs.mle", definition = function(y, delta, x, nComp = 2, disFamil
                       phi[i, k1] = pi0[k1] * deni
                       sumi = sumi + phi[i, k1]
                     }
-
                     W[i,] = phi[i,]/sumi
-                    W[i,W[i,] < 1e-10] <- 1e-10
-                    sumwi = sumwi +  W[i,]
+                    W[i,W[i,]< 1e-10] = 1e-10
+                    sumwi = sumwi + W[i,]
                   }
-
                     new_pi0 = sumwi/Sample.Size
 
                   for (k1 in seq_len(Num.Comp)) {
@@ -240,7 +238,7 @@ setMethod(f = "fmrs.mle", definition = function(y, delta, x, nComp = 2, disFamil
                     phi[i, k1] = new_pi0[k1] * deni
                     sumi = sumi + phi[i, k1]
                   }
-                    W[i, ] = phi[i, ]/sumi
+                    W[i,] = phi[i,]/sumi
                 }
 
 
@@ -261,14 +259,12 @@ setMethod(f = "fmrs.mle", definition = function(y, delta, x, nComp = 2, disFamil
                   1])), Initial.Coefficient = as.double(c(t(coef0[, -1]))), Initial.Dispersion = as.double(initDispersion), Initial.mixProp = as.double(initmixProp),
                 conv.eps.em = as.double(convepsEM), actset = as.integer(activeset))
 
-
             print("The results are based on using survreg in survival package.")
         }
 
     } else {
         stop("The family of sub-distributions is not specified correctly.")
     }
-
 
     fit <- new("fmrsfit", y = y, delta = delta, x = x, nobs = n, ncov = nCov, ncomp = nComp, coefficients = array(rbind(res$Intecept.Hat, matrix(res$Coefficient.Hat,
         nrow = nCov, byrow = FALSE)), dim = c(nCov + 1, nComp), dimnames = list(xnames, comnames)), dispersion = array(res$Dispersion.Hat, dim = c(1, nComp), dimnames = list(NULL,
@@ -279,9 +275,6 @@ setMethod(f = "fmrs.mle", definition = function(y, delta, x, nComp = 2, disFamil
             1, nComp), dimnames = list(xnames, comnames)))
     return(fit)
 })
-
-
-
 
 #' @rdname fmrs.tunsel-methods
 #' @aliases fmrs.tunsel-method
@@ -496,7 +489,7 @@ setMethod(f = "fmrs.gendata", definition = function(nObs, nComp, nCov, coeff, di
 
     mu <- rep(0, nCov)
     Sigma <- matrix(seq_len(nCov), nCov, nCov)
-    Sigma <- rho^abs(Sigma-t(Sigma))
+    Sigma = rho^abs(Sigma-t(Sigma))
 
     X <- matrix(rnorm(nCov * nObs), nObs)
     X <- scale(X, TRUE, FALSE)
@@ -517,29 +510,38 @@ setMethod(f = "fmrs.gendata", definition = function(nObs, nComp, nCov, coeff, di
     coef0 <- matrix(coeff, nrow = nComp, ncol = nCov + 1, byrow = TRUE)
     mixProp0 <- cumsum(mixProp)
 
+    yobs <- c()
+    c <- rep()
+    dlt <- c()
+    u <- c()
+    tobs <- c()
+
     if (disFamily == "lnorm") {
-        epss = rnorm(nObs)
-        u1 = runif(nObs)
-        u = sapply(seq_len(nObs), function(i){length(which(mixProp0 <= u1[i])) + 1})
-        yobs <- coef0[u, 1] + rowSums(cX * coef0[u, -1]) + dispersion[u] * epss
+        epss <- rnorm(nObs)
+        u1 <- runif(nObs)
+        u = sapply(seq_len(nObs), function(i){length(which(mixProp0<= u1[i])) + 1})
+        yobs <- coef0[u, 1] + rowSums(coef0[u, -1] * cX) + dispersion[u] * epss
         c <- log(runif(nObs, 0, umax))
-        tobs = sapply(seq_len(nObs), function(i){ifelse(yobs[i]<=c[i], yobs[i], c[i])})
-        dlt = sapply(seq_len(nObs), function(i){ifelse(yobs[i]<=c[i], 1, 0)})
+        tobs[yobs<=c] <- exp(yobs[yobs<=c])
+        tobs[yobs>c] <- exp(yobs[yobs>c])
+        dlt[yobs<=c] = 1
+        dlt[yobs>c] = 0
     } else if (disFamily == "norm") {
-        epss = rnorm(nObs)
-        u1 = runif(nObs)
-        u = sapply(seq_len(nObs), function(i){length(which(mixProp0 <= u1[i])) + 1})
-        yobs <- coef0[u, 1] + rowSums(cX * coef0[u, -1]) + dispersion[u] * epss
-        tobs = yobs
-        dlt = rep(1,nObs)
-     } else if (disFamily == "weibull") {
-         ext = log(rexp(nObs))
-         u1 = runif(nObs)
-         u = sapply(seq_len(nObs), function(i){length(which(mixProp0 <= u1[i])) + 1})
-         yobs <- coef0[u, 1] + rowSums(cX * coef0[u, -1]) + dispersion[u] * ext
-         c <- log(runif(nObs, 0, umax))
-         tobs = sapply(seq_len(nObs), function(i){ifelse(yobs[i]<=c[i], yobs[i], c[i])})
-         dlt = sapply(seq_len(nObs), function(i){ifelse(yobs[i]<=c[i], 1, 0)})
+        epss <- rnorm(nObs)
+        u1 <- runif(nObs)
+        u = sapply(seq_len(nObs), function(i){length(which(mixProp0<= u1[i])) + 1})
+        tobs <- coef0[u, 1] + rowSums(coef0[u, -1] * cX) + dispersion[u] * epss
+        dlt = rep(1, nObs)
+    } else if (disFamily == "weibull") {
+        ext <- log(rexp(nObs))
+        u1 <- runif(nObs)
+        u = sapply(seq_len(nObs), function(i){length(which(mixProp0<= u1[i])) + 1})
+        yobs <- coef0[u, 1] + rowSums(coef0[u, -1] * cX) + dispersion[u] * ext
+        c <- log(runif(nObs, 0, umax))
+        tobs[yobs<=c] <- exp(yobs[yobs<=c])
+        tobs[yobs>c] <- exp(yobs[yobs>c])
+        dlt[yobs<=c] = 1
+        dlt[yobs>c] = 0
     } else {
         stop("The family of sub-distributions are not specified correctly.")
     }
