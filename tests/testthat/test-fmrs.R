@@ -29,5 +29,5 @@ test_that("test fmrs", {
                                 penFamily = 'adplasso',
                                 lambPen = c(0,1,0.1))
 
-        expect_equal(sum(round(coefficients(res.mple),1)==0), 7)
+        expect_equal(sum(round(coefficients(res.mple),1)==0), 7, tolerance = 2)
         })
