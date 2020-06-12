@@ -164,7 +164,6 @@ void sicapen(double lam1, double *moshtagh, double *regcoef, int ncov1, double g
 
   for(j = 0; j < ncov1; j++)
     moshtagh[j] = lam1 * gamma2 * (gamma2 + 1) / pow(gamma2 + fabs(regcoef[j]), 2);
-
 }
 
 /* ************************************************************************ */
@@ -1304,9 +1303,9 @@ extern "C" {
         holdveccov[i] = initbeta[i][k1];
       }
       if((jar == 1) || (jar == 2))
-        eps1[k1] = eps * minimum(holdveccov, NCOV) / (2 * nsize * optlam[k1]);
+          eps1[k1] = eps * minimum(holdveccov, NCOV) / (2 * nsize * 0.1); //optlam[k1]);
       else
-        eps1[k1] = eps * minimum(holdveccov, NCOV) / (4 * nsize * optlam[k1]);
+        eps1[k1] = eps * minimum(holdveccov, NCOV) / (4 * nsize * 0.1);// optlam[k1]);
     }
 
 
@@ -1355,7 +1354,6 @@ extern "C" {
         }
         else
           hardpen(optlam[k1], vecder, holdveccov, NCOV);
-
 
         l = 0;
         if(acs[l][k1]==1)
