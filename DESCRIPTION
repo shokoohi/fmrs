@@ -1,8 +1,8 @@
 Package: fmrs
 Type: Package
 Title: Variable Selection in Finite Mixture of AFT Regression and FMR
-Version: 0.99.16
-Date: 2020-05-01
+Version: 0.99.17
+Date: 2020-06-15
 Authors@R: c(person("Farhad", "Shokoohi", role = c("aut", "cre"),
                      email = "shokoohi@icloud.com", comment = c(ORCID = "0000-0002-6224-2609"))
               )
@@ -18,7 +18,7 @@ License: GPL (>= 3)
 LazyData: TRUE
 VignetteBuilder: knitr
 BugReports: https://github.com/shokoohi/fmrs/issues
-Packaged: 2020-06-12 21:24:40 UTC; farhad
+Packaged: 2020-06-13 18:48:13 UTC; farhad
 RoxygenNote: 7.1.0
 Encoding: UTF-8
 NeedsCompilation: yes

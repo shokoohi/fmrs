@@ -52,11 +52,39 @@ setMethod("summary", signature = "fmrstunpar", summary.fmrstunpar)
 
 #' @rdname show-methods
 #' @aliases show,show-method
-setMethod("show", signature = "fmrsfit", show.fmrsfit)
+setMethod("show", "fmrsfit", function(object){
+    if (object@model == "FMR") {
+        modelfmr = "Finite Mixture of Regression Models"
+    } else if (object@disFamily == "lnorm") {
+        modelfmr = "Finite Mixture of Accelerated Failure Time Regression Models
+    Log-Normal Sub-Distributions"
+    } else {
+        modelfmr = "Finite Mixture of Accelerated Failure Time Regression Models
+    Weibull Sub-Distributions"
+    }
+    cat("An object of class '", class(object), "'\n", sep = "")
+    cat(" ", modelfmr, "\n")
+    cat("  ", object@ncomp, " Components; ", object@ncov, " Covariates; ", object@nobs, " samples.\n", sep = "")
+    cat("\n")
+})
 
 #' @rdname show-methods
 #' @aliases show,show-method
-setMethod("show", signature = "fmrstunpar", show.fmrstunpar)
+setMethod("show", "fmrstunpar", function(object){
+    if (object@model == "FMR") {
+        modelfmr = "Finite Mixture of Regression Models"
+    } else if (object@disFamily == "lnorm") {
+        modelfmr = "Finite Mixture of Accelerated Failure Time Regression Models
+    Log-Normal Sub-Distributions"
+    } else {
+        modelfmr = "Finite Mixture of Accelerated Failure Time Regression Models
+    Weibull Sub-Distributions"
+    }
+    cat("An object of class '", class(object), "'\n", sep = "")
+    cat(" ", modelfmr, "\n")
+    cat("  ", object@ncomp, " Components; ", object@penFamily, " Penalty; ", sep = "")
+    cat("\n")
+})
 
 #' @rdname fmrs.mle-methods
 #' @aliases fmrs.mle-method
