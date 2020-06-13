@@ -21,6 +21,3 @@ BugReports: https://github.com/shokoohi/fmrs/issues
 Packaged: 2020-06-13 18:48:13 UTC; farhad
 RoxygenNote: 7.1.0
 Encoding: UTF-8
-NeedsCompilation: yes
-Author: Farhad Shokoohi [aut, cre] (<https://orcid.org/0000-0002-6224-2609>)
-Maintainer: Farhad Shokoohi <shokoohi@icloud.com>
