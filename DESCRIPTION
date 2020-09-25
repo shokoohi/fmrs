@@ -1,7 +1,7 @@
 Package: fmrs
 Type: Package
 Title: Variable Selection in Finite Mixture of AFT Regression and FMR
-Version: 0.99.20
+Version: 0.99.21
 Date: 2020-09-25
 Authors@R: c(person("Farhad", "Shokoohi", role = c("aut", "cre"),
                      email = "shokoohi@icloud.com", comment = c(ORCID = "0000-0002-6224-2609"))
