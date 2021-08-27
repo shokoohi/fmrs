@@ -1,23 +1,23 @@
 Package: fmrs
 Type: Package
 Title: Variable Selection in Finite Mixture of AFT Regression and FMR
-Version: 0.99.21
-Date: 2020-09-25
+Version: 1.3.1
+Date: 2021-08-24
 Authors@R: c(person("Farhad", "Shokoohi", role = c("aut", "cre"),
                      email = "shokoohi@icloud.com", comment = c(ORCID = "0000-0002-6224-2609"))
               )
-Depends: R (>= 4.0.0)
+Depends: R (>= 4.1.0)
 Imports: methods, survival, stats
 Description: Provides parameter estimation as well as variable selection in
     Finite Mixture of Accelerated Failure Time Regression and Finite
     Mixture of Regression Models.
     Furthermore, this package provides Ridge Regression and Elastic Net.
 biocViews: Survival, Regression, DimensionReduction
-Suggests: BiocGenerics, testthat, knitr, utils
+Suggests: BiocGenerics, testthat, knitr, utils, rmarkdown
 License: GPL (>= 3)
 LazyData: TRUE
 VignetteBuilder: knitr
 BugReports: https://github.com/shokoohi/fmrs/issues
 Packaged: 2020-06-13 18:48:13 UTC; farhad
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Encoding: UTF-8

@@ -216,5 +216,7 @@ Therefore the variable selection and parameter estimation is done
 simultaneously using the fmrs package. 
 
 
-
+```{r}
+sessionInfo()
+```
 
