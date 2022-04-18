@@ -163,15 +163,13 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initCoeff = rnorm(nComp*nCov+nComp),
                    initDispersion = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
-coefficients(res.mle)
-dispersion(res.mle)
-mixProp(res.mle)
+summary(res.mle)
 ```
 
 As we see the ML estimates of regression coefficients are not zero. 
 Therefore MLE cannot provide a sparse solution. In order to provide a sparse 
 solution, we use the variable selection methods developed by 
-Shokoohi et. ale. (2016). First we need to find a good set of tuning 
+Shokoohi et. al. (2016). First we need to find a good set of tuning 
 parameters.
 It can be done by using component-wise tuning parameter selection function 
 implemented in `fmrs` as follows. In some settings, however, it is better to 
@@ -184,7 +182,7 @@ res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
                       initDispersion = dispersion(res.mle),
                       initmixProp = mixProp(res.mle),
                       penFamily = "adplasso")
-show(res.lam)
+summary(res.lam)
 ```
 
 We have used MLE estimates as initial values for estimating the tuning 
@@ -199,9 +197,7 @@ res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
                       initmixProp = mixProp(res.mle),
                       penFamily = "adplasso",
                       lambPen = slot(res.lam, "lambPen"))
-coefficients(res.var)
-dispersion(res.var)
-mixProp(res.var)
+summary(res.var)
 ```
 
 The final variables that are selected using this procedure are those with 
@@ -209,14 +205,15 @@ non-zero coefficients. Note that a switching between components of mixture
 has happened here.   
 
 ```{r}
-round(coefficients(res.var)[-1,],3)
+slot(res.var, "selectedset")
 ```
 
-Therefore the variable selection and parameter estimation is done 
+Therefore, the variable selection and parameter estimation is done 
 simultaneously using the fmrs package. 
-
 
 ```{r}
 sessionInfo()
 ```
+
+
 

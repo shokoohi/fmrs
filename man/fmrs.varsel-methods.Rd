@@ -25,11 +25,12 @@ fmrs.varsel(y, delta, x, nComp, ...)
   conveps = 1e-08,
   convepsEM = 1e-08,
   convepsNR = 1e-08,
-  porNR = 2,
+  NRpor = 2,
   gamMixPor = 1,
   activeset,
   lambMCP,
-  lambSICA
+  lambSICA,
+  cutpoint = 0.05
 )
 }
 \arguments{
@@ -76,7 +77,7 @@ EM algorithm}
 \item{convepsNR}{A positive value for threshold of convergence in
 NR algorithm}
 
-\item{porNR}{A positive interger for maximum number of searches in
+\item{NRpor}{A positive interger for maximum number of searches in
 NR algorithm}
 
 \item{gamMixPor}{Proportion of mixing parameters in the penalty. The
@@ -89,6 +90,9 @@ covariates are active in the fitted fmrs model}
 \item{lambMCP}{A positive numbers for \code{mcp}'s extra tuning parameter}
 
 \item{lambSICA}{A positive numbers for \code{sica}'s extra tuning parameter}
+
+\item{cutpoint}{A positive value for shrinking small values of parameter
+estimations in the EM algorithm tward zero}
 }
 \value{
 \code{\link{fmrsfit-class}}
@@ -157,43 +161,35 @@ The penalized likelihood of a finite mixture of AFT regression
 }
 \examples{
 set.seed(1980)
-nComp = 2
-nCov = 10
-nObs = 500
-dispersion = c(1, 1)
-mixProp = c(0.4, 0.6)
-rho = 0.5
+K = 2
+D = 10
+n = 500
+sig = c(1, 1)
+piM = c(0.4, 0.6)
+r1 = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
 coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
-umax = 40
+Um = 40
 
-dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
- coeff = c(coeff1, coeff2), dispersion = dispersion,
- mixProp =mixProp, rho = rho, umax = umax,
- disFamily = 'lnorm')
+dat <- fmrs.gendata(nObs = n, nComp = K, nCov = D, coeff = c(coeff1, coeff2),
+dispersion = sig, mixProp = piM, rho = r1, umax = Um, disFamily = 'lnorm')
 
-res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
- nComp = nComp, disFamily = 'lnorm',
- initCoeff = rnorm(nComp*nCov+nComp),
- initDispersion = rep(1, nComp),
- initmixProp = rep(1/nComp, nComp))
+res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta, nComp = K,
+disFamily = 'lnorm', initCoeff = rnorm(K*D+K), initDispersion = rep(1, K),
+initmixProp = rep(1/K, K))
 
 res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
-  nComp = ncomp(res.mle), disFamily = 'lnorm',
-  initCoeff=c(coefficients(res.mle)),
-  initDispersion = dispersion(res.mle),
-  initmixProp = mixProp(res.mle),
-  penFamily = 'adplasso')
-res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
-  nComp = ncomp(res.mle), disFamily = 'lnorm',
-  initCoeff=c(coefficients(res.mle)),
-  initDispersion = dispersion(res.mle),
-  initmixProp = mixProp(res.mle),
-  penFamily = 'adplasso',
-  lambPen = slot(res.lam, 'lambPen'))
+nComp = ncomp(res.mle), disFamily = 'lnorm',
+initCoeff = c(coefficients(res.mle)), initDispersion = dispersion(res.mle),
+initmixProp = mixProp(res.mle), penFamily = 'adplasso')
 
-coefficients(res.var)[-1,]
-round(coefficients(res.var)[-1,],5)
+res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
+nComp = ncomp(res.mle), disFamily = 'lnorm',
+initCoeff = c(coefficients(res.mle)), initDispersion = dispersion(res.mle),
+initmixProp = mixProp(res.mle), penFamily = 'adplasso',
+lambPen = slot(res.lam, 'lambPen'))
+
+summary(res.var)
 }
 \references{
 Shokoohi, F., Khalili, A., Asgharian, M. and Lin, S.

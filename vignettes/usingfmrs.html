@@ -12,11 +12,23 @@
 
 <meta name="author" content="Farhad Shokoohi" />
 
-<meta name="date" content="2021-08-26" />
+<meta name="date" content="2022-03-26" />
 
 <title>Using fmrs package</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -26,6 +38,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -127,7 +140,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -141,7 +334,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Using fmrs package</h1>
 <h4 class="author">Farhad Shokoohi</h4>
-<h4 class="date">2021-08-26</h4>
+<h4 class="date">2022-03-26</h4>
 
 
 
@@ -149,36 +342,106 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>fmrs package in action</h1>
 <div id="data-generation" class="section level2">
 <h2>Data generation</h2>
-<p>The function <code>fmrs.gendata</code> generates a data set from an FMRs model. It has the form</p>
+<p>The function <code>fmrs.gendata</code> generates a data set from an
+FMRs model. It has the form</p>
 <pre><code>fmrs.gendata(nObs, nComp, nCov, coeff, dispersion, mixProp, rho, umax, ...)</code></pre>
-<p>where <code>n</code> is the sample size, <code>nComp</code> is the order of FMRs model, <code>nCov</code> is the number of regression covariates, <code>coeff</code>, <code>dispersion</code> and <code>mixProp</code> are the parameters of regression models, i.e. regression coefficients, dispersion (standard deviation) of the errors (sub-distributions) and mixing proportions, respectively, and <code>rho</code> is the used in the variance-covariance matrix for simulating the design matrix <code>x</code>, and <code>umax</code> is the upper bound for Uniform distribution for generating censoring times.</p>
-<p>Depending on the choice of <code>disFamily</code>, the function <code>fmrs.gendata</code> generates a simulated data from FMRs models. For instance, if we choose <code>disFamily = &quot;norm&quot;</code>, the function ignores the censoring parameter <code>umax</code> and generates a data set from an FMR model with Normal sub-distributions. However, if we choose <code>disFamily = &quot;lnorm&quot;</code> or <code>disFamily = &quot;weibull&quot;</code>, the function generates data under a finite mixture of AFT regression model with Log-Normal or Weibull sub-distributions.</p>
-<p>The <code>fmrs.gendata</code> function returns a list which includes a vector of responses <code>$y</code>, a matrix of covariates <code>$x</code> and a vector of censoring indicators <code>$delta</code> as well as the name of sub-distribution of the mixture model.</p>
+<p>where <code>n</code> is the sample size, <code>nComp</code> is the
+order of FMRs model, <code>nCov</code> is the number of regression
+covariates, <code>coeff</code>, <code>dispersion</code> and
+<code>mixProp</code> are the parameters of regression models,
+i.e. regression coefficients, dispersion (standard deviation) of the
+errors (sub-distributions) and mixing proportions, respectively, and
+<code>rho</code> is the used in the variance-covariance matrix for
+simulating the design matrix <code>x</code>, and <code>umax</code> is
+the upper bound for Uniform distribution for generating censoring
+times.</p>
+<p>Depending on the choice of <code>disFamily</code>, the function
+<code>fmrs.gendata</code> generates a simulated data from FMRs models.
+For instance, if we choose <code>disFamily = &quot;norm&quot;</code>, the function
+ignores the censoring parameter <code>umax</code> and generates a data
+set from an FMR model with Normal sub-distributions. However, if we
+choose <code>disFamily = &quot;lnorm&quot;</code> or
+<code>disFamily = &quot;weibull&quot;</code>, the function generates data under a
+finite mixture of AFT regression model with Log-Normal or Weibull
+sub-distributions.</p>
+<p>The <code>fmrs.gendata</code> function returns a list which includes
+a vector of responses <code>$y</code>, a matrix of covariates
+<code>$x</code> and a vector of censoring indicators <code>$delta</code>
+as well as the name of sub-distribution of the mixture model.</p>
 </div>
 <div id="mle-of-fmrs-models" class="section level2">
 <h2>MLE of FMRs models</h2>
-<p>The function <code>fmrs.mle</code> in fmrs package provides maximum likelihood estimation for the parameters of an FMRs model. The function has the following form,</p>
+<p>The function <code>fmrs.mle</code> in fmrs package provides maximum
+likelihood estimation for the parameters of an FMRs model. The function
+has the following form,</p>
 <pre><code>fmrs.mle(y, x, delta, nComp, ...)</code></pre>
-<p>where <code>y</code>, <code>x</code> and <code>delta</code> are observations, covariates and censoring indicators respectively, and <code>nComp</code> is the order of FMRs, <code>initCoeff</code>, <code>initDispersion</code> and <code>initmixProp</code> are initial values for EM and NR algorithms, and the rest of arguments of the function are controlling parameres. The function returns a fitted FMRs model with estimates of regression parameters, standard deviations and mixing proportions of the mixture model. It also returns the log-likelihood and BIC under the estimated model, the maximum number of iterations used in EM algorithm and the type of the fitted model.</p>
-<p>Note that one can do ridge regression by setting a value for tuning parameter of the ridge penalty other than zero in the argument <code>lambRidge</code>.</p>
+<p>where <code>y</code>, <code>x</code> and <code>delta</code> are
+observations, covariates and censoring indicators respectively, and
+<code>nComp</code> is the order of FMRs, <code>initCoeff</code>,
+<code>initDispersion</code> and <code>initmixProp</code> are initial
+values for EM and NR algorithms, and the rest of arguments of the
+function are controlling parameres. The function returns a fitted FMRs
+model with estimates of regression parameters, standard deviations and
+mixing proportions of the mixture model. It also returns the
+log-likelihood and BIC under the estimated model, the maximum number of
+iterations used in EM algorithm and the type of the fitted model.</p>
+<p>Note that one can do ridge regression by setting a value for tuning
+parameter of the ridge penalty other than zero in the argument
+<code>lambRidge</code>.</p>
 </div>
 <div id="variable-selection-in-fmrs-models" class="section level2">
 <h2>Variable selection in FMRs models</h2>
-<p>To do the variable selection we provided the function <code>fmrs.varsel</code> with the form</p>
+<p>To do the variable selection we provided the function
+<code>fmrs.varsel</code> with the form</p>
 <pre><code>fmrs.varsel(y, x, delta, nComp, ...)</code></pre>
-<p>where <code>penFamily</code> is the penalty including <code>&quot;adplasso&quot;</code>, <code>&quot;lasso&quot;</code>, <code>&quot;mcp&quot;</code>, <code>&quot;scad&quot;</code>, <code>&quot;sica&quot;</code> and <code>&quot;hard&quot;</code>, and <code>lambPen</code> is the set of tuning parameters for components of penalty. We can run the function <code>fmrslme</code> first and use the parameter estimates as initial values for the function <code>fmrs.varsel</code>.</p>
+<p>where <code>penFamily</code> is the penalty including
+<code>&quot;adplasso&quot;</code>, <code>&quot;lasso&quot;</code>, <code>&quot;mcp&quot;</code>,
+<code>&quot;scad&quot;</code>, <code>&quot;sica&quot;</code> and <code>&quot;hard&quot;</code>, and
+<code>lambPen</code> is the set of tuning parameters for components of
+penalty. We can run the function <code>fmrslme</code> first and use the
+parameter estimates as initial values for the function
+<code>fmrs.varsel</code>.</p>
 <div id="choice-of-tuning-parameter" class="section level3">
 <h3>Choice of tuning parameter</h3>
-<p>There are two approaches for specifying tuning parameters: Common and Component-wise tuning parameters. If we consider choosing common tuning parameter, we can use the BIC criteria to search through the a set of candidate values in the interval <span class="math inline">\((0,\lambda_M)\)</span>, where <span class="math inline">\(\lambda_M\)</span> is a prespecified number. The BIC is provided by the function <code>fmrs.varsel</code> for each candidate point and we choose the optimal <span class="math inline">\(\hat\lambda\)</span>, the one that maximizes BIC. This approach will be good for the situations with enough samples sizes. It also reduces the computational burden.</p>
-<p>On the other hand, if we consider choosing component-wise tuning parameters we use the following function to search for optimal <span class="math inline">\((\lambda_1, \ldots, \lambda_K)\)</span> from the set of candidate values in <span class="math inline">\((0, \lambda_M)\)</span>. The function is</p>
+<p>There are two approaches for specifying tuning parameters: Common and
+Component-wise tuning parameters. If we consider choosing common tuning
+parameter, we can use the BIC criteria to search through the a set of
+candidate values in the interval <span class="math inline">\((0,\lambda_M)\)</span>, where <span class="math inline">\(\lambda_M\)</span> is a prespecified number. The
+BIC is provided by the function <code>fmrs.varsel</code> for each
+candidate point and we choose the optimal <span class="math inline">\(\hat\lambda\)</span>, the one that maximizes BIC.
+This approach will be good for the situations with enough samples sizes.
+It also reduces the computational burden.</p>
+<p>On the other hand, if we consider choosing component-wise tuning
+parameters we use the following function to search for optimal <span class="math inline">\((\lambda_1, \ldots, \lambda_K)\)</span> from the
+set of candidate values in <span class="math inline">\((0,
+\lambda_M)\)</span>. The function is</p>
 <pre><code>fmrs.tunsel(y, x, delta, nComp, ...)</code></pre>
-<p>It is a good practice run the function <code>fmrs.mle</code> first and use the parameter estimates as initial values in the function <code>fmrs.tunsel</code>. The function <code>fmrs.mle</code> then returns a set optimal tuning parameters of size <code>nComp</code> to be used in variable selection function. Note that this approach still is under theoretical study and is not proved to give optimal values in general.</p>
+<p>It is a good practice run the function <code>fmrs.mle</code> first
+and use the parameter estimates as initial values in the function
+<code>fmrs.tunsel</code>. The function <code>fmrs.mle</code> then
+returns a set optimal tuning parameters of size <code>nComp</code> to be
+used in variable selection function. Note that this approach still is
+under theoretical study and is not proved to give optimal values in
+general.</p>
 </div>
 </div>
 <div id="example-finite-mixture-of-aft-regression-model-log-normal" class="section level2">
 <h2>Example: finite mixture of AFT regression model (Log-Normal)</h2>
-<p>We use a simulated data set to illustrate using <code>fmrs</code> package. We generate the covariates (design matrix) from a multivariate normal distribution of dimension <code>nCov=10</code> and sample size 200 with mean vector <span class="math inline">\(\bf 0\)</span> and variance-covariance matrix <span class="math inline">\(\Sigma=(0.5^{|i-j|})\)</span>. We then generate time-to-event data from a finite mixture of two components AFT regression models with Log-Normal sub-distributions. The mixing proportions are set to <span class="math inline">\(\pi=(0.3, 0.7)\)</span>. We choose <span class="math inline">\(\boldsymbol\beta_0=(2,-1)\)</span> as the intercepts, <span class="math inline">\(\boldsymbol\beta_1=(-1, -2, 1, 2, 0 , 0, 0, 0, 0, 0)\)</span> and <span class="math inline">\(\boldsymbol\beta_2=(1, 2, 0, 0, 0 , 0, -1, 2, -2, 3)\)</span> as the regression coefficients in first and second component, respectively.</p>
-<p>We start by loading necessary libraries and assigning the parameters of model as follows.</p>
+<p>We use a simulated data set to illustrate using <code>fmrs</code>
+package. We generate the covariates (design matrix) from a multivariate
+normal distribution of dimension <code>nCov=10</code> and sample size
+200 with mean vector <span class="math inline">\(\bf 0\)</span> and
+variance-covariance matrix <span class="math inline">\(\Sigma=(0.5^{|i-j|})\)</span>. We then generate
+time-to-event data from a finite mixture of two components AFT
+regression models with Log-Normal sub-distributions. The mixing
+proportions are set to <span class="math inline">\(\pi=(0.3,
+0.7)\)</span>. We choose <span class="math inline">\(\boldsymbol\beta_0=(2,-1)\)</span> as the
+intercepts, <span class="math inline">\(\boldsymbol\beta_1=(-1, -2, 1,
+2, 0 , 0, 0, 0, 0, 0)\)</span> and <span class="math inline">\(\boldsymbol\beta_2=(1, 2, 0, 0, 0 , 0, -1, 2, -2,
+3)\)</span> as the regression coefficients in first and second
+component, respectively.</p>
+<p>We start by loading necessary libraries and assigning the parameters
+of model as follows.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fmrs)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1980</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>nComp <span class="ot">=</span> <span class="dv">2</span></span>
@@ -190,93 +453,153 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>coeff1 <span class="ot">=</span> <span class="fu">c</span>( <span class="dv">2</span>,  <span class="dv">2</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">0</span>,  <span class="dv">0</span>, <span class="dv">0</span>,  <span class="dv">0</span>)</span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>coeff2 <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">2</span>, <span class="sc">-</span><span class="dv">2</span>)</span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>umax <span class="ot">=</span> <span class="dv">40</span></span></code></pre></div>
-<p>Using the function <code>fmrs.gendata</code>, we generate a data set from a finite mixture of accelerated failure time regression models with above settings as follow.</p>
+<p>Using the function <code>fmrs.gendata</code>, we generate a data set
+from a finite mixture of accelerated failure time regression models with
+above settings as follow.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">fmrs.gendata</span>(<span class="at">nObs =</span> nObs, <span class="at">nComp =</span> nComp, <span class="at">nCov =</span> nCov,</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">coeff =</span> <span class="fu">c</span>(coeff1, coeff2), <span class="at">dispersion =</span> dispersion,</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">mixProp =</span> mixProp, <span class="at">rho =</span> rho, <span class="at">umax =</span> umax,</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">disFamily =</span> <span class="st">&quot;lnorm&quot;</span>)</span></code></pre></div>
-<p>Now we assume that the generated data are actually real data. We find MLE of the parameters of the assumed model using following code. Note that almost all mixture of regression models depends on initial values. Here we generate the initial values form a Normal distribution with</p>
+<p>Now we assume that the generated data are actually real data. We find
+MLE of the parameters of the assumed model using following code. Note
+that almost all mixture of regression models depends on initial values.
+Here we generate the initial values form a Normal distribution with</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>res.mle <span class="ot">&lt;-</span> <span class="fu">fmrs.mle</span>(<span class="at">y =</span> dat<span class="sc">$</span>y, <span class="at">x =</span> dat<span class="sc">$</span>x, <span class="at">delta =</span> dat<span class="sc">$</span>delta,</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">nComp =</span> nComp, <span class="at">disFamily =</span> <span class="st">&quot;lnorm&quot;</span>,</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">initCoeff =</span> <span class="fu">rnorm</span>(nComp<span class="sc">*</span>nCov<span class="sc">+</span>nComp),</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">initDispersion =</span> <span class="fu">rep</span>(<span class="dv">1</span>, nComp),</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">initmixProp =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span>nComp, nComp))</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(res.mle)</span></code></pre></div>
-<pre><code>##                 Comp.1      Comp.2
-## Intercept -1.010955533  2.82934349
-## X.1       -1.074204675  2.56103525
-## X.2        0.867308451 -1.24031116
-## X.3        2.061889577 -2.67956324
-## X.4        0.132001322  1.26454457
-## X.5       -0.006088153  2.41799140
-## X.6        0.036983327 -0.05336411
-## X.7       -0.130527651  0.25911688
-## X.8       -1.014300804 -0.15142542
-## X.9        1.981867661  0.04084774
-## X.10      -1.994605888  0.10765355</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dispersion</span>(res.mle)</span></code></pre></div>
-<pre><code>##         Comp.1   Comp.2
-## [1,] 0.9929071 1.367746</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mixProp</span>(res.mle)</span></code></pre></div>
-<pre><code>##         Comp.1    Comp.2
-## [1,] 0.5557072 0.4442928</code></pre>
-<p>As we see the ML estimates of regression coefficients are not zero. Therefore MLE cannot provide a sparse solution. In order to provide a sparse solution, we use the variable selection methods developed by Shokoohi et. ale. (2016). First we need to find a good set of tuning parameters. It can be done by using component-wise tuning parameter selection function implemented in <code>fmrs</code> as follows. In some settings, however, it is better to investigate if common tuning parameter performs better.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>res.lam <span class="ot">&lt;-</span> <span class="fu">fmrs.tunsel</span>(<span class="at">y =</span> dat<span class="sc">$</span>y, <span class="at">x =</span> dat<span class="sc">$</span>x, <span class="at">delta =</span> dat<span class="sc">$</span>delta,</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nComp =</span> nComp, <span class="at">disFamily =</span> <span class="st">&quot;lnorm&quot;</span>,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">initCoeff =</span> <span class="fu">c</span>(<span class="fu">coefficients</span>(res.mle)),</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">initDispersion =</span> <span class="fu">dispersion</span>(res.mle),</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">initmixProp =</span> <span class="fu">mixProp</span>(res.mle),</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">penFamily =</span> <span class="st">&quot;adplasso&quot;</span>)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(res.lam)</span></code></pre></div>
-<pre><code>## An object of class &#39;fmrstunpar&#39;
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(res.mle)</span></code></pre></div>
+<pre><code>## -------------------------------------------
+## Fitted Model: 
+## -------------------------------------------
 ##   Finite Mixture of Accelerated Failure Time Regression Models
 ##     Log-Normal Sub-Distributions 
-##   2 Components; adplasso Penalty;</code></pre>
-<p>We have used MLE estimates as initial values for estimating the tuning parameters. Now we used the same set of values to do variable selection with adaptive lasso penalty as follows.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>res.var <span class="ot">&lt;-</span> <span class="fu">fmrs.varsel</span>(<span class="at">y =</span> dat<span class="sc">$</span>y, <span class="at">x =</span> dat<span class="sc">$</span>x, <span class="at">delta =</span> dat<span class="sc">$</span>delta,</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nComp =</span> <span class="fu">ncomp</span>(res.mle), <span class="at">disFamily =</span> <span class="st">&quot;lnorm&quot;</span>,</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">initCoeff=</span><span class="fu">c</span>(<span class="fu">coefficients</span>(res.mle)),</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">initDispersion =</span> <span class="fu">dispersion</span>(res.mle),</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">initmixProp =</span> <span class="fu">mixProp</span>(res.mle),</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">penFamily =</span> <span class="st">&quot;adplasso&quot;</span>,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">lambPen =</span> <span class="fu">slot</span>(res.lam, <span class="st">&quot;lambPen&quot;</span>))</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">coefficients</span>(res.var)</span></code></pre></div>
-<pre><code>##                  Comp.1        Comp.2
-## Intercept -1.015321e+00  2.836297e+00
-## X.1       -1.047599e+00  2.541308e+00
-## X.2        8.508890e-01 -1.216940e+00
-## X.3        2.104544e+00 -2.667812e+00
-## X.4        2.223858e-03  1.240194e+00
-## X.5        3.235611e-14  2.434350e+00
-## X.6        5.304623e-14  1.111185e-14
-## X.7       -5.123118e-04  9.805940e-02
-## X.8       -1.032723e+00 -6.655528e-11
-## X.9        1.962557e+00  3.244154e-12
-## X.10      -1.976540e+00  7.321109e-05</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dispersion</span>(res.var)</span></code></pre></div>
-<pre><code>##        Comp.1   Comp.2
-## [1,] 1.002872 1.373093</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mixProp</span>(res.var)</span></code></pre></div>
-<pre><code>##        Comp.1   Comp.2
-## [1,] 0.556307 0.443693</code></pre>
-<p>The final variables that are selected using this procedure are those with non-zero coefficients. Note that a switching between components of mixture has happened here.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coefficients</span>(res.var)[<span class="sc">-</span><span class="dv">1</span>,],<span class="dv">3</span>)</span></code></pre></div>
+##   2 Components; 10 Covariates; 500 samples.
+## 
+## Coefficients:
+##                 Comp.1      Comp.2
+## Intercept -1.023604483  2.16195076
+## X.1       -0.947848918  1.88466885
+## X.2        0.789698410 -0.87396027
+## X.3        2.150264797 -2.14010452
+## X.4        0.006753939  0.98526303
+## X.5        0.057401304  1.97219759
+## X.6       -0.059513105  0.25060283
+## X.7       -0.129981745  0.03932427
+## X.8       -0.878292858 -0.05870977
+## X.9        1.928301008 -0.04922729
+## X.10      -2.048080400  0.06103528
+## 
+## Dispersions:
+##     Comp.1    Comp.2
+##  0.8846122 0.9351534
+## 
+## Mixing Proportions:
+##     Comp.1    Comp.2
+##  0.5831731 0.4168269
+## 
+## LogLik: -764.9188; BIC: 1685.203</code></pre>
+<p>As we see the ML estimates of regression coefficients are not zero.
+Therefore MLE cannot provide a sparse solution. In order to provide a
+sparse solution, we use the variable selection methods developed by
+Shokoohi et. al. (2016). First we need to find a good set of tuning
+parameters. It can be done by using component-wise tuning parameter
+selection function implemented in <code>fmrs</code> as follows. In some
+settings, however, it is better to investigate if common tuning
+parameter performs better.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>res.lam <span class="ot">&lt;-</span> <span class="fu">fmrs.tunsel</span>(<span class="at">y =</span> dat<span class="sc">$</span>y, <span class="at">x =</span> dat<span class="sc">$</span>x, <span class="at">delta =</span> dat<span class="sc">$</span>delta,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nComp =</span> nComp, <span class="at">disFamily =</span> <span class="st">&quot;lnorm&quot;</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">initCoeff =</span> <span class="fu">c</span>(<span class="fu">coefficients</span>(res.mle)),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">initDispersion =</span> <span class="fu">dispersion</span>(res.mle),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">initmixProp =</span> <span class="fu">mixProp</span>(res.mle),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">penFamily =</span> <span class="st">&quot;adplasso&quot;</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(res.lam)</span></code></pre></div>
+<pre><code>## -------------------------------------------
+## Selected Tuning Parameters: 
+## -------------------------------------------
+##   Finite Mixture of Accelerated Failure Time Regression Models
+##     Log-Normal Sub-Distributions 
+##   2 Components; adplasso Penalty;
+## 
+## Component-wise lambda:
+##  Comp.1 Comp.2
+##  0.0199   0.01</code></pre>
+<p>We have used MLE estimates as initial values for estimating the
+tuning parameters. Now we used the same set of values to do variable
+selection with adaptive lasso penalty as follows.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>res.var <span class="ot">&lt;-</span> <span class="fu">fmrs.varsel</span>(<span class="at">y =</span> dat<span class="sc">$</span>y, <span class="at">x =</span> dat<span class="sc">$</span>x, <span class="at">delta =</span> dat<span class="sc">$</span>delta,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">nComp =</span> <span class="fu">ncomp</span>(res.mle), <span class="at">disFamily =</span> <span class="st">&quot;lnorm&quot;</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">initCoeff=</span><span class="fu">c</span>(<span class="fu">coefficients</span>(res.mle)),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">initDispersion =</span> <span class="fu">dispersion</span>(res.mle),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">initmixProp =</span> <span class="fu">mixProp</span>(res.mle),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">penFamily =</span> <span class="st">&quot;adplasso&quot;</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">lambPen =</span> <span class="fu">slot</span>(res.lam, <span class="st">&quot;lambPen&quot;</span>))</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(res.var)</span></code></pre></div>
+<pre><code>## -------------------------------------------
+## Fitted Model: 
+## -------------------------------------------
+##   Finite Mixture of Accelerated Failure Time Regression Models
+##     Log-Normal Sub-Distributions 
+##   2 Components; 10 Covariates; 500 samples.
+## 
+## Coefficients:
+##               Comp.1     Comp.2
+## Intercept -1.0512750  2.1437918
+## X.1       -0.8943152  1.8453933
+## X.2        0.7280492 -0.8485914
+## X.3        2.1510976 -2.0749379
+## X.4        0.0000000  0.9350182
+## X.5        0.0000000  2.0218598
+## X.6        0.0000000  0.1340205
+## X.7        0.0000000  0.0000000
+## X.8       -0.8879717  0.0000000
+## X.9        1.8765916  0.0000000
+## X.10      -2.0186396  0.0000000
+## 
+## Selected Set:
+##      Comp.1 Comp.2
+## X.1       1      1
+## X.2       1      1
+## X.3       1      1
+## X.4       0      1
+## X.5       0      1
+## X.6       0      1
+## X.7       0      0
+## X.8       1      0
+## X.9       1      0
+## X.10      1      0
+## 
+## Dispersions:
+##     Comp.1    Comp.2
+##  0.8992599 0.9419583
+## 
+## Mixing Proportions:
+##     Comp.1    Comp.2
+##  0.5817755 0.4182245
+## 
+## LogLik: -768.9993; BIC: 1643.647</code></pre>
+<p>The final variables that are selected using this procedure are those
+with non-zero coefficients. Note that a switching between components of
+mixture has happened here.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slot</span>(res.var, <span class="st">&quot;selectedset&quot;</span>)</span></code></pre></div>
 <pre><code>##      Comp.1 Comp.2
-## X.1  -1.048  2.541
-## X.2   0.851 -1.217
-## X.3   2.105 -2.668
-## X.4   0.002  1.240
-## X.5   0.000  2.434
-## X.6   0.000  0.000
-## X.7  -0.001  0.098
-## X.8  -1.033  0.000
-## X.9   1.963  0.000
-## X.10 -1.977  0.000</code></pre>
-<p>Therefore the variable selection and parameter estimation is done simultaneously using the fmrs package.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
-<pre><code>## R version 4.1.1 (2021-08-10)
+## X.1       1      1
+## X.2       1      1
+## X.3       1      1
+## X.4       0      1
+## X.5       0      1
+## X.6       0      1
+## X.7       0      0
+## X.8       1      0
+## X.9       1      0
+## X.10      1      0</code></pre>
+<p>Therefore, the variable selection and parameter estimation is done
+simultaneously using the fmrs package.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<pre><code>## R version 4.1.3 (2022-03-10)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
-## Running under: macOS Big Sur 10.16
+## Running under: macOS Big Sur/Monterey 10.16
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
@@ -289,23 +612,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] fmrs_1.3.1
+## [1] fmrs_2.0.0
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.7        pillar_1.6.2      compiler_4.1.1    prettyunits_1.1.1
-##  [5] remotes_2.4.0     tools_4.1.1       digest_0.6.27     testthat_3.0.4   
-##  [9] pkgbuild_1.2.0    pkgload_1.2.1     evaluate_0.14     lattice_0.20-44  
-## [13] memoise_2.0.0     lifecycle_1.0.0   tibble_3.1.3      pkgconfig_2.0.3  
-## [17] rlang_0.4.11      Matrix_1.3-4      cli_3.0.1         rstudioapi_0.13  
-## [21] yaml_2.2.1        xfun_0.25         fastmap_1.1.0     withr_2.4.2      
-## [25] stringr_1.4.0     roxygen2_7.1.1    knitr_1.33        xml2_1.3.2       
-## [29] desc_1.3.0        fs_1.5.0          vctrs_0.3.8       devtools_2.4.2   
-## [33] grid_4.1.1        rprojroot_2.0.2   glue_1.4.2        R6_2.5.1         
-## [37] processx_3.5.2    fansi_0.5.0       survival_3.2-13   rmarkdown_2.10   
-## [41] sessioninfo_1.1.1 callr_3.7.0       purrr_0.3.4       magrittr_2.0.1   
-## [45] htmltools_0.5.2   splines_4.1.1     ps_1.6.0          ellipsis_0.3.2   
-## [49] usethis_2.0.1     utf8_1.2.2        stringi_1.7.3     cachem_1.0.6     
-## [53] crayon_1.4.1</code></pre>
+##  [1] jquerylib_0.1.4     bslib_0.3.1         compiler_4.1.3     
+##  [4] pillar_1.7.0        prettyunits_1.1.1   remotes_2.4.2      
+##  [7] tools_4.1.3         digest_0.6.29       testthat_3.1.2     
+## [10] pkgbuild_1.3.1      pkgload_1.2.4       jsonlite_1.8.0     
+## [13] evaluate_0.15       lattice_0.20-45     memoise_2.0.1      
+## [16] lifecycle_1.0.1     tibble_3.1.6        pkgconfig_2.0.3    
+## [19] rlang_1.0.2         Matrix_1.4-0        cli_3.2.0          
+## [22] rstudioapi_0.13     yaml_2.3.5          xfun_0.30          
+## [25] fastmap_1.1.0       withr_2.5.0         stringr_1.4.0      
+## [28] roxygen2_7.1.2.9000 knitr_1.37          xml2_1.3.3         
+## [31] sass_0.4.0          desc_1.4.1          fs_1.5.2           
+## [34] vctrs_0.3.8         devtools_2.4.3      grid_4.1.3         
+## [37] rprojroot_2.0.2     glue_1.6.2          R6_2.5.1           
+## [40] processx_3.5.2      fansi_1.0.2         survival_3.3-1     
+## [43] rmarkdown_2.13      sessioninfo_1.2.2   callr_3.7.0        
+## [46] purrr_0.3.4         magrittr_2.0.2      htmltools_0.5.2    
+## [49] splines_4.1.3       ps_1.6.0            ellipsis_0.3.2     
+## [52] usethis_2.1.5       utf8_1.2.2          stringi_1.7.6      
+## [55] cachem_1.0.6        crayon_1.5.0        brio_1.1.3</code></pre>
 </div>
 </div>
 

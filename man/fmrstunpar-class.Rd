@@ -12,6 +12,8 @@ An S4 class to represent estimated optimal lambdas resulted
 \section{Slots}{
 
 \describe{
+\item{\code{ncov}}{A length-one numeric vector}
+
 \item{\code{ncomp}}{A length-one numeric vector}
 
 \item{\code{lambPen}}{A dimension-one-\code{ncomp} numeric array}

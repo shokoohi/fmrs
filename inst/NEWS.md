@@ -1,3 +1,20 @@
+## Version 2.0.0
+
+---
+
+
+### IMPROVEMENTS SINCE LAST RELEASE
+
+- The package is rewritten using .Call function.
+- The codes for Weibull distribution are improved. 
+
+### BUG FIXES
+
+- Several bugs are fixed which caused the results to be different for the same
+analysis.
+
+
+
 ## Version 0.99.3
 
 ---

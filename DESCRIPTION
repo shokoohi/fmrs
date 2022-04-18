@@ -1,23 +1,31 @@
 Package: fmrs
 Type: Package
-Title: Variable Selection in Finite Mixture of AFT Regression and FMR
-Version: 1.3.1
-Date: 2021-08-24
+Title: Variable Selection in Finite Mixture of AFT Regression and FMR Models
+Version: 2.0.0
 Authors@R: c(person("Farhad", "Shokoohi", role = c("aut", "cre"),
-                     email = "shokoohi@icloud.com", comment = c(ORCID = "0000-0002-6224-2609"))
-              )
+    email = "shokoohi@icloud.com", comment = c(ORCID = "0000-0002-6224-2609"))
+    )
+Description: The package obtains parameter estimation, i.e., maximum
+    likelihood estimators (MLE), via the Expectation-Maximization (EM)
+    algorithm for the Finite Mixture of Regression (FMR) models with Normal
+    distribution, and MLE for the Finite Mixture of Accelerated Failure Time
+    Regression (FMAFTR) subject to right censoring with Log-Normal and Weibull
+    distributions via the EM algorithm and the Newton-Raphson algorithm (for
+    Weibull distribution).
+    More importantly, the package obtains the maximum penalized likelihood
+    (MPLE) for both FMR and FMAFTR models (collectively called FMRs).
+    A component-wise tuning parameter selection based on a component-wise BIC is
+    implemented in the package.
+    Furthermore, this package provides Ridge Regression and Elastic Net.
 Depends: R (>= 4.1.0)
 Imports: methods, survival, stats
-Description: Provides parameter estimation as well as variable selection in
-    Finite Mixture of Accelerated Failure Time Regression and Finite
-    Mixture of Regression Models.
-    Furthermore, this package provides Ridge Regression and Elastic Net.
+Date: 2022-03-28
 biocViews: Survival, Regression, DimensionReduction
-Suggests: BiocGenerics, testthat, knitr, utils, rmarkdown
-License: GPL (>= 3)
-LazyData: TRUE
+Suggests: BiocGenerics, testthat, knitr, utils
+License: GPL-3
 VignetteBuilder: knitr
 BugReports: https://github.com/shokoohi/fmrs/issues
-Packaged: 2020-06-13 18:48:13 UTC; farhad
-RoxygenNote: 7.1.1
+Packaged: 2028-03-01 18:49:07 UTC; farhad
+RoxygenNote: 7.1.2.9000
 Encoding: UTF-8
+NeedsCompilation: yes

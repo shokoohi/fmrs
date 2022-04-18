@@ -51,7 +51,7 @@ AFT regression models with Log-Normal sub-distributions,\code{'weibull'}
 for mixture of AFT regression models with Weibull sub-distributions}
 }
 \value{
-A list including reponse, covariates and cenroing variables
+A list including response, covariates and censoring variables
 }
 \description{
 Generates a data set from Finite Mixture
@@ -60,21 +60,19 @@ Generates a data set from Finite Mixture
 }
 \examples{
 set.seed(1980)
-nComp = 2
-nCov = 10
-nObs = 500
+K = 2
+D = 10
+n = 500
 REP = 500
-dispersion = c(1, 1)
-mixProp = c(0.4, 0.6)
-rho = 0.5
+sig = c(1, 1)
+piM = c(0.4, 0.6)
+r1 = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
 coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
-umax = 40
+Um = 40
 
-dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
- coeff = c(coeff1, coeff2), dispersion = dispersion,
- mixProp =mixProp, rho = rho, umax = umax,
- disFamily = 'lnorm')
+dat <- fmrs.gendata(nObs = n, nComp = K, nCov = D, coeff = c(coeff1, coeff2),
+dispersion = sig, mixProp = piM, rho = r1, umax = Um, disFamily = 'lnorm')
 }
 \seealso{
 Other lnorm, norm, weibull: 

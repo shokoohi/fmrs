@@ -19,16 +19,20 @@ fmrs.tunsel(y, delta, x, nComp, ...)
   initmixProp,
   penFamily = "lasso",
   lambRidge = 0,
-  nIterEM = 2000,
+  nIterEM = 400,
   nIterNR = 2,
   conveps = 1e-08,
   convepsEM = 1e-08,
   convepsNR = 1e-08,
-  porNR = 2,
+  NRpor = 2,
   gamMixPor = 1,
   activeset,
   lambMCP,
-  lambSICA
+  lambSICA,
+  cutpoint = 0.05,
+  LambMin = 0.01,
+  LambMax = 1,
+  nLamb = 100
 )
 }
 \arguments{
@@ -59,7 +63,7 @@ including intercepts}
 The available options are  \code{'lasso'}, \code{'adplasso'},
 \code{'mcp'}, \code{'scad'}, \code{'sica'} and \code{'hard'}.}
 
-\item{lambRidge}{A positive value for tuniing parameter in Ridge
+\item{lambRidge}{A positive value for tuning parameter in Ridge
 Regression or Elastic Net}
 
 \item{nIterEM}{Maximum number of iterations for EM algorithm}
@@ -74,7 +78,7 @@ EM algorithm}
 \item{convepsNR}{A positive value for threshold of convergence in
 NR algorithm}
 
-\item{porNR}{A positive interger for maximum number of searches in
+\item{NRpor}{A positive interger for maximum number of searches in
 NR algorithm}
 
 \item{gamMixPor}{Proportion of mixing parameters in the penalty. The
@@ -87,6 +91,15 @@ covariates are active in the fitted fmrs model}
 \item{lambMCP}{A positive numbers for \code{mcp}'s extra tuning parameter}
 
 \item{lambSICA}{A positive numbers for \code{sica}'s extra tuning parameter}
+
+\item{cutpoint}{A positive value for shrinking small values of parameter
+estimations in the EM algorithm toward zero}
+
+\item{LambMin}{A positive value for minimum value of tuning parameter}
+
+\item{LambMax}{A positive value for maximum value of tuning parameter}
+
+\item{nLamb}{A positive value for number of tuning parameter}
 }
 \value{
 An \code{\link{fmrstunpar-class}} that includes
@@ -117,33 +130,28 @@ set of good tuning parameters which is a rather thorny issue. We
 }
 \examples{
 set.seed(1980)
-nComp = 2
-nCov = 10
-nObs = 500
-dispersion = c(1, 1)
-mixProp = c(0.4, 0.6)
-rho = 0.5
+K = 2
+D = 10
+n = 500
+sig = c(1, 1)
+piM = c(0.4, 0.6)
+r1 = 0.5
 coeff1 = c( 2,  2, -1, -2, 1, 2, 0, 0,  0, 0,  0)
 coeff2 = c(-1, -1,  1,  2, 0, 0, 0, 0, -1, 2, -2)
-umax = 40
+Um = 40
 
-dat <- fmrs.gendata(nObs = nObs, nComp = nComp, nCov = nCov,
- coeff = c(coeff1, coeff2), dispersion = dispersion,
- mixProp = mixProp, rho = rho, umax = umax,
- disFamily = 'lnorm')
+dat <- fmrs.gendata(nObs = n, nComp = K, nCov = D, coeff = c(coeff1, coeff2),
+dispersion = sig, mixProp = piM, rho = r1, umax = Um, disFamily = 'lnorm')
 
-res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
- nComp = nComp, disFamily = 'lnorm',
- initCoeff = rnorm(nComp*nCov+nComp),
- initDispersion = rep(1, nComp),
- initmixProp = rep(1/nComp, nComp))
+res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta, nComp = K,
+disFamily = 'lnorm', initCoeff = rnorm(K*D+K), initDispersion = rep(1, K),
+initmixProp = rep(1/K, K))
 
-res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
-  nComp = nComp, disFamily = 'lnorm',
-  initCoeff = c(coefficients(res.mle)),
-  initDispersion = dispersion(res.mle),
-  initmixProp = mixProp(res.mle),
-  penFamily = 'adplasso')
+res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta, nComp = K,
+disFamily = 'lnorm', initCoeff = c(coefficients(res.mle)),
+initDispersion = dispersion(res.mle), initmixProp = mixProp(res.mle),
+penFamily = 'adplasso')
+
 show(res.lam)
 }
 \references{

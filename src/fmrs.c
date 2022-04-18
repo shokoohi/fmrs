@@ -1,256 +1,251 @@
-/* FMRs Models; MLE, Tuning Parameter and Variable Selection */
-
-/* ******************** Loading Liberaries ************************* */
-
-// RegisteringDynamic Symbols
-
-
-
 #include <R.h>
 #include <Rinternals.h>
 #include <Rmath.h>
 #include <math.h>
 #include <R_ext/Rdynload.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-void R_init_markovchain(DllInfo* info) {
-  R_registerRoutines(info, NULL, NULL, NULL, NULL);
-  R_useDynamicSymbols(info, TRUE);
-}
+/* ************************************************************************ */
+/* .Call calls */
+extern SEXP FMR_Norm_CTun(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP FMR_Norm_MLE(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP FMR_Norm_MPLE(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP FMR_Weibl_CTun(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP FMR_Weibl_MLE(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP FMR_Weibl_MPLE(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
+static const R_CallMethodDef CallEntries[] = {
+    {"FMR_Norm_CTun",  (DL_FUNC) &FMR_Norm_CTun,  23},
+    {"FMR_Norm_MLE",   (DL_FUNC) &FMR_Norm_MLE,   16},
+    {"FMR_Norm_MPLE",  (DL_FUNC) &FMR_Norm_MPLE,  22},
+    {"FMR_Weibl_CTun", (DL_FUNC) &FMR_Weibl_CTun, 24},
+    {"FMR_Weibl_MLE",  (DL_FUNC) &FMR_Weibl_MLE,  17},
+    {"FMR_Weibl_MPLE", (DL_FUNC) &FMR_Weibl_MPLE, 23},
+    {NULL, NULL, 0}
+};
 
-/* ******************** Defining Necessary Functions *************** */
-
-void backsub(int n, double *a, double *y)
+void R_init_fmrs(DllInfo *dll)
 {
-  int i, k, j;
-  double atemp[n + 1][n + 1];
-
-  for (i = 0; i < (n + 1); i++) {
-    for (j = 0; j < (n + 1); j++) {
-      atemp[i][j] = a[j + i * (n + 1)];
-    }
-  }
-
-  y[n-1] = atemp[n - 1][n] / atemp[n - 1][n - 1];
-
-  for(i = n - 2; i >= 0; i--) {
-    y[i] = atemp[i][n];
-    for(k = n - 1; k > i; k--)
-      y[i] = y[i] - atemp[i][k] * y[k];
-    y[i] = y[i] / atemp[i][i];
-  }
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }
 
 /* ************************************************************************ */
+/* ************************************************************************ */
+void backsub(int n, double *a, double *y)
+{
+    int i, k, j;
+    double atemp[n + 1][n + 1];
 
+    for (i=0; i < (n + 1); i++) {
+    for (j=0; j < (n + 1); j++) {
+    atemp[i][j] = a[j + i * (n + 1)];
+    }
+    }
+
+    y[n-1] = atemp[n - 1][n] / atemp[n - 1][n - 1];
+
+    for(i = n - 2; i >= 0; i--) {
+    y[i] = atemp[i][n];
+    for(k = n - 1; k > i; k--)
+    y[i] = y[i] - atemp[i][k] * y[k];
+    y[i] = y[i] / atemp[i][i];
+    }
+}
+
+/* ************************************************************************ */
 void maxabs(int row, int n, double *a, int *checksin, int *maxrow)
 {
-  double max = 0;
-  int loc_maxrow, loc_checksin;
-  int i, j;
-  loc_maxrow = row;
-  loc_checksin = 1;
-  double atemp[n + 1][n + 1];
+    double max=0;
+    int loc_maxrow, loc_checksin;
+    int i, j;
+    loc_maxrow = row;
+    loc_checksin = 1;
+    double atemp[n + 1][n + 1];
 
-  for (i = 0; i < (n + 1); i++) {
-    for (j = 0; j < (n + 1); j++) {
-      atemp[i][j] = a[j + i * (n + 1)];
+    for (i=0; i < (n + 1); i++) {
+    for (j=0; j < (n + 1); j++) {
+    atemp[i][j] = a[j + i * (n + 1)];
     }
-  }
+    }
 
-  for (i = row; i < n; i++) {
+    for (i = row; i < n; i++) {
     if ( fabs(atemp[i][row]) > max) {
-      max = fabs(atemp[i][row]);
-      loc_maxrow = i;
+    max = fabs(atemp[i][row]);
+    loc_maxrow = i;
     }
 
     if (max == 0) {
-      loc_checksin = 0;
-      break;
+    loc_checksin=0;
+    break;
     }
-  }
-  maxrow[0]   = loc_maxrow;
-  checksin[0] = loc_checksin;
+    }
+    maxrow[0]   = loc_maxrow;
+    checksin[0] = loc_checksin;
 }
 
 /* ************************************************************************ */
-
 void gauss(int n, double *a, int *checksin)
 {
-  int i, j, k;
-  int k_vec[1];
-  double temp;
-  double atemp[n + 1][n + 1];
-  k = 0;
+    int i, j, k;
+    int k_vec[1];
+    double temp;
+    double atemp[n + 1][n + 1];
+    k=0;
 
-  for (i = 0; i < (n + 1); i++) {
-    for (j = 0; j < (n + 1); j++) {
-      atemp[i][j] = a[j + i * (n + 1)];
+    for (i=0; i < (n + 1); i++) {
+    for (j=0; j < (n + 1); j++) {
+    atemp[i][j] = a[j + i * (n + 1)];
     }
-  }
+    }
 
-  for (i = 0; i < n; i++) {
+    for (i=0; i < n; i++) {
     maxabs(i, n, a, checksin, k_vec);
     k = k_vec[0];
 
     if (checksin[0] == 0) {
-      break;
+    break;
     }
 
-    if ( k != i)
-      for (j = i; j < n + 1; j++) {
-        temp = atemp[i][j];
-        atemp[i][j] = atemp[k][j];
-        atemp[k][j] = temp;
-      } /*for j */
+    if (k != i)
+    for (j = i; j < n + 1; j++) {
+    temp = atemp[i][j];
+    atemp[i][j] = atemp[k][j];
+    atemp[k][j] = temp;
+    }
 
-for (j = i + 1; j < n; j++) {
-  temp = atemp[j][i] / atemp[i][i];
-  for (k = i; k < n + 1; k++)
+    for (j = i + 1; j < n; j++) {
+    temp = atemp[j][i] / atemp[i][i];
+    for (k = i; k < n + 1; k++)
     atemp[j][k] = atemp[j][k] - 1.0 * temp * atemp[i][k];
-} /* for j */
-  } /* for i */
+    }
+    }
 
-for (i = 0; i < (n + 1); i++) {
-  for (j = 0; j < (n + 1); j++) {
+    for (i=0; i < (n + 1); i++) {
+    for (j=0; j < (n + 1); j++) {
     a[j + i * (n + 1)] = atemp[i][j];
-  }
-}
-
+    }
+    }
 }
 
 /* ************************************************************************ */
-
 void sol(int Nelem, double *IS, double *solution, int *checksin )
 {
-  gauss(Nelem, IS, checksin);
-  backsub(Nelem, IS, solution);
+    gauss(Nelem, IS, checksin);
+    backsub(Nelem, IS, solution);
 }
 
 /* ************************************************************************ */
-
-double minimum(double *vector1, int ncov1)
+double minimum(double *vector1, int D1)
 {
-  int i;
-  double min1;
-  min1 = fabs(vector1[0]);
+    int i;
+    double min1;
+    min1 = fabs(vector1[0]);
 
-  for(i = 0; i < ncov1; i++)
+    for(i = 1; i < D1; i++)
     if(fabs(vector1[i]) <= min1)
-      min1 = fabs(vector1[i]);
+    min1 = fabs(vector1[i]);
 
-    return(min1);
+    return min1;
 }
 /* ************************************************************************ */
-
-double maximum(double *vector1, int ncov1)
+double maximum(double *vector1, int D1)
 {
-  int i;
-  double max1;
-  max1 = fabs(vector1[0]);
+    int i;
+    double max1;
+    max1 = fabs(vector1[0]);
 
-  for(i = 0; i < ncov1; i++)
+    for(i=0; i < D1; i++)
     if(fabs(vector1[i]) >= max1)
-      max1 = fabs(vector1[i]);
-
-    return(max1);
+    max1 = fabs(vector1[i]);
+    return max1;
 }
 
 /* ************************************************************************ */
-
-void sicapen(double lam1, double *moshtagh, double *regcoef, int ncov1, double gamma2)
+void sicapen(double lam1, double *moshtagh, double *regcoef, int D1,
+     double SicaTun)
 {
-  int j;
+    int j;
 
-  for(j = 0; j < ncov1; j++)
-    moshtagh[j] = lam1 * gamma2 * (gamma2 + 1) / pow(gamma2 + fabs(regcoef[j]), 2);
+    for(j=0; j < D1; j++)
+    moshtagh[j] = lam1 * SicaTun * (SicaTun + 1) / pow(SicaTun +
+    fabs(regcoef[j]), 2);
 }
 
 /* ************************************************************************ */
-
-void mcppen(double lam1, double *moshtagh, double *regcoef, int ncov1, double gamma1)
+void mcppen(double lam1, double *moshtagh, double *regcoef, int D1,
+    double McpTun)
 {
-  int j;
+    int j;
 
-  for(j = 0; j < ncov1; j++){
-    if(fabs(regcoef[j]) <= (lam1 * gamma1))
-      moshtagh[j] = lam1 * (1 - fabs(regcoef[j]) / (lam1 * gamma1));
+    for(j=0; j < D1; j++){
+    if(fabs(regcoef[j]) <= (lam1 * McpTun))
+    moshtagh[j] = lam1 * (1 - fabs(regcoef[j]) / (lam1 * McpTun));
     else
-      moshtagh[j]= 0.0;
-  }
+    moshtagh[j]= 0.0;
+    }
 
 }
 
 /* ************************************************************************ */
-
-void scadpen(double lam1, double *moshtagh, double *regcoef, int ncov1)
+void scadpen(double lam1, double *moshtagh, double *regcoef, int D1)
 {
-  int j;
-  double a1;
-  a1=3.7;
+    int j;
+    double a1;
+    a1=3.7;
 
-  for(j = 0; j < ncov1; j++){
+    for(j=0; j < D1; j++){
     if(fabs(regcoef[j]) <= lam1)
-      moshtagh[j] = lam1;
+    moshtagh[j] = lam1;
     else if((a1 * lam1 - fabs(regcoef[j])) <= 0)
-      moshtagh[j] = 0;
+    moshtagh[j]=0;
     else
-      moshtagh[j]= (a1 * lam1 - fabs(regcoef[j])) / (a1 - 1);
-  }
+    moshtagh[j]= (a1 * lam1 - fabs(regcoef[j])) / (a1 - 1);
+    }
 }
 
 /* ************************************************************************ */
-
-void hardpen(double lam1, double *moshtagh, double *regcoef, int ncov1)
+void hardpen(double lam1, double *moshtagh, double *regcoef, int D1)
 {
-  int j;
+    int j;
 
-  for(j = 0; j < ncov1; j++){
+    for(j=0; j < D1; j++){
     if(fabs(regcoef[j]) <= lam1)
-      moshtagh[j]= (-2) * (fabs(regcoef[j]) - lam1);
+    moshtagh[j]= (-2) * (fabs(regcoef[j]) - lam1);
     else
-      moshtagh[j] = 0;
-  }
+    moshtagh[j]=0;
+    }
+}
+
+const char* names[] = { "alpha", "beta", "sigma", "pi", "LogLik", "BIC",
+    "AIC", "MaxIter", "tau", "predict", "residual", "" };
+
+int accessAcsArr(SEXP acs, const int first_index, const int second_index,
+    const int D)
+{
+    return INTEGER(acs)[(D + 1) * second_index + first_index];
 }
 
 /* *************************** MLE Normal and Log-Normal ******************* */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-  void FMR_Norm_Surv_EM_MLE(double *resp,
-                            double *myX,
-                            double *delta,
-                            double *myridgepen_prop,
-                            int *myNCOMP,
-                            int *myNCOV,
-                            int *mynsize,
-                            int *myEMmaxiter,
-                            int *MaxEMiter,
-                            double *myinitial_alpha,
-                            double *myinitial_beta,
-                            double *myinitial_sigma,
-                            double *myinitial_pi,
-                            double *myeps,
-                            double *myepsconv,
-                            double *myalpha,
-                            double *mybeta,
-                            double *mysigma,
-                            double *mypi,
-                            double *loglike,
-                            double *BIC,
-                            double *AIC,
-                            double *GCV,
-                            double *EBIC1,
-                            double *EBIC5,
-                            double *GIC,
-                            double *predict,
-                            double *residual,
-                            double *tau,
-                            int *actset,
-                            int *disnorm
-  )
-  {
+SEXP FMR_Norm_MLE(SEXP myY,
+      SEXP myX,
+      SEXP myK,
+      SEXP myD,
+      SEXP myN,
+      SEXP mydelta,
+      SEXP myAlpha,
+      SEXP myBeta,
+      SEXP mySigma,
+      SEXP myPi,
+      SEXP myacs,
+      SEXP myridge,
+      SEXP myEMiter,
+      SEXP myeps,
+      SEXP myepsC,
+      SEXP myNorm
+)
+{
     int i;
     int j;
     int k1;
@@ -258,401 +253,368 @@ extern "C" {
     int niter1;
     int check1[1];
 
-    int nsize = *mynsize;
-    int NCOV = *myNCOV;
-    int EM_maxiter = *myEMmaxiter;
-    int NCOMP = *myNCOMP;
+    int N = asInteger(myN);
+    int D = asInteger(myD);
+    int EM_Miter = asInteger(myEMiter);
+    int K = asInteger(myK);
 
-    int acs[NCOV+1][NCOMP];
-
-    int ONCOV[NCOMP];
-    for(k1=0; k1<NCOMP; k1++){
-      ONCOV[k1] = 0;
-      for(i=0; i<NCOV+1; i++){
-        acs[i][k1] = actset[(NCOV+1) * k1 + i];
-        ONCOV[k1] += acs[i][k1];
-      }
+    int OD[K];
+    for (k1 = 0; k1 < K; k1++) {
+    OD[k1] = 0;
+    for (j = 0; j < D + 1; j++)
+    OD[k1] += accessAcsArr(myacs, j, k1, D);
     }
 
-    //printf("%d\n",ONCOV[0]); // remove this
-    //printf("%d\n",ONCOV[1]); // remove this
-    //printf("%d\n",ONCOV[k1]); // remove this
-    double eps_conv = *myepsconv;
-    double eps = *myeps;
+    double eps_conv = asReal(myepsC);
+    double eps = asReal(myeps);
 
-    double ridge1 = *myridgepen_prop;
-
-    double multX[nsize][NCOV][NCOMP];
-    double one_X[nsize][NCOV + 1][NCOMP];
+    double ridge = asReal(myridge);
+    double one_X[N][D + 1][K];
     double sumi;
     double mui;
     double deni;
 
-    double W[nsize][NCOMP];
-    double phi[nsize][NCOMP];
+    double W[N][K];
+    double phi[N][K];
 
-    double initbeta[NCOV][NCOMP];
-    double beta0[NCOV][NCOMP];
-    double new_beta0[NCOV][NCOMP];
-    double beta0hat[NCOV][NCOMP];
+    double beta_ini[D][K];
+    double beta_old[D][K];
+    double beta_new[D][K];
 
-    double initalpha[NCOMP];
-    double alpha0[NCOMP];
-    double new_alpha0[NCOMP];
-    double alpha0hat[NCOMP];
+    double alpha_ini[K];
+    double alpha_old[K];
+    double alpha_new[K];
 
-    double initsigma[NCOMP];
-    double sigma0[NCOMP];
-    double new_sigma0[NCOMP];
-    double sigma0hat[NCOMP];
+    double sigma_ini[K];
+    double sigma_old[K];
+    double sigma_new[K];
 
-    double sigpennom = 0.0;
-    double sigpendenom = 0.0;
+    double pi_ini[K];
+    double pi_old[K];
+    double pi_new[K];
 
-    double initpi[NCOMP];
-    double pi0[NCOMP];
-    double new_pi0[NCOMP];
-    double pi0hat[NCOMP];
+    double w_s[N][K];
+    double Aw[N][K];
+    double V[N][K];
 
-    double w_s[nsize][NCOMP];
-    double Aw[nsize][NCOMP];
-    double V[nsize][NCOMP];
+    double oneXTWY[D + 1];
+    double oneXTWX[D + 1][D + 1];
 
-    double oneXTWY[NCOV + 1];
-    double oneXTWX[NCOV + 1][NCOV + 1];
+    double sumwi[K];
+    double sumi5[K];
+    double sumi3[K];
 
-    double sumwi[NCOMP];
-    double sumi5[NCOMP];
+    double SumDif;
 
-    double jamconvg1;
-
-    double oneComMat[NCOV + 2][NCOV + 2];
-    double onesolution1[NCOV + 2];
-    double oneComMatVec[(NCOV + 2) * (NCOV + 2)];
+    double oneComMat[D + 2][D + 2];
+    double OneSolv[D + 2];
+    double oneComMatVec[(D + 2) * (D + 2)];
     double loglike1;
-
-    char convg1 = 'n';
 
     double sumi1, sumi2;
-    double sumi3[NCOMP];
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for(i = 0; i < NCOV; i++){
-        new_beta0[i][k1] = beta0hat[i][k1] = beta0[i][k1] = initbeta[i][k1] = myinitial_beta[NCOV * k1 + i] * acs[i+1][k1];
-      }
-      new_alpha0[k1] = alpha0hat[k1] = alpha0[k1] = initalpha[k1] = myinitial_alpha[k1] * acs[0][k1];
-      new_sigma0[k1] = sigma0hat[k1] = sigma0[k1] = initsigma[k1] = myinitial_sigma[k1];
-      new_pi0[k1] = pi0hat[k1] = pi0[k1] = initpi[k1] = myinitial_pi[k1];
+    for (k1 = 0; k1 < K; k1++) {
+    for (j = 0; j < D; j++) {
+    beta_new[j][k1] = beta_old[j][k1] =
+    beta_ini[j][k1] = REAL(myBeta)[D * k1 + j] *
+    accessAcsArr(myacs, j + 1, k1, D);
+    }
+    alpha_new[k1] = alpha_old[k1] = alpha_ini[k1] =
+    REAL(myAlpha)[k1] * accessAcsArr(myacs, 0, k1, D);
+    sigma_new[k1] = sigma_old[k1] = sigma_ini[k1] =
+    REAL(mySigma)[k1];
+    pi_new[k1] = pi_old[k1] = pi_ini[k1] = REAL(myPi)[k1];
     }
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      l=0;
-      for (j = 0; j < NCOV; j++){
-        if(acs[j+1][k1] == 1){
-          for (i = 0; i < nsize; i++){
-            multX[i][l][k1] = myX[nsize * j + i];
-          }
-          l++;
-        }
-      }
+    for(k1=0; k1<K; k1++){
+    l = 0;
+    if (accessAcsArr(myacs, 0, k1, D) == 1) {
+    for (i = 0; i < N; i++) {
+    one_X[i][l][k1] = 1.0;
+    }
+    l++;
     }
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      l=0;
-      if(acs[0][k1] == 1){
-        for (i = 0; i < nsize; i++){
-          one_X[i][l][k1] = 1.0;
-        }
-        l++;
-      }
-
-      for (j = 0; j < NCOV; j++){
-        if(acs[j+1][k1] == 1){
-          for (i = 0; i < nsize; i++){
-            one_X[i][l][k1] = myX[nsize * j + i];
-          }
-          l++;
-        }
-      }
+    for (j = 0; j < D; j++) {
+    if (accessAcsArr(myacs, j + 1, k1, D) == 1) {
+    for (i = 0; i < N; i++) {
+    one_X[i][l][k1] = REAL(myX)[N * j + i];
     }
-
+    l++;
+    }
+    }
+    }
 
     niter1 = 0;
-    while((convg1 != 'y') && (niter1 < EM_maxiter)){
+    while (niter1 < EM_Miter) {
+    /****Beginning of each iteration****/
+    /*******The E-step of the EM********/
 
-      /****Beginning of each iteration****/
-
-      /*******The E-step of the EM********/
-
-      for(k1 = 0; k1 < NCOMP; k1++){
-        sumwi[k1] = 0.0;
-        sumi5[k1] = 0.0;
-        sumi3[k1] = 0.0;
-      }
-
-      for(i = 0; i < nsize; i++){
-        sumi = 0.0;
-        for(k1 = 0; k1 < NCOMP;  k1++){
-          mui = 0.0;
-          for(j = 0; j < NCOV; j++)
-            mui += myX[nsize * j + i] * beta0[j][k1] * acs[j+1][k1];
-          mui += alpha0[k1] * acs[0][k1];
-          deni = pow(eps +  dnorm(resp[i] - mui, 0, sigma0[k1], 0), delta[i]) *  pow(eps + 1 - pnorm(resp[i] - mui, 0, sigma0[k1], 1, 0), 1 - delta[i]) ;
-          phi[i][k1] = pi0[k1] * deni;
-          sumi += phi[i][k1];
-        }
-        for(k1 = 0; k1 < NCOMP;  k1++){
-          W[i][k1] = phi[i][k1] / sumi;
-          sumwi[k1] += W[i][k1];
-        }
-      }
-
-      /**********End of the E-step*******/
-
-      for(i = 0; i < nsize; i++){
-        for(k1 = 0; k1 < NCOMP;  k1++){
-          mui = 0.0;
-          for(j = 0; j < NCOV; j++)
-            mui += myX[nsize * j + i] * beta0[j][k1] * acs[j+1][k1];
-          mui += alpha0[k1] * acs[0][k1];
-          w_s[i][k1] = (resp[i] - mui) / sigma0[k1];
-          Aw[i][k1] = dnorm(w_s[i][k1], 0, 1, 0) / (eps + (1 - pnorm(w_s[i][k1], 0, 1, 1, 0)));
-          V[i][k1] = delta[i] * resp[i] + (1- delta[i]) * (mui + sigma0[k1] * Aw[i][k1]);
-        }
-      }
-
-      /*********M-step of the EM*********/
-
-      for(k1 = 0; k1 < NCOMP; k1++){
-
-        /******Constructing the weigthed vector XTWY***/
-
-        for(j = 0; j < ONCOV[k1]; j++){
-          sumi1 = 0.0;
-          for(i = 0; i < nsize; i++)
-            sumi1 += one_X[i][j][k1] * W[i][k1] * V[i][k1];
-          oneXTWY[j] = sumi1;
-        }
-
-        /*****Constructing the weighted matrix XTWX***/
-
-        for(i = 0 ; i < (ONCOV[k1]); i++){
-          for(j = i; j < (ONCOV[k1]); j++){
-            sumi2 = 0.0;
-            for(l = 0; l < nsize; l++)
-              sumi2 += one_X[l][i][k1] * W[l][k1] * one_X[l][j][k1];
-            if(i == j)
-              oneXTWX[i][j] = sumi2 + ridge1 * log(nsize);
-            else
-              oneXTWX[j][i] = oneXTWX[i][j] = sumi2;
-          }
-        }
-
-        if(acs[0][k1] == 1)
-          oneXTWX[0][0] = oneXTWX[0][0] - ridge1 * log(nsize);
-
-        /***In a system Ax=b, adding b to A as its last column**/
-
-        for(i = 0 ; i < ONCOV[k1]; i++)
-          for(j = 0; j < (ONCOV[k1] + 1); j++)
-            if(j != ONCOV[k1])
-              oneComMat[i][j] = oneXTWX[i][j];
-            else
-              oneComMat[i][j] = oneXTWY[i];
-
-            for (i = 0; i < (ONCOV[k1] + 1); i++) {
-              for (j = 0; j < (ONCOV[k1] + 1); j++) {
-                oneComMatVec[j + i * (ONCOV[k1] + 1)] = oneComMat[i][j];
-              }
-            }
-
-            /**************************************************************/
-            /*Solving the system Ax=y to get betahat in the k-th component*/
-            /**************************************************************/
-
-            sol(ONCOV[k1], oneComMatVec, onesolution1, check1);
-
-            l=0;
-            if(acs[l][k1] == 1)
-              new_alpha0[k1] = onesolution1[l++];
-            for(j = 0; j < NCOV; j++){
-              if(acs[j+1][k1] == 1){
-                new_beta0[j][k1]  = onesolution1[l++];
-              }
-            }
-      }
-
-      for(i = 0; i < nsize; i++){
-        for(k1 = 0; k1 < NCOMP;  k1++){
-          mui = 0.0;
-          for(j = 0; j < NCOV; j++)
-            mui += myX[nsize * j + i] * new_beta0[j][k1] * acs[j+1][k1];
-          mui += new_alpha0[k1] * acs[0][k1];
-          sumi5[k1] += W[i][k1] * pow(V[i][k1] - mui, 2);
-          sumi3[k1] += W[i][k1] * (delta[i] + (1 - delta[i]) * (Aw[i][k1] * (Aw[i][k1] - w_s[i][k1])))  ;
-        }
-      }
-
-      for (k1 = 0; k1 < NCOMP; k1++) {
-        new_sigma0[k1] = sqrt((sumi5[k1] + sigpennom) / (sumi3[k1] + sigpendenom));
-      }
-
-      for (k1 = 0; k1 < NCOMP; k1++) {
-        new_pi0[k1] = sumwi[k1] / nsize;
-      }
-
-      /*****End of the M-step of the EM*****/
-      jamconvg1 = 0.0;
-      niter1++;
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        for(j = 0; j < NCOV; j++)
-          jamconvg1 += pow(new_beta0[j][k1] - beta0[j][k1], 2) * acs[i+1][k1];
-        jamconvg1 += pow(new_alpha0[k1] - alpha0[k1], 2) * acs[0][k1];
-        jamconvg1 += pow(new_pi0[k1] - pi0[k1], 2);
-        jamconvg1 += pow(new_sigma0[k1] - sigma0[k1], 2);
-      }
-
-      if(jamconvg1 <= eps_conv)
-        convg1='y';
-
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        for(j = 0; j < NCOV; j++)
-          beta0[j][k1] = new_beta0[j][k1];
-        alpha0[k1] = new_alpha0[k1];
-        pi0[k1] = new_pi0[k1];
-        sigma0[k1] = new_sigma0[k1];
-      }
-
-      /*******End of each iteration*******/
+    for (k1 = 0; k1 < K; k1++) {
+    sumwi[k1] = 0.0;
+    sumi5[k1] = 0.0;
+    sumi3[k1] = 0.0;
     }
 
-    for(k1 = 0; k1 < NCOMP;  k1++){
-      for(j = 0; j < NCOV; j++)
-        beta0hat[j][k1] = new_beta0[j][k1];
-      alpha0hat[k1] = new_alpha0[k1];
-      pi0hat[k1] = new_pi0[k1];
-      sigma0hat[k1] = new_sigma0[k1];
+    for (i = 0; i < N; i++) {
+    sumi = 0.0;
+    for (k1 = 0; k1 < K; k1++) {
+    mui = 0.0;
+    for (j = 0; j < D; j++)
+    mui += REAL(myX)[N * j + i] * beta_old[j][k1] *
+    accessAcsArr(myacs, j + 1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    deni = pow(eps + dnorm(REAL(myY) [i] - mui, 0, sigma_old[k1], 0),
+       INTEGER(mydelta)[i]) * pow(eps + 1 - pnorm(REAL(myY)[i] - mui, 0,
+       sigma_old[k1], 1, 0), 1 - INTEGER(mydelta)[i]);
+    phi[i][k1] = pi_old[k1] * deni;
+    sumi += phi[i][k1];
+    }
+    for (k1 = 0; k1 < K; k1++) {
+    W[i][k1] = phi[i][k1] / sumi;
+    sumwi[k1] += W[i][k1];
+    }
+    }
+
+    /**********End of the E-step*******/
+
+    for (i = 0; i < N; i++) {
+    for (k1 = 0; k1 < K; k1++) {
+    mui = 0.0;
+    for (j = 0; j < D; j++)
+    mui += REAL(myX)[N * j + i] * beta_old[j][k1] *
+    accessAcsArr(myacs, j + 1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    w_s[i][k1] = (REAL(myY)[i] - mui) / sigma_old[k1];
+    Aw[i][k1] = dnorm(w_s[i][k1], 0, 1, 0) / (eps + (1 -
+    pnorm(w_s[i][k1], 0, 1, 1, 0)));
+    V[i][k1] = INTEGER(mydelta)[i] * REAL(myY)[i] +
+    (1 - INTEGER(mydelta)[i]) * (mui + sigma_old[k1] * Aw[i][k1]);
+    }
+    }
+
+    /*********M-step of the EM*********/
+    for (k1 = 0; k1 < K; k1++) {
+
+    /******Constructing the weighted vector XTWY***/
+
+    for (j = 0; j < OD[k1]; j++) {
+    sumi1 = 0.0;
+    for (i = 0; i < N; i++)
+    sumi1 += one_X[i][j][k1] * W[i][k1] * V[i][k1];
+    oneXTWY[j] = sumi1;
+    }
+
+    /*****Constructing the weighted matrix XTWX***/
+
+    for (i = 0; i < (OD[k1]); i++) {
+    for (j = i; j < (OD[k1]); j++) {
+    sumi2 = 0.0;
+    for (l = 0; l < N; l++)
+    sumi2 += one_X[l][i][k1] * W[l][k1] * one_X[l][j][k1];
+    if (i == j)
+    oneXTWX[i][j] = sumi2 + ridge * log(N);
+    else
+    oneXTWX[j][i] = oneXTWX[i][j] = sumi2;
+    }
+    }
+
+    if (accessAcsArr(myacs, 0, k1, D) == 1)
+    oneXTWX[0][0] = oneXTWX[0][0] - ridge * log(N);
+
+    /***In a system Ax=b, adding b to A as its last column**/
+
+    for (i = 0; i < OD[k1]; i++) {
+    for (j = 0; j < (OD[k1] + 1); j++) {
+    if (j != OD[k1])
+    oneComMat[i][j] = oneXTWX[i][j];
+    else
+    oneComMat[i][j] = oneXTWY[i];
+    }
+    }
+
+    for (i = 0; i < (OD[k1] + 1); i++) {
+    for (j = 0; j < (OD[k1] + 1); j++) {
+    oneComMatVec[j + i * (OD[k1] + 1)] = oneComMat[i][j];
+    }
+    }
+
+    /**************************************************************/
+    /*Solving the system Ax=y to get betahat in the k-th component*/
+    /**************************************************************/
+
+    sol(OD[k1], oneComMatVec, OneSolv, check1);
+
+    l = 0;
+    if (accessAcsArr(myacs, l, k1, D) == 1)
+    alpha_new[k1] = OneSolv[l++];
+    for (j = 0; j < D; j++) {
+    if (accessAcsArr(myacs, j + 1, k1, D) == 1) {
+    beta_new[j][k1] = OneSolv[l++];
+    }
+    }
+    }
+
+    for (i = 0; i < N; i++) {
+    for (k1 = 0; k1 < K; k1++) {
+    mui = 0.0;
+    for (j = 0; j < D; j++)
+    mui += REAL(myX)[N * j + i] * beta_new[j][k1] *
+    accessAcsArr(myacs, j + 1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    sumi5[k1] += W[i][k1] * pow(V[i][k1] - mui, 2);
+    sumi3[k1] += W[i][k1] * (INTEGER(mydelta)[i] + (1 - INTEGER(mydelta)[i]) *
+    (Aw[i][k1] * (Aw[i][k1] - w_s[i][k1])));
+    }
+    }
+
+    for (k1 = 0; k1 < K; k1++) {
+    sigma_new[k1] = sqrt((sumi5[k1]) / (sumi3[k1]));
+    }
+
+    for (k1 = 0; k1 < K; k1++) {
+    pi_new[k1] = sumwi[k1] / N;
+    }
+
+    /*****End of the M-step of the EM*****/
+    SumDif = 0.0;
+    niter1++;
+    for (k1 = 0; k1 < K; k1++) {
+    for (j = 0; j < D; j++)
+    SumDif += pow(beta_new[j][k1] - beta_old[j][k1], 2) *
+    accessAcsArr(myacs, j + 1, k1, D);
+    SumDif += pow(alpha_new[k1] - alpha_old[k1], 2) *
+    accessAcsArr(myacs, 0, k1, D);
+    SumDif += pow(pi_new[k1] - pi_old[k1], 2);
+    SumDif += pow(sigma_new[k1] - sigma_old[k1], 2);
+    }
+
+    if (SumDif <= eps_conv)
+    break;
+
+    for (k1 = 0; k1 < K; k1++) {
+    for (j = 0; j < D; j++)
+    beta_old[j][k1] = beta_new[j][k1];
+    alpha_old[k1] = alpha_new[k1];
+    pi_old[k1] = pi_new[k1];
+    sigma_old[k1] = sigma_new[k1];
+    }
+
+    /*******End of each iteration*******/
     }
 
     loglike1 = 0.0;
 
-    for(i = 0; i < nsize; i++){
-      sumi = 0.0;
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += myX[nsize * j + i] * beta0hat[j][k1] * acs[j+1][k1];
-        mui += alpha0hat[k1] * acs[0][k1];
-        deni = pow(eps +  dnorm(resp[i] - mui, 0, sigma0hat[k1], 0), delta[i]) *  pow(eps + 1 - pnorm(resp[i] - mui, 0, sigma0hat[k1], 1, 0), 1 - delta[i]) ;
-        phi[i][k1] = pi0hat[k1] * deni;
-        sumi += phi[i][k1];
-      }
-      loglike1 += log(sumi);
+    for (i = 0; i < N; i++) {
+    sumi = 0.0;
+    for (k1 = 0; k1 < K; k1++) {
+    mui = 0.0;
+    for (j = 0; j < D; j++)
+    mui += REAL(myX)[N * j + i] * beta_new[j][k1] *
+    accessAcsArr(myacs, j + 1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    deni = pow(eps + dnorm(REAL(myY)[i] - mui, 0, sigma_new[k1], 0),
+       INTEGER(mydelta)[i]) * pow(eps + 1 - pnorm(REAL(myY)[i] - mui, 0,
+       sigma_new[k1], 1, 0), 1 - INTEGER(mydelta)[i]);
+    phi[i][k1] = pi_new[k1] * deni;
+    sumi += phi[i][k1];
+    }
+    loglike1 += log(sumi);
+    for (k1 = 0; k1 < K; k1++) {
+    W[i][k1] = phi[i][k1] / sumi;
+    }
     }
 
-    *loglike = loglike1;
-
-    for (k1 = 0; k1 < NCOMP; k1++)
-    {
-      for (j = 0;  j < NCOV;  j++)
-        mybeta[k1 * NCOV + j] = beta0hat[j][k1];
-      myalpha[k1] = alpha0hat[k1];
-      mysigma[k1] = sigma0hat[k1];
-      mypi[k1] = pi0hat[k1];
+    int SumPar = 0;
+    for (k1 = 0; k1 < K; k1++) {
+    SumPar += OD[k1];
     }
+    SumPar += 2 * K - 1;
 
-    *BIC = loglike1 - 0.5 * NCOMP * NCOV * log(nsize);
-    *EBIC5 = loglike1 - 0.5 * NCOMP * NCOV * log(nsize) - 0.5 * (NCOMP * NCOV) * log(NCOV);
-    *EBIC1 = loglike1 - 0.5 * (NCOMP * NCOV) * log(nsize) - (NCOMP * NCOV) * log(NCOV);
-    *AIC = loglike1 - (NCOMP * NCOV);
-    *GCV = (loglike1) / (nsize * pow(1 - NCOMP * NCOV / nsize, 2));
-    *GIC = loglike1 - 0.5 * (NCOMP * NCOV) * log(nsize);
-    *MaxEMiter = niter1;
+    double BIC = 0.0;
+    double AIC = 0.0;
+    BIC = -(2 * loglike1) + SumPar * log(N);
+    AIC = -(2 * loglike1) + 2 * SumPar;
 
-    /*******The E-step of the EM********/
+    SEXP alpha = PROTECT(allocVector(REALSXP, K));
+    SEXP beta = PROTECT(allocVector(REALSXP, K * D));
+    SEXP sigma = PROTECT(allocVector(REALSXP, K));
+    SEXP pi = PROTECT(allocVector(REALSXP, K));
+    SEXP predict = PROTECT(allocVector(REALSXP, K * N));
+    SEXP residual = PROTECT(allocVector(REALSXP, K * N));
+    SEXP tau = PROTECT(allocVector(REALSXP, K * N));
 
-    for(i = 0; i < nsize; i++){
-      sumi = 0.0;
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += myX[nsize * j + i] * beta0hat[j][k1] * acs[j+1][k1];
-        mui += alpha0hat[k1]  * acs[0][k1];
-        deni = pow(eps +  dnorm(resp[i] - mui, 0, sigma0hat[k1], 0), delta[i]) *  pow(eps + 1 - pnorm(resp[i] - mui, 0, sigma0hat[k1], 1, 0), 1 - delta[i]) ;
-        phi[i][k1] = pi0hat[k1] * deni;
-        sumi += phi[i][k1];
-      }
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        W[i][k1] = phi[i][k1] / sumi;
-      }
+
+    for (k1 = 0; k1 < K; k1++) {
+    for (j = 0; j < D; j++)
+    REAL(beta)[k1 * D + j] = beta_new[j][k1];
+    REAL(alpha)[k1] = alpha_new[k1];
+    REAL(sigma)[k1] = sigma_new[k1];
+    REAL(pi)[k1] = pi_new[k1];
     }
 
     /**********End of the E-step*******/
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for(i = 0; i < nsize; i++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += myX[nsize * j + i] * beta0hat[j][k1] * acs[j+1][k1];
-        mui += alpha0hat[k1]  * acs[0][k1];
+    for (k1 = 0; k1 < K; k1++) {
+    for (i = 0; i < N; i++) {
+    mui = 0.0;
+    for (j = 0; j < D; j++)
+    mui += REAL(myX)[N * j + i] * beta_new[j][k1] *
+    accessAcsArr(myacs, j + 1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
 
-        if(*disnorm == 1){
-          predict[k1 * nsize + i] = mui;
-          residual[k1 * nsize + i] = resp[i] - mui;
-        }else{
-          predict[k1 * nsize + i] = exp(mui);
-          residual[k1 * nsize + i] = exp(resp[i]) - exp(mui);
-        }
-        tau[k1 * nsize + i] = W[i][k1];
-      }
+    if (asInteger(myNorm) == 1) {
+    REAL(predict)[k1 * N + i] = mui;
+    REAL(residual)[k1 * N + i] = REAL(myY)[i] - mui;
+    }
+    else {
+    REAL(predict)[k1 * N + i] = exp(mui);
+    REAL(residual)[k1 * N + i] = exp(REAL(myY)[i]) - exp(mui);
+    }
+    REAL(tau)[k1 * N + i] = W[i][k1];
+    }
     }
 
-  }
-#ifdef __cplusplus
+    SEXP res = PROTECT(mkNamed(VECSXP, names));
+    SET_VECTOR_ELT(res, 0, alpha);
+    SET_VECTOR_ELT(res, 1, beta);
+    SET_VECTOR_ELT(res, 2, sigma);
+    SET_VECTOR_ELT(res, 3, pi);
+    SET_VECTOR_ELT(res, 4, ScalarReal(loglike1));
+    SET_VECTOR_ELT(res, 5, ScalarReal(BIC));
+    SET_VECTOR_ELT(res, 6, ScalarReal(AIC));
+    SET_VECTOR_ELT(res, 7, ScalarInteger(niter1));
+    SET_VECTOR_ELT(res, 8, tau);
+    SET_VECTOR_ELT(res, 9, predict);
+    SET_VECTOR_ELT(res, 10, residual);
+    UNPROTECT(8);
+    return res;
 }
-#endif
 
 /* ********************* Variable Selection Normal and Log-Normal *********** */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-  void FMR_Norm_Surv_EM_VarSel(double *resp,
-                               double *myX,
-                               double *delta,
-                               int *myPenaltyFamily,
-                               double *mylambda,
-                               double *myridgepen_prop,
-                               int *myNCOMP,
-                               int *myNCOV,
-                               int *mynsize,
-                               int *myEMmaxiter,
-                               int *MaxEMiter,
-                               double *myinitial_alpha,
-                               double *myinitial_beta,
-                               double *myinitial_sigma,
-                               double *myinitial_pi,
-                               double *myeps,
-                               double *myepsconv,
-                               double *gammixportion,
-                               double *myalpha,
-                               double *mybeta,
-                               double *mysigma,
-                               double *mypi,
-                               double *loglike,
-                               double *BIC,
-                               double *AIC,
-                               double *GCV,
-                               double *EBIC1,
-                               double *EBIC5,
-                               double *GIC,
-                               double *predict,
-                               double *residual,
-                               double *tau,
-                               int *actset,
-                               double *tuneGam1,
-                               double *tuneGam2
-  )
-  {
+SEXP FMR_Norm_MPLE(SEXP myY,
+       SEXP myX,
+       SEXP myK,
+       SEXP myD,
+       SEXP myN,
+       SEXP mydelta,
+       SEXP myAlpha,
+       SEXP myBeta,
+       SEXP mySigma,
+       SEXP myPi,
+       SEXP myacs,
+       SEXP myridge,
+       SEXP myEMiter,
+       SEXP myeps,
+       SEXP myepsC,
+       SEXP myNorm,
+       SEXP myPenalty,
+       SEXP mylambda,
+       SEXP myPiPor,
+       SEXP myMcpTun,
+       SEXP mySicaTun,
+       SEXP myTol
+)
+{
     int i;
     int j;
     int k1;
@@ -661,857 +623,835 @@ extern "C" {
     int check1[1];
     int SUM1;
 
-    int nsize = *mynsize;
-    int NCOV = *myNCOV;
-    int EM_maxiter = *myEMmaxiter;
-    int NCOMP = *myNCOMP;
-    int jar = *myPenaltyFamily;
-    double gamma1 = *tuneGam1;
-    double gamma2 = *tuneGam2;
+    int N = asInteger(myN);
+    int D = asInteger(myD);
+    int EM_Miter = asReal(myEMiter);
+    int K = asInteger(myK);
+    int jar = asInteger(myPenalty);
+    double McpTun = asReal(myMcpTun);
+    double SicaTun = asReal(mySicaTun);
 
-    int acs[NCOV+1][NCOMP];
-    int ONCOV[NCOMP];
-    for(k1=0; k1<NCOMP; k1++){
-      ONCOV[k1] = 0;
-      for(i=0; i<NCOV+1; i++){
-        acs[i][k1] = actset[(NCOV+1) * k1 + i];
-        ONCOV[k1] += acs[i][k1];
-      }
+    double Tol = asReal(myTol);
+
+    int OD[K];
+    for(k1=0; k1<K; k1++){
+    OD[k1]=0;
+    for(j=0; j<D+1; j++){
+    OD[k1] += accessAcsArr(myacs, j, k1, D);
+    }
     }
 
-    double ridge1 = *myridgepen_prop;
-    double eps = *myeps;
-    double eps_conv = *myepsconv;
-    double GamMP = *gammixportion;
+    double ridge = asReal(myridge);
+    double eps = asReal(myeps);
+    double eps_conv = asReal(myepsC);
+    double GamMP = asReal(myPiPor);
 
-    double multX[nsize][NCOV][NCOMP];
-    double one_X[nsize][NCOV + 1][NCOMP];
+    double one_X[N][D+1][K];
 
-    double optlam[NCOMP];
+    double optlam[K];
 
-    double initbeta[NCOV][NCOMP];
-    double beta0[NCOV][NCOMP];
-    double new_beta0[NCOV][NCOMP];
-    double beta0hat[NCOV][NCOMP];
+    double beta_ini[D][K];
+    double beta_old[D][K];
+    double beta_new[D][K];
 
-    double initalpha[NCOMP];
-    double alpha0[NCOMP];
-    double new_alpha0[NCOMP];
-    double alpha0hat[NCOMP];
+    double alpha_ini[K];
+    double alpha_old[K];
+    double alpha_new[K];
 
-    double initsigma[NCOMP];
-    double sigma0[NCOMP];
-    double new_sigma0[NCOMP];
-    double sigma0hat[NCOMP];
+    double sigma_ini[K];
+    double sigma_old[K];
+    double sigma_new[K];
 
-    double sigpennom = 0.0;
-    double sigpendenom = 0.0;
+    double pi_ini[K];
+    double pi_old[K];
+    double pi_new[K];
 
-    double initpi[NCOMP];
-    double pi0[NCOMP];
-    double new_pi0[NCOMP];
-    double pi0hat[NCOMP];
+    double W[N][K];
+    double phi[N][K];
 
-    double W[nsize][NCOMP];
-    double phi[nsize][NCOMP];
+    double w_s[N][K];
+    double Aw[N][K];
+    double V[N][K];
 
-    double w_s[nsize][NCOMP];
-    double Aw[nsize][NCOMP];
-    double V[nsize][NCOMP];
+    double eps1[K];
 
-    double eps1[NCOMP];
+    double vecder[D];
+    double vecSig[D+1];
+    double En[K];
 
-    double vecder[NCOV];
-    double vecsigma[NCOV + 1];
-    double En[NCOMP];
+    double oneXTWY[D+1];
+    double oneXTWX[D+1][D+1];
+    double selection[D][K];
 
-    double oneXTWY[NCOV + 1];
-    double oneXTWX[NCOV + 1][NCOV + 1];
-    double selection[NCOV][NCOMP];
+    double oneComMat[D+2][D+2];
+    double OneSolv[D+2];
+    double oneComMatVec[(D+2) * (D+2)];
 
-    double oneComMat[NCOV + 2][NCOV + 2];
-    double onesolution1[NCOV + 2];
-    double oneComMatVec[(NCOV + 2) * (NCOV + 2)];
-
-    double sumwi[NCOMP];
-    double sumi4[NCOMP];
-    double sumi5[NCOMP];
+    double sumwi[K];
+    double sumi4[K];
+    double sumi5[K];
     double sumi;
     double mui;
     double deni;
 
     char convg1 = 'n';
 
-    double jamconvg1;
+    double SumDif;
     double loglike1;
-    double sat_loglike1;
-    double sat_den;
+    double holdveccov[D];
 
-    double holdveccov[NCOV];
-    //    double holdveccom[NCOMP];
-
-    for (k1 = 0; k1 < NCOMP; k1++) {
-      optlam[k1]= mylambda[k1];
+    for (k1=0; k1 < K; k1++) {
+    optlam[k1]= REAL(mylambda)[k1];
     }
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for(i = 0; i < NCOV; i++){
-        new_beta0[i][k1] = beta0hat[i][k1] = beta0[i][k1] = initbeta[i][k1] = myinitial_beta[NCOV * k1 + i] * acs[i+1][k1];
-      }
-      new_alpha0[k1] = alpha0hat[k1] = alpha0[k1] = initalpha[k1] = myinitial_alpha[k1] * acs[0][k1];
-      new_sigma0[k1] = sigma0hat[k1] = sigma0[k1] = initsigma[k1] = myinitial_sigma[k1];
-      new_pi0[k1] = pi0hat[k1] = pi0[k1] = initpi[k1] = myinitial_pi[k1];
+    for(k1=0; k1 < K; k1++){
+    for(j=0; j < D; j++){
+    beta_new[j][k1]= beta_old[j][k1] = beta_ini[j][k1] =
+    REAL(myBeta)[D*k1+j] *accessAcsArr(myacs, j + 1, k1, D) ;
+    }
+    alpha_new[k1] = alpha_old[k1] = alpha_ini[k1] =
+    REAL(myAlpha)[k1] * accessAcsArr(myacs, 0, k1, D);
+    sigma_new[k1] = sigma_old[k1] = sigma_ini[k1] =
+    REAL(mySigma)[k1];
+    pi_new[k1] = pi_old[k1] = pi_ini[k1] =
+    REAL(myPi)[k1];
     }
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      l = 0;
-      for (j = 0; j < NCOV; j++){
-        if(acs[j+1][k1] == 1){
-          for (i = 0; i < nsize; i++){
-            multX[i][l][k1] = myX[nsize * j + i];
-          }
-          l++;
-        }
-      }
+    for(k1=0; k1 < K; k1++){
+    l=0;
+    if(accessAcsArr(myacs, 0, k1, D)  == 1){
+    for (i=0; i < N; i++){
+    one_X[i][l][k1] = 1.0;
+    }
+    l++;
+    }
+    for (j=0; j < D; j++){
+    if(accessAcsArr(myacs, j + 1, k1, D)  == 1){
+    for (i=0; i < N; i++){
+    one_X[i][l][k1] = REAL(myX)[N*j+i];
+    }
+    l++;
+    }
+    }
     }
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      l = 0;
-      if(acs[0][k1] == 1){
-        for (i = 0; i < nsize; i++){
-          one_X[i][l][k1] = 1.0;
-        }
-        l++;
-      }
-      for (j = 0; j < NCOV; j++){
-        if(acs[j+1][k1] == 1){
-          for (i = 0; i < nsize; i++){
-            one_X[i][l][k1] = myX[nsize * j + i];
-          }
-          l++;
-        }
-      }
+    for(k1=0; k1 < K; k1++){
+    for (j=0; j < D; j++) {
+    holdveccov[j] = beta_ini[j][k1];
+    }
+    if((jar == 1) || (jar == 2))
+    eps1[k1] = eps * minimum(holdveccov, D) / (2 * N * optlam[k1]);
+    else
+    eps1[k1] = eps * minimum(holdveccov, D) / (4 * N * optlam[k1]);
     }
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for (i = 0; i < NCOV; i++) {
-        holdveccov[i] = initbeta[i][k1];
-      }
-      if((jar == 1) || (jar == 2))
-        eps1[k1] = eps * minimum(holdveccov, NCOV) / (2 * nsize * optlam[k1]);
-      else
-        eps1[k1] = eps * minimum(holdveccov, NCOV) / (4 * nsize * optlam[k1]);
-    }
-
-    niter1 = 0;
+    niter1=0;
     convg1 = 'n';
 
-    while((convg1 != 'y') && (niter1 < EM_maxiter)){
+    while((convg1 != 'y') && (niter1 < EM_Miter)){
+    /******Beginning of each iteration******/
+    /****E-step of the EM algorithm************/
+    for(k1=0; k1 < K;  k1++){
+    sumwi[k1] = 0.0;
+    }
 
-      /******Beginning of each iteration******/
+    for(i=0; i < N; i++){
+    sumi = 0.0;
+    for(k1=0; k1 < K;  k1++){
+    mui=0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_old[j][k1] *
+    accessAcsArr(myacs, j + 1, k1, D) ;
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    deni = pow(eps + dnorm(REAL(myY)[i] - mui, 0, sigma_old[k1], 0),
+       INTEGER(mydelta)[i]) * pow(eps + 1 - pnorm(REAL(myY)[i] - mui, 0,
+       sigma_old[k1], 1, 0), 1 - INTEGER(mydelta)[i]);
+    phi[i][k1] = pi_old[k1] * deni;
+    sumi += phi[i][k1];
+    }
+    for(k1=0; k1 < K;  k1++){
+    W[i][k1] = phi[i][k1] / sumi;
+    sumwi[k1] += W[i][k1];
+    }
+    }
 
-      /****E-step of the EM algorithm************/
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        sumwi[k1] = 0.0;
-      }
+    for (k1=0; k1 < K; k1++) {
+    pi_new[k1] = sumwi[k1] / N;
+    }
 
-      for(i = 0; i < nsize; i++){
-        sumi = 0.0;
-        for(k1 = 0; k1 < NCOMP;  k1++){
-          mui = 0;
-          for(j = 0; j < NCOV; j++)
-            mui += myX[nsize * j + i] * beta0[j][k1] * acs[j+1][k1];
-          mui += alpha0[k1] * acs[0][k1];
-          deni = pow(eps +  dnorm(resp[i] - mui, 0, sigma0[k1], 0), delta[i]) *  pow(eps + 1 - pnorm(resp[i] - mui, 0, sigma0[k1], 1, 0), 1 - delta[i]) ;
-          phi[i][k1] = pi0[k1] * deni;
-          sumi += phi[i][k1];
-        }
-        for(k1 = 0; k1 < NCOMP;  k1++){
-          W[i][k1] = phi[i][k1] / sumi;
-          sumwi[k1] += W[i][k1];
-        }
-      }
+    /*****End of the E-step of the EM algorithm*****/
 
-      for (k1 = 0; k1 < NCOMP; k1++) {
-        new_pi0[k1] = sumwi[k1] / nsize;
-      }
+    for(i=0; i < N; i++){
+    for(k1=0; k1 < K;  k1++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_old[j][k1] *
+    accessAcsArr(myacs, j + 1, k1, D) ;
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    w_s[i][k1] = (REAL(myY)[i] - mui) / sigma_old[k1];
+    Aw[i][k1] = dnorm(w_s[i][k1], 0, 1, 0) / (eps + (1 -
+    pnorm(w_s[i][k1], 0, 1, 1, 0)));
+    V[i][k1] = INTEGER(mydelta)[i] * REAL(myY)[i] +
+    (1- INTEGER(mydelta)[i]) * (mui + sigma_old[k1] * Aw[i][k1]);
+    }
+    }
 
-      /*****End of the E-step of the EM algorithm*****/
+    /****M-step of the EM algorithm*************/
+    for(k1=0; k1 < K;  k1++){
 
-      for(i = 0; i < nsize; i++){
-        for(k1 = 0; k1 < NCOMP;  k1++){
-          mui = 0.0;
-          for(j = 0; j < NCOV; j++)
-            mui += myX[nsize * j + i] * beta0[j][k1] * acs[j+1][k1];
-          mui += alpha0[k1] * acs[0][k1];
-          w_s[i][k1] = (resp[i] - mui) / sigma0[k1];
-          Aw[i][k1] = dnorm(w_s[i][k1], 0, 1, 0) / (eps + (1 - pnorm(w_s[i][k1], 0, 1, 1, 0)));
-          V[i][k1] = delta[i] * resp[i] + (1- delta[i]) * (mui + sigma0[k1] * Aw[i][k1]);
-        }
-      }
+    En[k1] = N * pow(pi_old[k1], GamMP);
 
-      /****M-step of the EM algorithm*************/
+    for (j=0; j < D; j++) {
+    holdveccov[j] = beta_old[j][k1];
+    }
 
-      for(k1 = 0; k1 < NCOMP;  k1++){
-
-        En[k1] = nsize * pow(pi0[k1], GamMP);
-
-        for (j = 0; j < NCOV; j++) {
-          holdveccov[j] = beta0[j][k1];
-        }
-
-        if(jar == 1)
-          for(j = 0; j < NCOV; j++)
-            vecder[j] = optlam[k1];
-        else if (jar == 2)
-          scadpen(optlam[k1], vecder, holdveccov, NCOV);
-        else if (jar == 3)
-          mcppen(optlam[k1], vecder, holdveccov, NCOV, gamma1);
-        else if (jar == 4)
-          sicapen(optlam[k1], vecder, holdveccov, NCOV, gamma2);
-        else if (jar == 5){
-          for(j = 0; j < NCOV; j++)
-            vecder[j] = optlam[k1] / (fabs(initbeta[j][k1]) + eps);
-        }
-        else
-          hardpen(optlam[k1], vecder, holdveccov, NCOV);
-
-
-        l = 0;
-        if(acs[l][k1] == 1)
-          vecsigma[l++] = 0.0;
-        for(j = 0; j < NCOV; j++)
-          if(acs[j+1][k1] == 1)
-            vecsigma[l++] = vecder[j] / (fabs(beta0[j][k1]) + eps1[k1]);
-
-          for(i = 0; i < ONCOV[k1]; i++){
-            for(j = 0; j < ONCOV[k1]; j++){
-              sumi = 0.0;
-              for(l = 0; l < nsize; l++)
-                sumi += one_X[l][i][k1] * W[l][k1] * one_X[l][j][k1];
-              if(i != j)
-                oneXTWX[i][j] = sumi;
-              else
-                oneXTWX[i][j] = sumi + En[k1] * vecsigma[j] + ridge1 * log(nsize);
-            }
-          }
-
-          if(acs[0][k1] == 1)
-            oneXTWX[0][0] = oneXTWX[0][0] - (En[k1] * vecsigma[0]) - ridge1 * log(nsize);
+    if(jar == 1)
+    for(j=0; j < D; j++)
+    vecder[j] = optlam[k1];
+    else if (jar == 2)
+    scadpen(optlam[k1], vecder, holdveccov, D);
+    else if (jar == 3)
+    mcppen(optlam[k1], vecder, holdveccov, D, McpTun);
+    else if (jar == 4)
+    sicapen(optlam[k1], vecder, holdveccov, D, SicaTun);
+    else if (jar == 5){
+    for(j=0; j < D; j++)
+    vecder[j] = optlam[k1] / (fabs(beta_ini[j][k1]) + eps);
+    }
+    else
+    hardpen(optlam[k1], vecder, holdveccov, D);
 
 
-          /******Constructing the weigthed vector XTWY***/
+    l=0;
+    if(accessAcsArr(myacs, 0, k1, D)  == 1)
+    vecSig[l++] = 0.0;
+    for(j=0; j < D; j++){
+    if(accessAcsArr(myacs, j + 1, k1, D)  == 1)
+    vecSig[l++] = vecder[j] / (fabs(beta_old[j][k1]) + eps1[k1]);
+    }
 
-          for(j = 0; j < ONCOV[k1]; j++){
-            sumi = 0.0;
-            for(i = 0; i < nsize; i++)
-              sumi += one_X[i][j][k1] * W[i][k1] * V[i][k1];
-            oneXTWY[j] = sumi;
-          }
+    for(i=0; i < OD[k1]; i++){
+    for(j=0; j < OD[k1]; j++){
+    sumi = 0.0;
+    for(l=0; l < N; l++)
+    sumi +=one_X[l][i][k1] * W[l][k1] * one_X[l][j][k1];
+    if(i != j)
+    oneXTWX[i][j] = sumi;
+    else
+    oneXTWX[i][j] = sumi + En[k1] * vecSig[j] +
+    ridge * log(N);
+    }
+    }
 
-          /***In a system Ax=b, adding b to A as its last column**/
+    if(accessAcsArr(myacs, 0, k1, D) == 1)
+    oneXTWX[0][0] = oneXTWX[0][0] - (En[k1] * vecSig[0]) -
+    ridge * log(N);
 
-          for(i = 0; i < ONCOV[k1]; i++)
-            for(j = 0; j < (ONCOV[k1] + 1); j++)
-              if(j != ONCOV[k1])
-                oneComMat[i][j] = oneXTWX[i][j];
-              else
-                oneComMat[i][j] = oneXTWY[i];
+    /******Constructing the weigthed vector XTWY***/
 
-              for (i = 0; i < (ONCOV[k1] + 1); i++) {
-                for (j = 0; j < (ONCOV[k1] + 1); j++) {
-                  oneComMatVec[j + i * (ONCOV[k1] + 1)] = oneComMat[i][j];
-                }
-              }
+    for(j=0; j < OD[k1]; j++){
+    sumi = 0.0;
+    for(i=0; i < N; i++)
+    sumi += one_X[i][j][k1] * W[i][k1] * V[i][k1];
+    oneXTWY[j] = sumi;
+    }
 
-              /**************************************************************/
-              /*Solving the system Ax=y to get betahat in the k-th component*/
-              /**************************************************************/
+    /***In a system Ax=b, adding b to A as its last column**/
 
-              sol(ONCOV[k1], oneComMatVec, onesolution1, check1);
+    for(i=0; i < OD[k1]; i++){
+    for(j=0; j < (OD[k1] + 1); j++){
+    if(j != OD[k1])
+    oneComMat[i][j] = oneXTWX[i][j];
+    else
+    oneComMat[i][j] = oneXTWY[i];
+    }
+    }
 
-              l=0;
-              if(acs[0][k1] == 1)
-                new_alpha0[k1] = onesolution1[l++];
-              for(j = 0; j < NCOV; j++){
-                if(acs[j+1][k1] == 1){
-                  new_beta0[j][k1]  = onesolution1[l++];
-                }
-              }
+    for (i=0; i < (OD[k1] + 1); i++) {
+    for (j=0; j < (OD[k1] + 1); j++) {
+    oneComMatVec[j+i*(OD[k1]+1)] = oneComMat[i][j];
+    }
+    }
 
-      }//* End of each component
+    /**************************************************************/
+    /*Solving the system Ax=y to get betahat in the k-th component*/
+    /**************************************************************/
+    sol(OD[k1], oneComMatVec, OneSolv, check1);
 
-      {
-        for (k1 = 0; k1 < NCOMP; k1++){
-          sumi5[k1] = 0.0;
-          sumi4[k1] = 0.0;
-        }
+    l=0;
+    if(accessAcsArr(myacs, 0, k1, D)  == 1)
+    alpha_new[k1] = OneSolv[l++];
+    for(j=0; j < D; j++){
+    if(accessAcsArr(myacs, j + 1, k1, D)  == 1){
+    beta_new[j][k1]  = OneSolv[l++];
+    }
+    }
 
-        for(i = 0; i < nsize; i++){
-          for(k1 = 0; k1 < NCOMP;  k1++){
-            mui = 0.0;
-            for(j = 0; j < NCOV; j++)
-              mui += myX[nsize * j + i] * new_beta0[j][k1] * acs[j+1][k1];
-            mui += new_alpha0[k1] * acs[0][k1];
-            sumi5[k1] += W[i][k1] * pow(V[i][k1] - mui, 2);
-          }
-        }
-        for (k1 = 0; k1 < NCOMP; k1++) {
-          for (i = 0; i < nsize; i++) {
-            sumi4[k1] += W[i][k1] * (delta[i] + (1 - delta[i]) * (Aw[i][k1] * (Aw[i][k1] - w_s[i][k1])))  ;
-          }
-        }
+    }
 
-        for (k1 = 0; k1 < NCOMP; k1++) {
-          new_sigma0[k1] = sqrt((sumi5[k1] + sigpennom) / (sumi4[k1] + sigpendenom));
-        }
-      }
+    for (k1=0; k1 < K; k1++){
+    sumi5[k1] = 0.0;
+    sumi4[k1] = 0.0;
+    }
 
-      jamconvg1 = 0.0;
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        for(j = 0; j < NCOV; j++)
-          jamconvg1 += pow(new_beta0[j][k1] - beta0[j][k1], 2) * acs[i+1][k1];
-        jamconvg1 += pow(new_alpha0[k1] - alpha0[k1], 2) * acs[0][k1];
-        jamconvg1 += pow(new_pi0[k1] - pi0[k1], 2);
-        jamconvg1 += pow(new_sigma0[k1] - sigma0[k1], 2);
-      }
+    for(i=0; i < N; i++){
+    for(k1=0; k1 < K;  k1++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] *
+    accessAcsArr(myacs, j + 1, k1, D) ;
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    sumi5[k1] += W[i][k1] * pow(V[i][k1] - mui, 2);
+    }
+    }
+    for (k1=0; k1 < K; k1++) {
+    for (i=0; i < N; i++) {
+    sumi4[k1] += W[i][k1] * (INTEGER(mydelta)[i] +
+    (1 - INTEGER(mydelta)[i]) * (Aw[i][k1] * (Aw[i][k1] - w_s[i][k1])));
+    }
+    }
 
-      if (jamconvg1 <= eps_conv)
-        convg1='y';
+    for (k1=0; k1 < K; k1++) {
+    sigma_new[k1] = sqrt((sumi5[k1] / sumi4[k1]));
+    }
 
-      niter1++;
+    SumDif = 0.0;
+    for(k1=0; k1 < K;  k1++){
+    for(j=0; j < D; j++)
+    SumDif += pow(beta_new[j][k1] - beta_old[j][k1], 2) *
+    accessAcsArr(myacs, j + 1, k1, D);
+    SumDif += pow(alpha_new[k1] - alpha_old[k1], 2) *
+    accessAcsArr(myacs, 0, k1, D);
+    SumDif += pow(pi_new[k1] - pi_old[k1], 2);
+    SumDif += pow(sigma_new[k1] - sigma_old[k1], 2);
+    }
 
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        alpha0[k1] = new_alpha0[k1];
-        for(j = 0; j < NCOV; j++)
-          beta0[j][k1] = new_beta0[j][k1];
-        pi0[k1] = new_pi0[k1];
-        sigma0[k1] = new_sigma0[k1];
-      }
+    if (SumDif <= eps_conv)
+    convg1='y';
 
-    }//*End of each iteration
+    niter1++;
+
+    for(k1=0; k1 < K;  k1++){
+    alpha_old[k1] = alpha_new[k1];
+    for(j=0; j < D; j++)
+    beta_old[j][k1] = beta_new[j][k1];
+    pi_old[k1] = pi_new[k1];
+    sigma_old[k1] = sigma_new[k1];
+    }
+    }
 
     //*********************************************************************
-    //*Storing the estiamtes of the regression coefficients
+    //*Storing the estimates of the regression coefficients
     //*in a global variable called "Betahat".
     //*Selecting the finial model and storing
     //*********************************************************************
 
-    for(k1 = 0; k1 < NCOMP;  k1++)
-      for(j = 0; j < NCOV; j++)
-        selection[j][k1] = 0;
-
-    for(k1 = 0; k1 < NCOMP;  k1++){
-      alpha0hat[k1] = new_alpha0[k1];
-      for(j = 0; j < NCOV; j++){
-        beta0hat[j][k1] = new_beta0[j][k1];
-        if(fabs(beta0hat[j][k1]) <= 0.25)
-          selection[j][k1] = 0;
-        else
-          selection[j][k1] = 1;
-      }
-    }
-    for (k1 = 0; k1 < NCOMP; k1++) {
-      pi0hat[k1] = new_pi0[k1];
+    for(k1=0; k1 < K;  k1++){
+    for(j=0; j < D; j++)
+    selection[j][k1]=0;
     }
 
-    for(i = 0; i < nsize; i++){
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += myX[nsize * j + i] * beta0hat[j][k1] * selection[j][k1] * acs[j+1][k1];
-        mui += alpha0hat[k1] * acs[0][k1];
-        w_s[i][k1] = (resp[i] - mui) / new_sigma0[k1];
-        Aw[i][k1] = dnorm(w_s[i][k1], 0, 1, 0) / (eps + (1 - pnorm(w_s[i][k1], 0, 1, 1, 0)));
-        V[i][k1] = delta[i] * resp[i] + (1 - delta[i]) * (mui + new_sigma0[k1] * Aw[i][k1]);
-      }
+    for(k1=0; k1 < K;  k1++){
+    for(j=0; j < D; j++){
+    if(fabs(beta_new[j][k1]) <= Tol){
+    selection[j][k1]=0;
+    beta_new[j][k1] = 0.0;
+    }
+    else
+    selection[j][k1] = 1;
+    }
     }
 
-    for (k1 = 0; k1 < NCOMP; k1++){
-      sumi5[k1] = 0.0;
-      sumi4[k1] = 0.0;
-    }
 
-    for(i = 0; i < nsize; i++){
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += myX[nsize * j + i] * beta0hat[j][k1] * selection[j][k1] * acs[j+1][k1];
-        mui += alpha0hat[k1] * acs[0][k1];
-        sumi5[k1] += W[i][k1] * pow(V[i][k1] - mui,2);
-      }
+    for(i=0; i < N; i++){
+    for(k1=0; k1 < K;  k1++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] *
+    selection[j][k1] * accessAcsArr(myacs, j + 1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    w_s[i][k1] = (REAL(myY)[i] - mui) / sigma_new[k1];
+    Aw[i][k1] = dnorm(w_s[i][k1], 0, 1, 0) / (eps + (1 -
+    pnorm(w_s[i][k1], 0, 1, 1, 0)));
+    V[i][k1] = INTEGER(mydelta)[i] * REAL(myY)[i] +
+    (1 - INTEGER(mydelta)[i]) * (mui + sigma_new[k1] * Aw[i][k1]);
     }
-
-    for (k1 = 0; k1 < NCOMP; k1++) {
-      for (i = 0; i < nsize; i++) {
-        sumi4[k1] += W[i][k1] * (delta[i] + (1 - delta[i]) * (Aw[i][k1] * (Aw[i][k1] - w_s[i][k1])));
-      }
-    }
-
-    for (k1 = 0; k1 < NCOMP; k1++) {
-      sigma0hat[k1] = sqrt((sumi5[k1] + sigpennom) / (sumi4[k1] + sigpendenom));
     }
 
     loglike1 = 0.0;
-    sat_loglike1 = 0.0;
 
-    for(i = 0; i < nsize; i++){
-      sumi = 0.0;
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += myX[nsize * j + i] * beta0hat[j][k1] * selection[j][k1] * acs[j+1][k1];
-        mui += alpha0hat[k1] * acs[0][k1];
-        deni = pow(eps +  dnorm(resp[i] - mui, 0, sigma0hat[k1], 0), delta[i]) *  pow(eps + 1 - pnorm(resp[i] - mui, 0, sigma0hat[k1], 1, 0), 1 - delta[i]) ;
-        sat_den = pow(eps +  dnorm(0, 0, sigma0hat[k1], 0), delta[i]) *  pow(eps + 1 - pnorm(0, 0, sigma0hat[k1], 1, 0), 1 - delta[i]) ;
-        phi[i][k1] = pi0hat[k1] * deni;
-        sumi += phi[i][k1];
-      }
-      loglike1 += log(sumi);
-      sat_loglike1 += log(sat_den);
+    for(i=0; i < N; i++){
+    sumi = 0.0;
+    for(k1=0; k1 < K;  k1++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] *
+    selection[j][k1] * accessAcsArr(myacs, j + 1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    deni = pow(eps +  dnorm(REAL(myY)[i] - mui, 0, sigma_new[k1], 0),
+       INTEGER(mydelta)[i]) * pow(eps + 1 - pnorm(REAL(myY)[i] - mui, 0,
+       sigma_new[k1], 1, 0), 1 - INTEGER(mydelta)[i]);
+    phi[i][k1] = pi_new[k1] * deni;
+    sumi += phi[i][k1];
+    }
+    loglike1 += log(sumi);
     }
 
-    SUM1 = 0;
-    for(k1 = 0; k1 < NCOMP;  k1++)
-      for(j = 0; j < NCOV; j++)
-        SUM1 += selection[j][k1];
+    SUM1=0;
+    for(k1=0; k1 < K;  k1++){
+    SUM1 += accessAcsArr(myacs, 0, k1, D);
+    for(j=0; j < D; j++){
+    SUM1 += selection[j][k1];
+    }
+    }
+    SUM1 +=  2*K-1;
+    double BIC = 0.0;
+    double AIC = 0.0;
 
-    *loglike = loglike1;
+    BIC = -(2 * loglike1) + SUM1 * log(N);
+    AIC = -(2 * loglike1) + 2 * SUM1;
 
-    for (k1 = 0; k1 < NCOMP; k1++)
-    {
-      for (j = 0;  j < NCOV;  j++)
-        mybeta[k1 * NCOV + j] = beta0hat[j][k1];
-      myalpha[k1] = alpha0hat[k1];
-      mysigma[k1] = sigma0hat[k1];
-      mypi[k1] = pi0hat[k1];
+    SEXP alpha = PROTECT(allocVector(REALSXP, K));
+    SEXP beta = PROTECT(allocVector(REALSXP, K*D));
+    SEXP sigma = PROTECT(allocVector(REALSXP, K));
+    SEXP pi = PROTECT(allocVector(REALSXP, K));
+    SEXP predict = PROTECT(allocVector(REALSXP, K*N));
+    SEXP residual = PROTECT(allocVector(REALSXP, K*N));
+    SEXP tau = PROTECT(allocVector(REALSXP, K*N));
+    SEXP SeL = PROTECT(allocVector(INTSXP, K*D));
+
+    for (k1=0; k1 < K; k1++){
+    for (j=0;  j < D;  j++)
+    INTEGER(SeL)[k1 * D + j] = selection[j][k1];
     }
 
-    *BIC = loglike1 - 0.5 * SUM1 * log(nsize);
-    *EBIC5 = loglike1 - 0.5 * (SUM1) * log(nsize) - 0.5 * (SUM1) * log(NCOV);
-    *EBIC1 = loglike1 - 0.5 * (SUM1) * log(nsize) - (SUM1) * log(NCOV);
-    *AIC = loglike1 - (SUM1);
-    *GCV = (loglike1) / (nsize * pow(1 - SUM1 / nsize, 2));
-    *GIC = loglike1 - 0.5 * (SUM1) * log(nsize);
-    *MaxEMiter = niter1;
+    for (k1=0; k1 < K; k1++){
+    for (j=0;  j < D;  j++)
+    REAL(beta)[k1 * D + j] = beta_new[j][k1];
+    REAL(alpha)[k1] = alpha_new[k1];
+    REAL(sigma)[k1] = sigma_new[k1];
+    REAL(pi)[k1] = pi_new[k1];
+    }
+
     /*******The E-step of the EM********/
 
-    for(i = 0; i < nsize; i++){
-      sumi = 0.0;
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += myX[nsize * j + i] * beta0hat[j][k1] * acs[j+1][k1];
-        mui += alpha0hat[k1] * acs[0][k1];
-        deni = pow(eps +  dnorm(resp[i] - mui, 0, sigma0hat[k1], 0), delta[i]) *  pow(eps + 1 - pnorm(resp[i] - mui, 0, sigma0hat[k1], 1, 0), 1 - delta[i]) ;
-        phi[i][k1] = pi0hat[k1] * deni;
-        sumi += phi[i][k1];
-      }
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        W[i][k1] = phi[i][k1] / sumi;
-      }
+    for(i=0; i < N; i++){
+    sumi = 0.0;
+    for(k1=0; k1 < K;  k1++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] *
+    accessAcsArr(myacs, j + 1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    deni = pow(eps + dnorm(REAL(myY)[i] - mui, 0, sigma_new[k1], 0),
+       INTEGER(mydelta)[i]) * pow(eps + 1 - pnorm(REAL(myY)[i] - mui, 0,
+       sigma_new[k1], 1, 0), 1 - INTEGER(mydelta)[i]);
+    phi[i][k1] = pi_new[k1] * deni;
+    sumi += phi[i][k1];
+    }
+    for(k1=0; k1 < K;  k1++){
+    W[i][k1] = phi[i][k1] / sumi;
+    }
     }
 
     /**********End of the E-step*******/
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for(i = 0; i < nsize; i++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui +=  myX[nsize * j + i] * beta0hat[j][k1] * acs[j+1][k1];
-        mui += alpha0hat[k1] * acs[0][k1];
-        predict[k1 * nsize + i] = mui;
-        residual[k1 * nsize + i] = resp[i] - mui;
-        tau[k1 * nsize + i] = W[i][k1];
-      }
+    /**********End of the E-step*******/
+    for(k1=0; k1 < K; k1++){
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] *
+    accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    if(asInteger(myNorm) == 1){
+    REAL(predict)[k1*N+i] = mui;
+    REAL(residual)[k1*N+i] = REAL(myY)[i] - mui;
+    }else{
+    REAL(predict)[k1*N+i] = exp(mui);
+    REAL(residual)[k1*N+i] = exp(REAL(myY)[i]) - exp(mui);
+    }
+    REAL(tau)[k1*N+i] = W[i][k1];
+    }
     }
 
-  }
-#ifdef __cplusplus
+    const char *names[] = {"alpha", "beta", "sigma", "pi", "LogLik", "BIC",
+       "AIC", "MaxIter", "tau", "predict", "residual",
+       "selection", ""};
+    SEXP res = PROTECT(mkNamed(VECSXP, names));
+    SET_VECTOR_ELT(res, 0, alpha);
+    SET_VECTOR_ELT(res, 1, beta);
+    SET_VECTOR_ELT(res, 2, sigma);
+    SET_VECTOR_ELT(res, 3, pi);
+    SET_VECTOR_ELT(res, 4, ScalarReal(loglike1));
+    SET_VECTOR_ELT(res, 5, ScalarReal(BIC));
+    SET_VECTOR_ELT(res, 6, ScalarReal(AIC));
+    SET_VECTOR_ELT(res, 7, ScalarInteger(niter1));
+    SET_VECTOR_ELT(res, 8, tau);
+    SET_VECTOR_ELT(res, 9, predict);
+    SET_VECTOR_ELT(res, 10, residual);
+    SET_VECTOR_ELT(res, 11, SeL);
+    UNPROTECT(9);
+    return res;
 }
-#endif
 
 /* ****************** Tuning Parameter Normal and Log-Normal ************** */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-  void FMR_Norm_Surv_CwTuneParSel(double *resp,
-                                  double *myX,
-                                  double *delta,
-                                  int *myPenaltyFamily,
-                                  double *myridgepen_prop,
-                                  int *myNCOMP,
-                                  int *myNCOV,
-                                  int *mynsize,
-                                  double *myinitial_alpha,
-                                  double *myinitial_beta,
-                                  double *myinitial_sigma,
-                                  double *myinitial_pi,
-                                  double *myeps,
-                                  double *myepsEM,
-                                  double *gammixportion,
-                                  double *optlambda,
-                                  int *actset,
-                                  double *tuneGam1,
-                                  double *tuneGam2
-  )
-  {
+SEXP FMR_Norm_CTun(SEXP myY,
+       SEXP myX,
+       SEXP myK,
+       SEXP myD,
+       SEXP myN,
+       SEXP mydelta,
+       SEXP myAlpha,
+       SEXP myBeta,
+       SEXP mySigma,
+       SEXP myPi,
+       SEXP myacs,
+       SEXP myridge,
+       SEXP myEMiter,
+       SEXP myeps,
+       SEXP myNorm,
+       SEXP myPenalty,
+       SEXP myPiPor,
+       SEXP myMcpTun,
+       SEXP mySicaTun,
+       SEXP myTol,
+       SEXP myLambMin,
+       SEXP myLambMax,
+       SEXP mynLamb
+)
+{
     int i;
     int j;
     int k1;
     int l;
+    int l1;
     int check1[1];
 
-    double gamma1 = *tuneGam1;
-    double gamma2 = *tuneGam2;
+    double McpTun = asReal(myMcpTun);
+    double SicaTun = asReal(mySicaTun);
 
-    int l1;
-    int MaxLim = 80;
+    double LambMax = asReal(myLambMax);
+    double LambMin = asReal(myLambMin);
+    int MaxLim = asInteger(mynLamb);
 
-    int nsize = *mynsize;
-    int NCOV = *myNCOV;
-    int NCOMP = *myNCOMP;
-    int jar = *myPenaltyFamily;
+    double Tol = asReal(myTol);
 
-    int acs[NCOV+1][NCOMP];
+    int N = asInteger(myN);
+    int D = asInteger(myD);
+    int K = asInteger(myK);
+    int jar = asInteger(myPenalty);
 
-    int ONCOV[NCOMP];
-    for(k1=0; k1<NCOMP; k1++){
-      ONCOV[k1] = 0;
-      for(i=0; i<NCOV+1; i++){
-        acs[i][k1] = actset[(NCOV+1) * k1 + i];
-        ONCOV[k1] += acs[i][k1];
-      }
+    int OD[K];
+    for(k1=0; k1<K; k1++){
+    OD[k1]=0;
+    for(j=0; j<D+1; j++){
+    OD[k1] += accessAcsArr(myacs, j, k1, D);       }
     }
 
-    double ridge1 = *myridgepen_prop;
+    double ridge = asReal(myridge);
     double gam = 0.0;
-    if(ridge1 != 0.0)
-      gam = 1;
+    if(ridge != 0.0)
+    gam = 1;
 
-    double eps = *myepsEM;
-    double GamMP = *gammixportion;
+    double eps = asReal(myeps);
+    double GamMP = asReal(myPiPor);
 
+    double one_X[N][D+1][K];
 
-    double multX[nsize][NCOV][NCOMP];
-    double one_X[nsize][NCOV + 1][NCOMP];
+    double beta_ini[D][K];
+    double beta_old[D][K];
+    double beta_new[D][K];
 
-    double optlam[NCOMP];
+    double alpha_ini[K];
+    double alpha_old[K];
+    double alpha_new[K];
 
-    double initbeta[NCOV][NCOMP];
-    double beta0[NCOV][NCOMP];
-    double new_beta0[NCOV][NCOMP];
+    double sigma_ini[K];
+    double sigma_old[K];
 
-    double initalpha[NCOMP];
-    double alpha0[NCOMP];
-    double new_alpha0[NCOMP];
+    double pi_ini[K];
 
-    double initsigma[NCOMP];
-    double sigma0[NCOMP];
-    double new_sigma0[NCOMP];
+    double W[N][K];
+    double phi[N][K];
 
-    //        double sigpennom = 0.0;
-    //        double sigpendenom = 0.0;
+    double w_s[N][K];
+    double Aw[N][K];
+    double V[N][K];
 
-    double initpi[NCOMP];
-    double pi0[NCOMP];
-    double new_pi0[NCOMP];
+    double eps1[K];
 
-    double W[nsize][NCOMP];
-    double phi[nsize][NCOMP];
+    double vecder[D];
+    double vecSig[D+1];
+    double En[K];
 
-    double w_s[nsize][NCOMP];
-    double Aw[nsize][NCOMP];
-    double V[nsize][NCOMP];
+    double oneXTWY[D+1];
+    double oneXTWX[D+1][D+1];
+    double selection[D][K];
 
-    double eps1[NCOMP];
-
-    double vecder[NCOV];
-    double vecsigma[NCOV + 1];
-    double En[NCOMP];
-
-    double oneXTWY[NCOV + 1];
-    double oneXTWX[NCOV + 1][NCOV + 1];
-    double selection[NCOV][NCOMP];
-
-    double oneComMat[NCOV + 2][NCOV + 2];
-    double onesolution1[NCOV + 2];
-    double oneComMatVec[(NCOV + 2) * (NCOV + 2)];
+    double oneComMat[D+2][D+2];
+    double OneSolv[D+2];
+    double oneComMatVec[(D+2) * (D+2)];
 
     double sumi;
     double mui;
     double deni;
 
-    double n1[NCOMP];
-    double BIC[MaxLim][NCOMP];
-    double Max_BIC[NCOMP];
+    double n1[K];
+    double BIC[MaxLim][K];
+    double Max_BIC[K];
     double lambda1[MaxLim];
 
-    int count1[NCOMP][MaxLim];
-    int indx1[NCOMP];
+    int count1[K][MaxLim];
+    int indx1[K];
 
-    for(l1 = 0; l1 < MaxLim; l1++)
-      lambda1[l1] = 0.01 + l1 * 0.01;
+    double hl = (LambMax - LambMin)/MaxLim;
+    for(l1=0; l1 < MaxLim; l1++)
+    lambda1[l1] = LambMin + l1 * (hl);
 
     double loglike1;
 
-    double holdveccov[NCOV];
-    //    double holdveccom[NCOMP];
+    double holdveccov[D];
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for(i = 0; i < NCOV; i++){
-        new_beta0[i][k1] = beta0[i][k1] = initbeta[i][k1] = myinitial_beta[NCOV * k1 + i] * acs[i+1][k1];
-      }
-      new_alpha0[k1] = alpha0[k1] = initalpha[k1] = myinitial_alpha[k1] * acs[0][k1];
-      new_sigma0[k1] = sigma0[k1] = initsigma[k1] = myinitial_sigma[k1];
-      new_pi0[k1] = pi0[k1] = initpi[k1] = myinitial_pi[k1];
+    for(k1=0; k1 < K; k1++){
+    for(j=0; j < D; j++){
+    beta_new[j][k1] = beta_old[j][k1] = beta_ini[j][k1] =
+    REAL(myBeta)[D*k1+j] * accessAcsArr(myacs, j+1, k1, D);
     }
-
-    for(k1 = 0; k1 < NCOMP; k1++){
-      l=0;
-      for (j = 0; j < NCOV; j++){
-        if(acs[j+1][k1] == 1){
-          for (i = 0; i < nsize; i++){
-            multX[i][l][k1] = myX[nsize * j + i];
-          }
-          l++;
-        }
-      }
-    }
-
-    for(k1 = 0; k1 < NCOMP; k1++){
-      l=0;
-      if(acs[0][k1] == 1){
-        for (i = 0; i < nsize; i++){
-          one_X[i][l][k1] = 1.0;
-        }
-        l++;
-      }
-
-      for (j = 0; j < NCOV; j++){
-        if(acs[j+1][k1] == 1){
-          for (i = 0; i < nsize; i++){
-            one_X[i][l][k1] = myX[nsize * j + i];
-          }
-          l++;
-        }
-      }
-    }
-
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for (i = 0; i < NCOV; i++) {
-        holdveccov[i] = initbeta[i][k1];
-      }
-      if((jar == 1) || (jar == 2))
-          eps1[k1] = eps * minimum(holdveccov, NCOV) / (2 * nsize * 0.1); //optlam[k1]);
-      else
-        eps1[k1] = eps * minimum(holdveccov, NCOV) / (4 * nsize * 0.1);// optlam[k1]);
+    alpha_new[k1] = alpha_old[k1] = alpha_ini[k1] =
+    REAL(myAlpha)[k1] * accessAcsArr(myacs, 0, k1, D);
+    /* sigma_new[k1] = */ sigma_old[k1] = sigma_ini[k1] =
+    REAL(mySigma)[k1];
+    /*pi_new[k1] =  pi_old[k1]  = */ pi_ini[k1] = REAL(myPi)[k1];
     }
 
 
-    for(k1 = 0; k1 < NCOMP; k1++)
-      n1[k1] = 0.0;
-
-    for(i = 0; i < nsize; i++){
-      sumi = 0.0;
-      for(k1 = 0; k1 < NCOMP; k1++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui +=  myX[nsize * j + i] * initbeta[j][k1] * acs[j+1][k1];
-        mui += initalpha[k1] * acs[0][k1];
-        deni = pow(eps +  dnorm(resp[i] - mui, 0, initsigma[k1], 0), delta[i]) *  pow(eps + 1 - pnorm(resp[i] - mui, 0, initsigma[k1], 1, 0), 1 - delta[i]);
-        phi[i][k1] = initpi[k1] * deni;
-        sumi += phi[i][k1];
-      }
-      for(k1 = 0; k1 < NCOMP; k1++){
-        W[i][k1] = phi[i][k1] / sumi;
-        //n1[k1] += W[i][k1];
-      }
+    for(k1=0; k1 < K; k1++){
+    l=0;
+    if(accessAcsArr(myacs, 0, k1, D) == 1){
+    for (i=0; i < N; i++){
+    one_X[i][l][k1] = 1.0;
+    }
+    l++;
     }
 
-    //*Start of choosing lambda for each component of the mixture
-
-    for(k1 = 0; k1 < NCOMP; k1++){
-      En[k1] = nsize * pow(initpi[k1], GamMP);
-
-      for (j = 0; j < NCOV; j++) {
-        holdveccov[j] = beta0[j][k1];
-      }
-
-      for(l1 = 0; l1 < MaxLim; l1++){
-        if(jar == 1)
-          for(j = 0; j < NCOV; j++)
-            vecder[j] = lambda1[l1];
-        else if (jar == 2)
-          scadpen(lambda1[l1], vecder, holdveccov, NCOV);
-        else if (jar == 3)
-          mcppen(lambda1[l1], vecder, holdveccov, NCOV, gamma1);
-        else if (jar == 4)
-          sicapen(lambda1[l1], vecder, holdveccov, NCOV, gamma2);
-        else if (jar == 5){
-          for(j = 0; j < NCOV; j++)
-            vecder[j] = optlam[k1] / (fabs(initbeta[j][k1]) + eps);
-        }
-        else
-          hardpen(optlam[k1], vecder, holdveccov, NCOV);
-
-        l = 0;
-        if(acs[l][k1]==1)
-          vecsigma[l++] = 0.0;
-        for(j = 0; j < NCOV; j++){
-          if(acs[j+1][k1] == 1)
-            vecsigma[l++] = vecder[j] / (fabs(beta0[j][k1]) + eps1[k1]);
-        }
-
-        for(i = 0; i < ONCOV[k1]; i++){
-          for(j = 0; j < ONCOV[k1]; j++){
-            sumi = 0.0;
-            for(l = 0; l < nsize; l++)
-              sumi += one_X[l][i][k1] * W[l][k1] * one_X[l][j][k1];
-            if(i != j)
-              oneXTWX[i][j] = sumi;
-            else
-              oneXTWX[i][j] = sumi + En[k1] * vecsigma[j] + ridge1 * log(nsize);
-          }
-        }
-
-        if(acs[0][k1] == 1)
-          oneXTWX[0][0] = oneXTWX[0][0] - (En[k1] * vecsigma[0]) - ridge1 * log(nsize);
-
-        for(i = 0; i < nsize; i++){
-          mui = 0.0;
-          for(j = 0; j < NCOV; j++)
-            mui += myX[nsize * j + i] * beta0[j][k1] * acs[j+1][k1];
-          mui += alpha0[k1] * acs[0][k1];
-          w_s[i][k1] = (resp[i] - mui) / sigma0[k1];
-          Aw[i][k1] = dnorm(w_s[i][k1], 0, 1, 0) / (eps + (1 - pnorm(w_s[i][k1], 0, 1, 1, 0)));
-          V[i][k1] = delta[i] * resp[i] + (1 - delta[i]) * (mui + sigma0[k1] * Aw[i][k1]);
-        }
-
-        /****** Constructing the weigthed vector oneXTWY ***/
-
-        for(j = 0; j < ONCOV[k1]; j++){
-          sumi = 0.0;
-          for(i = 0; i < nsize; i++)
-            sumi += one_X[i][j][k1] * W[i][k1] * V[i][k1];
-          oneXTWY[j] = sumi;
-        }
-
-        /***In a system Ax=b, adding b to A as its last column**/
-
-        for(i = 0; i < ONCOV[k1]; i++)
-          for(j = 0; j < (ONCOV[k1] + 1); j++)
-            if(j != ONCOV[k1])
-              oneComMat[i][j] = oneXTWX[i][j];
-            else
-              oneComMat[i][j] = oneXTWY[i];
-
-            for (i = 0; i < (ONCOV[k1] + 1); i++) {
-              for (j = 0; j < (ONCOV[k1] + 1); j++) {
-                oneComMatVec[j + i * (ONCOV[k1] + 1)] = oneComMat[i][j];
-              }
-            }
-
-            /**************************************************************/
-            /*Solving the system Ax=y to get betahat in the k-th component*/
-            /**************************************************************/
-
-            count1[k1][l1] = 0;
-            sol(ONCOV[k1], oneComMatVec, onesolution1, check1);
-
-            l = 0;
-            if(acs[l][k1] == 1)
-              new_alpha0[k1] = onesolution1[l++];
-            for(j = 0; j < NCOV; j++){
-              if(acs[j+1][k1] == 1){
-                new_beta0[j][k1]  = onesolution1[l++];
-                if(fabs(new_beta0[j][k1]) < 0.2)
-                  selection[j][k1] = 0;
-                else
-                  selection[j][k1] = 1;
-                count1[k1][l1] += selection[j][k1];
-              }
-            }
-
-            for(j = 0; j < NCOV; j++){
-              beta0[j][k1] = new_beta0[j][k1];
-            }
-
-            alpha0[k1] = new_alpha0[k1];
-
-            loglike1 = 0.0;
-            n1[k1] = 0.0;
-
-            for(i = 0; i < nsize; i++){
-              mui = 0.0;
-              for(j = 0; j < NCOV; j++)
-                mui += myX[nsize * j + i] * new_beta0[j][k1] * selection[j][k1] * acs[j+1][k1];
-              mui += alpha0[k1] * acs[0][k1];
-              deni = pow(eps +  dnorm(resp[i] - mui, 0, sigma0[k1], 0), delta[i]) *  pow(eps + 1 - pnorm(resp[i] - mui, 0, sigma0[k1], 1, 0), 1 - delta[i]) ;
-              loglike1 += W[i][k1] * log(deni);
-              n1[k1] += W[i][k1];
-            }
-
-            BIC[l1][k1] = loglike1 - 0.5 * (count1[k1][l1]) * log(n1[k1]) - gam * (count1[k1][l1]) * log(ONCOV[k1]);
-
-            if(l1 == 0){
-              Max_BIC[k1] = BIC[l1][k1];
-              indx1[k1] = l1;
-            }
-            else if(BIC[l1][k1] > Max_BIC[k1])
-            {
-              Max_BIC[k1] = BIC[l1][k1];
-              indx1[k1] = l1;
-            }
-      }//*End of choosing lambda for each component
-    }//*End of choosing lambda for both components of the mixture
-
-    for(k1 = 0; k1 < NCOMP; k1++){
-      optlambda[k1] = lambda1[indx1[k1]];
+    for (j=0; j < D; j++){
+    if(accessAcsArr(myacs, j + 1, k1, D) == 1){
+    for (i=0; i < N; i++){
+    one_X[i][l][k1] = REAL(myX)[N*j+i];
     }
-  }
-#ifdef __cplusplus
+    l++;
+    }
+    }
+    }
+
+    for(k1=0; k1 < K; k1++){
+    for (j=0; j < D; j++) {
+    holdveccov[j] = beta_ini[j][k1];
+    }
+    if((jar == 1) || (jar == 2))
+    eps1[k1] = eps * minimum(holdveccov, D) / (2 * N * 0.1);
+    else
+    eps1[k1] = eps * minimum(holdveccov, D) / (4 * N * 0.1);
+    }
+
+    for(k1=0; k1 < K; k1++)
+    n1[k1] = 0.0;
+
+    for(i=0; i < N; i++){
+    sumi = 0.0;
+    for(k1=0; k1 < K; k1++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui +=  REAL(myX)[N*j+i] * beta_ini[j][k1] *
+    accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_ini[k1] * accessAcsArr(myacs, 0, k1, D);
+    deni = pow(eps + dnorm(REAL(myY)[i] - mui, 0, sigma_ini[k1], 0),
+       INTEGER(mydelta)[i]) * pow(eps + 1 - pnorm(REAL(myY)[i] - mui, 0,
+       sigma_ini[k1], 1, 0), 1 - INTEGER(mydelta)[i]);
+    phi[i][k1] = pi_ini[k1] * deni;
+    sumi += phi[i][k1];
+    }
+    for(k1=0; k1 < K; k1++){
+    W[i][k1] = phi[i][k1] / sumi;
+    }
+    }
+
+    for(k1=0; k1 < K; k1++){
+    En[k1] = N * pow(pi_ini[k1], GamMP);
+
+    for (j=0; j < D; j++) {
+    holdveccov[j] = beta_old[j][k1];
+    }
+
+    for(l1=0; l1 < MaxLim; l1++){
+    if(jar == 1)
+    for(j=0; j < D; j++)
+    vecder[j] = lambda1[l1];
+    else if (jar == 2)
+    scadpen(lambda1[l1], vecder, holdveccov, D);
+    else if (jar == 3)
+    mcppen(lambda1[l1], vecder, holdveccov, D, McpTun);
+    else if (jar == 4)
+    sicapen(lambda1[l1], vecder, holdveccov, D, SicaTun);
+    else if (jar == 5){
+    for(j=0; j < D; j++)
+    vecder[j] = lambda1[l1] / (fabs(beta_ini[j][k1]) + eps);
+    }
+    else
+    hardpen(lambda1[l1], vecder, holdveccov, D);
+
+    l=0;
+    if(accessAcsArr(myacs, 0, k1, D)==1)
+    vecSig[l++] = 0.0;
+    for(j=0; j < D; j++){
+    if(accessAcsArr(myacs, j + 1, k1, D) == 1)
+    vecSig[l++] = vecder[j] / (fabs(beta_old[j][k1]) + eps1[k1]);
+    }
+
+    for(i=0; i < OD[k1]; i++){
+    for(j=0; j < OD[k1]; j++){
+    sumi = 0.0;
+    for(l=0; l < N; l++)
+    sumi += one_X[l][i][k1] * W[l][k1] * one_X[l][j][k1];
+    if(i != j)
+    oneXTWX[i][j] = sumi;
+    else
+    oneXTWX[i][j] = sumi + En[k1] * vecSig[j] + ridge *
+    log(N);
+    }
+    }
+
+    if(accessAcsArr(myacs, 0, k1, D) == 1)
+    oneXTWX[0][0] = oneXTWX[0][0] - (En[k1] * vecSig[0]) - ridge * log(N);
+
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_old[j][k1] *
+    accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    w_s[i][k1] = (REAL(myY)[i] - mui) / sigma_old[k1];
+    Aw[i][k1] = dnorm(w_s[i][k1], 0, 1, 0) / (eps + (1 -
+    pnorm(w_s[i][k1], 0, 1, 1, 0)));
+    V[i][k1] = INTEGER(mydelta)[i] * REAL(myY)[i] +
+    (1 - INTEGER(mydelta)[i]) * (mui + sigma_old[k1] * Aw[i][k1]);
+    }
+
+    /****** Constructing the weigthed vector oneXTWY ***/
+
+    for(j=0; j < OD[k1]; j++){
+    sumi = 0.0;
+    for(i=0; i < N; i++)
+    sumi += one_X[i][j][k1] * W[i][k1] * V[i][k1];
+    oneXTWY[j] = sumi;
+    }
+
+    /***In a system Ax=b, adding b to A as its last column**/
+
+    for(i=0; i < OD[k1]; i++){
+    for(j=0; j < (OD[k1] + 1); j++){
+    if(j != OD[k1])
+    oneComMat[i][j] = oneXTWX[i][j];
+    else
+    oneComMat[i][j] = oneXTWY[i];
+    }
+    }
+
+    for (i=0; i < (OD[k1] + 1); i++) {
+    for (j=0; j < (OD[k1] + 1); j++) {
+    oneComMatVec[j+i*(OD[k1]+1)] = oneComMat[i][j];
+    }
+    }
+
+    /**************************************************************/
+    /*Solving the system Ax=y to get betahat in the k-th component*/
+    /**************************************************************/
+    count1[k1][l1]=0;
+    sol(OD[k1], oneComMatVec, OneSolv, check1);
+
+    l=0;
+    if(accessAcsArr(myacs, 0, k1, D) == 1)
+    alpha_new[k1] = OneSolv[l++];
+    for(j=0; j < D; j++){
+    if(accessAcsArr(myacs, j + 1, k1, D) == 1){
+    beta_new[j][k1]  = OneSolv[l++];
+    if(fabs(beta_new[j][k1]) < Tol)
+    selection[j][k1]=0;
+    else
+    selection[j][k1] = 1;
+    count1[k1][l1] += selection[j][k1];
+    }
+    }
+
+    for(j=0; j < D; j++){
+    beta_old[j][k1] = beta_new[j][k1];
+    }
+
+    alpha_old[k1] = alpha_new[k1];
+
+    loglike1 = 0.0;
+    n1[k1] = 0.0;
+
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] *
+    selection[j][k1] * accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D) ;
+    deni = pow(eps + dnorm(REAL(myY)[i] - mui, 0, sigma_old[k1], 0),
+       INTEGER(mydelta)[i]) * pow(eps + 1 - pnorm(REAL(myY)[i] - mui, 0,
+       sigma_old[k1], 1, 0), 1 - INTEGER(mydelta)[i]);
+    loglike1 += W[i][k1] * log(deni);
+    n1[k1] += W[i][k1];
+    }
+
+    BIC[l1][k1] = loglike1 - 0.5 * (count1[k1][l1]) * log(n1[k1]) -
+    gam * (count1[k1][l1]) * log(OD[k1]);
+
+    if(l1 == 0){
+    Max_BIC[k1] = BIC[l1][k1];
+    indx1[k1] = l1;
+    }
+    else if(BIC[l1][k1] > Max_BIC[k1])
+    {
+    Max_BIC[k1] = BIC[l1][k1];
+    indx1[k1] = l1;
+    }
+    }
+    }
+
+    SEXP OptLam = PROTECT(allocVector(REALSXP, K));
+    for(k1=0; k1 < K; k1++){
+    REAL(OptLam)[k1] = lambda1[indx1[k1]];
+    }
+
+    const char *names[] = {"OptLam", ""};
+    SEXP res = PROTECT(mkNamed(VECSXP, names));
+    SET_VECTOR_ELT(res, 0, OptLam);
+    UNPROTECT(2);
+    return res;
 }
-#endif
 
 /* *************************** MLE Weibull *************************** */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-  void FMR_Weibl_Surv_EM_MLE(double *resp,
-                             double *myX,
-                             double *delta,
-                             double *myridgepen_prop,
-                             int *myNCOMP,
-                             int *myNCOV,
-                             int *mynsize,
-                             int *myEMmaxiter,
-                             int *myNRmaxiter,
-                             int *myNRportion,
-                             int *MaxEMiter,
-                             double *myinitial_alpha,
-                             double *myinitial_beta,
-                             double *myinitial_sigma,
-                             double *myinitial_pi,
-                             double *myepsconv,
-                             double *myalpha,
-                             double *mybeta,
-                             double *mysigma,
-                             double *mypi,
-                             double *loglike,
-                             double *BIC,
-                             double *AIC,
-                             double *GCV,
-                             double *EBIC1,
-                             double *EBIC5,
-                             double *GIC,
-                             double *predict,
-                             double *residual,
-                             double *tau,
-                             int *actset
-  )
-  {
+SEXP FMR_Weibl_MLE(SEXP myY,
+       SEXP myX,
+       SEXP myK,
+       SEXP myD,
+       SEXP myN,
+       SEXP mydelta,
+       SEXP myAlpha,
+       SEXP myBeta,
+       SEXP mySigma,
+       SEXP myPi,
+       SEXP myacs,
+       SEXP myridge,
+       SEXP myEMiter,
+       SEXP myeps,
+       SEXP myepsC,
+       SEXP myNRiter,
+       SEXP myNRPor
+)
+{
     int i;
     int j;
     int j1;
@@ -1521,485 +1461,456 @@ extern "C" {
     int niter2;
     int check1[1];
 
-    int nsize = *mynsize;
-    int NCOV = *myNCOV;
-    int NCOMP = *myNCOMP;
-    int EM_maxiter = *myEMmaxiter;
-    int NR_maxiter = *myNRmaxiter;
+    int N = asInteger(myN);
+    int D = asInteger(myD);
+    int K = asInteger(myK);
+    int EM_Miter = asInteger(myEMiter);
+    int NR_maxiter = asInteger(myNRiter);
 
-    int acs[NCOV+1][NCOMP];
-
-    int ONCOV[NCOMP];
-    for(k1=0; k1<NCOMP; k1++){
-      ONCOV[k1] = 0;
-      for(i=0; i<NCOV+1; i++){
-        acs[i][k1] = actset[(NCOV+1) * k1 + i];
-        ONCOV[k1] += acs[i][k1];
-      }
+    int OD[K];
+    for(k1=0; k1<K; k1++){
+    OD[k1]=0;
+    for(j=0; j<D+1; j++){
+    OD[k1] += accessAcsArr(myacs, j, k1, D);
+    }
     }
 
-    double eps_conv = *myepsconv;
+    double eps_conv = asReal(myepsC);
+    double eps = asReal(myeps);
 
-    double ridge1 = *myridgepen_prop;
-    int NRportion = *myNRportion;
-    int alp = 0;
+    double ridge = asReal(myridge);
+    int NRportion = asReal(myNRPor);
+    int alp=0;
 
-    double multX[nsize][NCOV][NCOMP];
-    double one_X[nsize][NCOV + 1][NCOMP];
+    double multX[N][D][K];
+    double OneX[N][D+1][K];
     double sumi;
     double mui;
     double deni;
 
-    double W[nsize][NCOMP];
-    double phi[nsize][NCOMP];
+    double W[N][K];
+    double phi[N][K];
 
-    double initbeta[NCOV][NCOMP];
-    double beta0[NCOV][NCOMP];
-    double new_beta0[NCOV][NCOMP];
-    double beta0hat[NCOV][NCOMP];
+    double beta_ini[D][K];
+    double beta_old[D][K];
+    double beta_new[D][K];
 
-    double initalpha[NCOMP];
-    double alpha0[NCOMP];
-    double new_alpha0[NCOMP];
-    double alpha0hat[NCOMP];
+    double alpha_ini[K];
+    double alpha_old[K];
+    double alpha_new[K];
 
-    double initsigma[NCOMP];
-    double sigma0[NCOMP];
-    double new_sigma0[NCOMP];
-    double sigma0hat[NCOMP];
+    double sigma_ini[K];
+    double sigma_old[K];
+    double sigma_new[K];
 
-    //        double sigpennom = 0.0;
-    //        double sigpendenom = 0.0;
+    double pi_ini[K];
+    double pi_old[K];
+    double pi_new[K];
 
-    double initpi[NCOMP];
-    double pi0[NCOMP];
-    double new_pi0[NCOMP];
-    double pi0hat[NCOMP];
+    double oneXTWY[D+1];
+    double oneXTWX[D+1][D+1];
 
-    double oneXTWY[NCOV + 1];
-    double oneXTWX[NCOV + 1][NCOV + 1];
+    double sumwi[K];
+    double sumi3[K];
+    double sumi5[K];
 
-    double sumwi[NCOMP];
-    double sumi3[NCOMP];
-    double sumi5[NCOMP];
+    double SumDif;
 
-    double jamconvg1;
-
-    double oneComMat[NCOV + 2][NCOV + 2];
-    double onesolution1[NCOV + 2];
-    double oneComMatVec[(NCOV + 2) * (NCOV + 2)];
+    double OneMat[D+2][D+2];
+    double OneSolv[D+2];
+    double OneMatVec[(D+2) * (D+2)];
     double loglike1;
     double oldloglike1;
     double newloglike1;
 
+    double zZ = 0.0;
+    double eZ = 0.0;
+
     char convg1 = 'n';
     char convg2 = 'n';
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for(i = 0; i < NCOV; i++){
-        new_beta0[i][k1] = beta0hat[i][k1] = beta0[i][k1] = initbeta[i][k1] = myinitial_beta[NCOV * k1 + i] * acs[i+1][k1];
-      }
-      new_alpha0[k1] = alpha0hat[k1] = alpha0[k1] = initalpha[k1] = myinitial_alpha[k1] * acs[0][k1];
-      new_sigma0[k1] = sigma0hat[k1] = sigma0[k1] = initsigma[k1] = myinitial_sigma[k1];
-      new_pi0[k1] = pi0hat[k1] = pi0[k1] = initpi[k1] = myinitial_pi[k1];
+    for(k1=0; k1 < K; k1++){
+    for(j=0; j < D; j++){
+    beta_new[j][k1] = beta_old[j][k1] = beta_ini[j][k1] =
+    REAL(myBeta)[D*k1+j] * accessAcsArr(myacs, j+1, k1, D);
+    }
+    alpha_new[k1] = alpha_old[k1] = alpha_ini[k1] =
+    REAL(myAlpha)[k1] * accessAcsArr(myacs, 0, k1, D);
+    sigma_new[k1] = sigma_old[k1] = sigma_ini[k1] =
+    REAL(mySigma)[k1];
+    pi_new[k1] = pi_old[k1] = pi_ini[k1] = REAL(myPi)[k1];
     }
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      l=0;
-      for (j = 0; j < NCOV; j++){
-        if(acs[j+1][k1] == 1){
-          for (i = 0; i < nsize; i++){
-            multX[i][l][k1] = myX[nsize * j + i];
-          }
-          l++;
-        }
-      }
+    for(k1=0; k1 < K; k1++){
+    l=0;
+    for (j=0; j < D; j++){
+    if(accessAcsArr(myacs, j+1, k1, D) == 1){
+    for (i=0; i < N; i++){
+    multX[i][l][k1] = REAL(myX)[N*j+i];
+    }
+    l++;
+    }
+    }
     }
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      l=0;
-      if(acs[0][k1] == 1){
-        for (i = 0; i < nsize; i++){
-          one_X[i][l][k1] = 1.0;
-        }
-        l++;
-      }
-
-      for (j = 0; j < NCOV; j++){
-        if(acs[j+1][k1] == 1){
-          for (i = 0; i < nsize; i++){
-            one_X[i][l][k1] = myX[nsize * j + i];
-          }
-          l++;
-        }
-      }
+    for(k1=0; k1 < K; k1++){
+    l=0;
+    if(accessAcsArr(myacs, 0, k1, D) == 1){
+    for (i=0; i < N; i++){
+    OneX[i][l][k1] = 1.0;
+    }
+    l++;
     }
 
-    niter1 = 0;
+    for (j=0; j < D; j++){
+    if(accessAcsArr(myacs, j+1, k1, D) == 1){
+    for (i=0; i < N; i++){
+    OneX[i][l][k1] = REAL(myX)[N*j+i];
+    }
+    l++;
+    }
+    }
+    }
+
+    niter1=0;
     convg1 = 'n';
-    while((convg1 != 'y') && (niter1 < EM_maxiter)){
-
-      /****Beginning of each iteration****/
-
-      /*******The E-step of the EM********/
-      for (k1 = 0; k1 < NCOMP; k1++) {
-        sumwi[k1] = 0.0;
-      }
-
-      for(i = 0; i < nsize; i++){
-        sumi = 0.0;
-        for(k1 = 0; k1 < NCOMP; k1++){
-          mui = 0.0;
-          for(j = 0; j < NCOV; j++)
-            mui += myX[nsize * j + i] * beta0[j][k1] * acs[j+1][k1];
-          mui += alpha0[k1] * acs[0][k1];
-          deni = pow((1 / sigma0[k1])* exp((resp[i] - mui) / sigma0[k1]), delta[i]) * exp(-exp((resp[i] - mui) / sigma0[k1])) ;
-          //if (isnan(deni))
-          //  cout << "NAN" << "\t";
-          //                    if (deni < eps2)
-          //                        deni = eps2;
-          //cout << deni << endl;
-          phi[i][k1] = pi0[k1] * deni;
-          sumi += phi[i][k1];
-        }
-        for(k1 = 0; k1 < NCOMP; k1++){
-          W[i][k1] = phi[i][k1] / sumi;
-          sumwi[k1] += W[i][k1];
-        }
-      }
-
-      for(k1 = 0; k1 < NCOMP; k1++){
-        new_pi0[k1] = sumwi[k1] / nsize;
-      }
-
-      /**********End of the E-step*******/
-
-      for (k1 = 0; k1 < NCOMP; k1++) {
-        for (j1 = 0; j1 < NCOV; j1++) {
-          initbeta[j1][k1] = beta0[j1][k1];
-        }
-        initalpha[k1] = alpha0[k1];
-        initsigma[k1] = sigma0[k1];
-        initpi[k1] = pi0[k1];
-      }
-
-      /*********M-step of the EM*********/
-
-      for(k1 = 0; k1 < NCOMP; k1++){
-        niter2 = 0;
-        convg2 = 'n';
-        while((convg2 != 'y') && (niter2 < NR_maxiter)){
-
-          /******Constructing the weigthed score function***/
-          oldloglike1 = 0.0;
-          for(i = 0; i < nsize; i++){
-            mui = 0.0;
-            for(j = 0; j < NCOV; j++)
-              mui += myX[nsize * j + i] * beta0[j][k1] * acs[j+1][k1];
-            mui += alpha0[k1] * acs[0][k1];
-            deni = pow((1 / sigma0[k1]) * exp((resp[i] - mui) / sigma0[k1]), delta[i]) * exp(- exp((resp[i] - mui) / sigma0[k1])) ;
-            //                        if (deni < eps2)
-            //                            deni = eps2;
-            oldloglike1 += W[i][k1] * log(deni);
-          }
-
-          /*****Constructing the weighted oneXTWY matrix***/
-          j1 = 0;
-          for(j = 0; j < (NCOV + 1); j++){
-            if(acs[j][k1] == 1){
-              sumi = 0.0;
-              for(i = 0; i < nsize; i++){
-                mui = 0.0;
-                for(l = 0; l < NCOV; l++)
-                  mui += myX[nsize * l + i] * beta0[l][k1] * acs[l+1][k1];
-                mui += alpha0[k1] * acs[0][k1];
-                if(j==0){
-                  sumi += W[i][k1] * (acs[j][k1]  / sigma0[k1]) * (exp((resp[i] - mui) / sigma0[k1]) - delta[i]);
-                }
-                else{
-                  sumi += W[i][k1] * (myX[nsize * (j-1) + i] * acs[j][k1]  / sigma0[k1]) * (exp((resp[i] - mui) / sigma0[k1]) - delta[i]);
-                }
-              }
-              oneXTWY[j1++] =  sumi;
-            }
-          }
-
-          /*****Constructing the weighted Hessian matrix***/
-
-          for(i = 0; i < ONCOV[k1]; i++){
-            for(j = i; j < ONCOV[k1]; j++){
-              sumi = 0.0;
-              for(l = 0; l < nsize; l++){
-                mui = 0.0;
-                for(j1 = 0; j1 < NCOV; j1++)
-                  mui += myX[nsize * j1 + l] * beta0[j1][k1] * acs[j1+1][k1] ;
-                mui += alpha0[k1]  * acs[0][k1] ;
-                sumi += - W[l][k1] * one_X[l][i][k1] * one_X[l][j][k1] / (sigma0[k1] * sigma0[k1]) * exp((resp[l] - mui) / sigma0[k1]);
-              }
-              if(i == j)
-                oneXTWX[i][j] = sumi + ridge1 * log(nsize);
-              else
-                oneXTWX[j][i] = oneXTWX[i][j] = sumi;
-            }
-          }
-
-          if(acs[0][k1] == 1)
-            oneXTWX[0][0] = oneXTWX[0][0] - ridge1 * log(nsize);
-
-          /***In a system Ax=b, adding b to A as its last column**/
-
-          for(i = 0; i < ONCOV[k1]; i++)
-            for(j = 0; j < (ONCOV[k1] + 1); j++)
-              if(j != ONCOV[k1])
-                oneComMat[i][j] = - oneXTWX[i][j];
-              else
-                oneComMat[i][j] = oneXTWY[i];
-
-              for (i = 0; i < (ONCOV[k1] + 1); i++) {
-                for (j = 0; j < (ONCOV[k1] + 1); j++) {
-                  oneComMatVec[j + i * (ONCOV[k1] + 1)] = oneComMat[i][j];
-                }
-              }
-
-              /**************************************************************/
-              /*Solving the system Ax=y to get betahat in the k-th component*/
-              /**************************************************************/
-
-              sol((ONCOV[k1]), oneComMatVec, onesolution1, check1);
-
-              alp = 0;
-              do {
-                l = 0;
-                if(acs[0][k1] == 1)
-                  new_alpha0[k1] = pow(0.5, alp) * onesolution1[l++] + alpha0[k1];
-                for(j = 0; j < NCOV; j++){
-                  if(acs[j+1][k1] == 1){
-                    new_beta0[j][k1] = pow(0.5, alp) * onesolution1[l++] + beta0[j][k1];
-                  }
-                }
-
-                sumi3[k1] = 0.0;
-                sumi5[k1] = 0.0;
-
-                for(i = 0; i < nsize; i++){
-                  mui = 0.0;
-                  for(l = 0; l < NCOV; l++)
-                    mui += myX[nsize * l + i] * new_beta0[l][k1] * acs[l+1][k1];
-                  mui += new_alpha0[k1] * acs[0][k1];
-                  sumi3[k1] += W[i][k1] * (- delta[i] / sigma0[k1] + ((resp[i] - mui) / (sigma0[k1] * sigma0[k1])) * ( exp( (resp[i] - mui) / sigma0[k1]) - delta[i])   );
-                  sumi5[k1] += W[i][k1] * ( delta[i] / (sigma0[k1] * sigma0[k1]) +  ((resp[i] - mui) / (sigma0[k1] * sigma0[k1] * sigma0[k1])) * (2 * delta[i] - (2 + (resp[i] - mui) / sigma0[k1]) * exp( (resp[i] - mui) / sigma0[k1])  )) ;
-                }
-                //sumi5[k1] += sigpennom;
-                //sumi3[k1] += sigpendenom;
-                new_sigma0[k1] = sigma0[k1] - pow(0.5, alp) * (1 / sumi5[k1]) * sumi3[k1];
-                //                        new_sigma0[k1] = (new_sigma0[k1] < 0.1)?0.5:new_sigma0[k1];
-                //                        if (k1 == 0)
-                //                            new_sigma0[k1] = (new_sigma0[k1] > 10)?2:(new_sigma0[k1]); // + 0.01
-                //                        else
-                //                            newsigma[k1] = (new_sigma0[k1] > 10)?2:(new_sigma0[k1]); // + 0.005
-
-                newloglike1 = 0.0;
-                for(i = 0; i < nsize; i++){
-                  mui = 0.0;
-                  for(j = 0; j < NCOV; j++)
-                    mui += myX[nsize * j + i] * new_beta0[j][k1] * acs[j+1][k1];
-                  mui += new_alpha0[k1] * acs[0][k1];
-                  deni = pow((1 / new_sigma0[k1]) * exp((resp[i] - mui) / new_sigma0[k1]), delta[i]) * exp(- exp((resp[i] - mui) / new_sigma0[k1])) ;
-                  //                            if (deni < eps2)
-                  //                                deni = eps2;
-                  newloglike1 += W[i][k1] * log(deni);
-                }
-                alp++;
-
-              } while ((oldloglike1 > newloglike1) & (alp < NRportion));
-
-              jamconvg1 = 0.0;
-              niter2++;
-              for(j = 0; j < NCOV; j++)
-                jamconvg1 += pow(new_beta0[j][k1] - beta0[j][k1], 2) * acs[i+1][k1];
-              jamconvg1 += pow(new_alpha0[k1] - alpha0[k1], 2) * acs[0][k1];
-              jamconvg1 += pow(new_sigma0[k1] - sigma0[k1], 2);
-              jamconvg1 += pow(new_pi0[k1] - pi0[k1], 2);
-
-              convg2 = 'n';
-              if(jamconvg1 < eps_conv)
-                convg2 = 'y';
-
-              for(j = 0; j < NCOV; j++)
-                beta0[j][k1] = new_beta0[j][k1];
-              alpha0[k1] = new_alpha0[k1];
-              sigma0[k1] = new_sigma0[k1];
-        }
-      }
-
-      /*****End of the M-step of the EM*****/
-
-      jamconvg1 = 0.0;
-      niter1++;
-      for(k1 = 0; k1 < NCOMP; k1++){
-        for(j = 0; j < NCOV; j++)
-          jamconvg1 += pow(new_beta0[j][k1] - initbeta[j][k1], 2) * acs[i+1][k1];
-        jamconvg1 += pow(new_alpha0[k1] - initalpha[k1], 2) * acs[0][k1];
-        jamconvg1 += pow(new_sigma0[k1] - initsigma[k1], 2);
-        jamconvg1 += pow(new_pi0[k1] - initpi[k1], 2);
-      }
-
-      convg1 = 'n';
-      if(jamconvg1 < eps_conv)
-        convg1 = 'y';
-      for(k1 = 0; k1 < NCOMP; k1++){
-        alpha0[k1] = new_alpha0[k1];
-        for(j = 0; j < NCOV; j++){
-          beta0[j][k1] = new_beta0[j][k1];
-        }
-        sigma0[k1] = new_sigma0[k1];
-        pi0[k1] = new_pi0[k1];
-      }
-    }
-
-    /*******End of each iteration *******/
-
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for(j = 0; j < NCOV; j++){
-        beta0hat[j][k1] = new_beta0[j][k1];
-      }
-      alpha0hat[k1] = new_alpha0[k1];
-      pi0hat[k1] = new_pi0[k1];
-      sigma0hat[k1] = new_sigma0[k1];
-    }
-
-    loglike1 = 0.0;
-
-    for(i = 0; i < nsize; i++){
-      sumi = 0.0;
-      for(k1 = 0; k1 < NCOMP; k1++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += myX[nsize * j + i] * beta0hat[j][k1] * acs[j+1][k1];
-        mui += alpha0hat[k1] * acs[0][k1];
-        deni = pow((1 / sigma0hat[k1]) * exp((resp[i] - mui) / sigma0hat[k1]), delta[i]) * exp(- exp((resp[i] - mui) / sigma0hat[k1]));
-        phi[i][k1] = pi0hat[k1] * deni;
-        sumi += phi[i][k1];
-      }
-      loglike1 += log(sumi);
-    }
-
-    *loglike = loglike1;
-
-    for (k1 = 0; k1 < NCOMP; k1++)
-    {
-      for (j = 0;  j < NCOV;  j++)
-      {
-        mybeta[k1 * NCOV + j] = beta0hat[j][k1];
-      }
-      myalpha[k1] = alpha0hat[k1];
-      mysigma[k1] = sigma0hat[k1];
-      mypi[k1] = pi0hat[k1];
-    }
-
-    *BIC = loglike1 - 0.5 * NCOMP * NCOV * log(nsize);
-    *EBIC5 = loglike1 - 0.5 * NCOMP * NCOV * log(nsize) - 0.5 * (NCOMP * NCOV) * log(NCOV);
-    *EBIC1 = loglike1 - 0.5 * (NCOMP * NCOV) * log(nsize) - (NCOMP * NCOV) * log(NCOV);
-    *AIC = loglike1 - (NCOMP * NCOV);
-    *GCV = (loglike1) / (nsize * pow(1 - NCOMP * NCOV / nsize, 2));
-    *GIC = loglike1 - 0.5 * (NCOMP * NCOV) * log(nsize);
-    *MaxEMiter = niter1;
-
+    while((convg1 != 'y') && (niter1 < EM_Miter)){
+    /****Beginning of each iteration****/
     /*******The E-step of the EM********/
+    for (k1=0; k1 < K; k1++) {
+    sumwi[k1] = 0.0;
+    }
 
-    for(i = 0; i < nsize; i++){
-      sumi = 0.0;
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += myX[nsize * j + i] * beta0hat[j][k1] * acs[j+1][k1];
-        mui += alpha0hat[k1] * acs[0][k1];
-        deni = pow((1 / sigma0hat[k1])* exp((resp[i] - mui) / sigma0hat[k1]), delta[i]) * exp(-exp((resp[i] - mui) / sigma0hat[k1])) ;
-        phi[i][k1] = pi0hat[k1] * deni;
-        sumi += phi[i][k1];
-      }
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        W[i][k1] = phi[i][k1] / sumi;
-      }
+    for(i=0; i < N; i++){
+    sumi = 0.0;
+    for(k1=0; k1 < K; k1++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_old[j][k1] *
+    accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_old[k1]);
+    deni = eps + pow((eZ / sigma_old[k1]), INTEGER(mydelta)[i]) * exp(-eZ);
+    phi[i][k1] = pi_old[k1] * deni;
+    sumi += phi[i][k1];
+    }
+    for(k1=0; k1 < K; k1++){
+    W[i][k1] = phi[i][k1] / sumi;
+    sumwi[k1] += W[i][k1];
+    }
+    }
+
+    for(k1=0; k1 < K; k1++){
+    pi_new[k1] = sumwi[k1] / N;
     }
 
     /**********End of the E-step*******/
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for(i = 0; i < nsize; i++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += myX[nsize * j + i] * beta0hat[j][k1] * acs[j+1][k1];
-        mui += alpha0hat[k1] * acs[0][k1];
-        predict[k1 * nsize + i] = exp(mui);
-        residual[k1 * nsize + i] = exp(resp[i]) - exp(mui);
-        tau[k1 * nsize + i] = W[i][k1];
-      }
+
+    for (k1=0; k1 < K; k1++) {
+    for (j1=0; j1 < D; j1++) {
+    beta_ini[j1][k1] = beta_old[j1][k1];
+    }
+    alpha_ini[k1] = alpha_old[k1];
+    sigma_ini[k1] = sigma_old[k1];
+    pi_ini[k1] = pi_old[k1];
     }
 
-  }
-#ifdef __cplusplus
+    /*********M-step of the EM*********/
+
+    for(k1=0; k1 < K; k1++){
+    niter2=0;
+    convg2 = 'n';
+    while((convg2 != 'y') && (niter2 < NR_maxiter)){
+    /******Compute Likelihood***/
+    oldloglike1 = 0.0;
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_old[j][k1] *
+    accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_old[k1]);
+    deni = eps + pow((eZ / sigma_old[k1]), INTEGER(mydelta)[i]) *
+    exp(-eZ);
+    oldloglike1 += W[i][k1] * log(deni);
+    }
+
+    /*****Constructing the weighted oneXTWY matrix***/
+    j1=0;
+    for(j=0; j < (D+1); j++){
+    if(accessAcsArr(myacs, j, k1, D) == 1){
+    sumi = 0.0;
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(l=0; l < D; l++)
+    mui += REAL(myX)[N*l+i] * beta_old[l][k1] *
+    accessAcsArr(myacs, l+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_old[k1]);
+    if(j==0){
+    sumi += W[i][k1] * (accessAcsArr(myacs, 0, k1, D) /
+    sigma_old[k1]) * (eZ - INTEGER(mydelta)[i]);
+    }
+    else{
+    sumi += W[i][k1] * (REAL(myX)[N*(j-1)+i] *
+    accessAcsArr(myacs, j, k1, D) / sigma_old[k1]) *
+    (eZ - INTEGER(mydelta)[i]);
+    }
+    }
+    oneXTWY[j1++] =  sumi;
+    }
+    }
+
+    /*****Constructing the weighted Hessian matrix***/
+
+    for(i=0; i < OD[k1]; i++){
+    for(j = i; j < OD[k1]; j++){
+    sumi = 0.0;
+    for(l=0; l < N; l++){
+    mui = 0.0;
+    for(j1=0; j1 < D; j1++)
+    mui += REAL(myX)[N*j1+l] * beta_old[j1][k1] *
+    accessAcsArr(myacs, j1+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[l] - mui) / sigma_old[k1]);
+    sumi += - W[l][k1] * OneX[l][i][k1] * OneX[l][j][k1] /
+    (sigma_old[k1] * sigma_old[k1]) * eZ;
+    }
+    if(i == j)
+    oneXTWX[i][j] = sumi + ridge * log(N);
+    else
+    oneXTWX[j][i] = oneXTWX[i][j] = sumi;
+    }
+    }
+
+    if(accessAcsArr(myacs, 0, k1, D) == 1)
+    oneXTWX[0][0] = oneXTWX[0][0] - ridge * log(N);
+
+    /***In a system Ax=b, adding b to A as its last column**/
+
+    for(i=0; i < OD[k1]; i++){
+    for(j=0; j < (OD[k1] + 1); j++){
+    if(j != OD[k1])
+    OneMat[i][j] = - oneXTWX[i][j];
+    else
+    OneMat[i][j] = oneXTWY[i];
+    }
+    }
+
+    for (i=0; i < (OD[k1] + 1); i++) {
+    for (j=0; j < (OD[k1] + 1); j++) {
+    OneMatVec[j+i*(OD[k1]+1)] = OneMat[i][j];
+    }
+    }
+
+    /**************************************************************/
+    /*Solving the system Ax=y to get betahat in the k-th component*/
+    /**************************************************************/
+    sol((OD[k1]), OneMatVec, OneSolv, check1);
+    alp=0;
+    do {
+    l=0;
+    if(accessAcsArr(myacs, 0, k1, D) == 1)
+    alpha_new[k1] = pow(0.5, alp) * OneSolv[l++] +
+    alpha_old[k1];
+    for(j=0; j < D; j++){
+    if(accessAcsArr(myacs, j+1, k1, D) == 1){
+    beta_new[j][k1] = pow(0.5, alp) *
+    OneSolv[l++] + beta_old[j][k1];
+    }
+    }
+
+    sumi3[k1] = 0.0;
+    sumi5[k1] = 0.0;
+
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(l=0; l < D; l++)
+    mui += REAL(myX)[N*l+i] * beta_new[l][k1] *
+    accessAcsArr(myacs, l+1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    zZ = (REAL(myY)[i] - mui) / sigma_old[k1];
+    eZ = exp(zZ);
+    sumi3[k1] += W[i][k1] * (- INTEGER(mydelta)[i] / sigma_old[k1] +
+    (zZ / (sigma_old[k1])) * (eZ - INTEGER(mydelta)[i]));
+    sumi5[k1] += W[i][k1] * (INTEGER(mydelta)[i] / (sigma_old[k1] *
+    sigma_old[k1]) + (zZ / (sigma_old[k1] * sigma_old[k1])) *
+    (2 * INTEGER(mydelta)[i] - (2 + zZ) * eZ));
+    }
+    sigma_new[k1] = sigma_old[k1] - pow(0.5, alp) * (sumi3[k1] /
+    sumi5[k1]);
+
+    newloglike1 = 0.0;
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] *
+    accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_old[k1]);
+    deni = eps + pow((eZ / sigma_new[k1]), INTEGER(mydelta)[i]) *
+    exp(-eZ);
+    newloglike1 += W[i][k1] * log(deni);
+    }
+    alp++;
+
+    } while ((oldloglike1 > newloglike1) & (alp < NRportion));
+
+    SumDif = 0.0;
+    niter2++;
+    for(j=0; j < D; j++)
+    SumDif += pow(beta_new[j][k1] - beta_old[j][k1], 2) *
+    accessAcsArr(myacs, j+1, k1, D);
+    SumDif += pow(alpha_new[k1] - alpha_old[k1], 2) *
+    accessAcsArr(myacs, 0, k1, D);
+    SumDif += pow(sigma_new[k1] - sigma_old[k1], 2);
+    SumDif += pow(pi_new[k1] - pi_old[k1], 2);
+
+    convg2 = 'n';
+    if(SumDif < eps_conv)
+    convg2 = 'y';
+
+    for(j=0; j < D; j++)
+    beta_old[j][k1] = beta_new[j][k1];
+    alpha_old[k1] = alpha_new[k1];
+    sigma_old[k1] = sigma_new[k1];
+    pi_old[k1] = pi_new[k1];
+    }
+    }
+
+    /*****End of the M-step of the EM*****/
+
+    SumDif = 0.0;
+    niter1++;
+    for(k1=0; k1 < K; k1++){
+    for(j=0; j < D; j++)
+    SumDif += pow(beta_new[j][k1] - beta_ini[j][k1], 2) *
+    accessAcsArr(myacs, j+1, k1, D);
+    SumDif += pow(alpha_new[k1] - alpha_ini[k1], 2) *
+    accessAcsArr(myacs, 0, k1, D);
+    SumDif += pow(sigma_new[k1] - sigma_ini[k1], 2);
+    SumDif += pow(pi_new[k1] - pi_ini[k1], 2);
+    }
+
+    convg1 = 'n';
+    if(SumDif < eps_conv)
+    convg1 = 'y';
+    for(k1=0; k1 < K; k1++){
+    alpha_old[k1] = alpha_new[k1];
+    for(j=0; j < D; j++){
+    beta_old[j][k1] = beta_new[j][k1];
+    }
+    sigma_old[k1] = sigma_new[k1];
+    pi_old[k1] = pi_new[k1];
+    }
+    }
+
+    /*******End of each iteration *******/
+
+    loglike1 = 0.0;
+    for(i=0; i < N; i++){
+    sumi = 0.0;
+    for(k1=0; k1 < K; k1++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] *
+    accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_new[k1]);
+    deni = eps + pow((eZ / sigma_new[k1]), INTEGER(mydelta)[i]) * exp(-eZ);
+    phi[i][k1] = pi_new[k1] * deni;
+    sumi += phi[i][k1];
+    }
+    loglike1 += log(sumi);
+    for(k1=0; k1 < K;  k1++){
+    W[i][k1] = phi[i][k1] / sumi;
+    }
+    }
+
+    int SumPar = 0;
+    for(k1=0; k1<K; k1++){
+    SumPar += OD[k1];
+    }
+    SumPar += 2*K-1;
+
+    double BIC = 0.0;
+    double AIC = 0.0;
+    BIC = - (2 * loglike1) + SumPar * log(N);
+    AIC = - (2 * loglike1) + 2 * SumPar;
+
+    SEXP alpha = PROTECT(allocVector(REALSXP, K));
+    SEXP beta = PROTECT(allocVector(REALSXP, K*D));
+    SEXP sigma = PROTECT(allocVector(REALSXP, K));
+    SEXP pi = PROTECT(allocVector(REALSXP, K));
+    SEXP predict = PROTECT(allocVector(REALSXP, K*N));
+    SEXP residual = PROTECT(allocVector(REALSXP, K*N));
+    SEXP tau = PROTECT(allocVector(REALSXP, K*N));
+
+    for (k1=0; k1 < K; k1++){
+    for (j=0;  j < D;  j++)
+    REAL(beta)[k1 * D + j] = beta_new[j][k1];
+    REAL(alpha)[k1] = alpha_new[k1];
+    REAL(sigma)[k1] = sigma_new[k1];
+    REAL(pi)[k1] = pi_new[k1];
+    }
+
+    /**********End of the E-step*******/
+    for(k1=0; k1 < K; k1++){
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] *
+    accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    REAL(predict)[k1*N+i] = exp(mui);
+    REAL(residual)[k1*N+i] = exp(REAL(myY)[i]) - exp(mui);
+    REAL(tau)[k1*N+i] = W[i][k1];
+    }
+    }
+    const char *names[] = {"alpha", "beta", "sigma", "pi", "LogLik", "BIC",
+       "AIC", "MaxIter", "tau", "predict", "residual", ""};
+    SEXP res = PROTECT(mkNamed(VECSXP, names));
+    SET_VECTOR_ELT(res, 0, alpha);
+    SET_VECTOR_ELT(res, 1, beta);
+    SET_VECTOR_ELT(res, 2, sigma);
+    SET_VECTOR_ELT(res, 3, pi);
+    SET_VECTOR_ELT(res, 4, ScalarReal(loglike1));
+    SET_VECTOR_ELT(res, 5, ScalarReal(BIC));
+    SET_VECTOR_ELT(res, 6, ScalarReal(AIC));
+    SET_VECTOR_ELT(res, 7, ScalarInteger(niter1));
+    SET_VECTOR_ELT(res, 8, tau);
+    SET_VECTOR_ELT(res, 9, predict);
+    SET_VECTOR_ELT(res, 10, residual);
+    UNPROTECT(8);
+    return res;
 }
-#endif
 
 /* ************************* Variable Selection Weibull***************** */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-  void FMR_Weibl_Surv_EM_VarSel(double *resp,
-                                double *myX,
-                                double *delta,
-                                int *myPenaltyFamily,
-                                double *mylambda,
-                                double *myridgepen_prop,
-                                int *myNCOMP,
-                                int *myNCOV,
-                                int *mynsize,
-                                int *myEMmaxiter,
-                                int *myNRmaxiter,
-                                int *myNRportion,
-                                int *MaxEMiter,
-                                double *myinitial_alpha,
-                                double *myinitial_beta,
-                                double *myinitial_sigma,
-                                double *myinitial_pi,
-                                double *myeps,
-                                double *myepsconv,
-                                double *gammixportion,
-                                double *myalpha,
-                                double *mybeta,
-                                double *mysigma,
-                                double *mypi,
-                                double *loglike,
-                                double *BIC,
-                                double *AIC,
-                                double *GCV,
-                                double *EBIC1,
-                                double *EBIC5,
-                                double *GIC,
-                                double *predict,
-                                double *residual,
-                                double *tau,
-                                double *tuneGam1,
-                                double *tuneGam2
-  )
-  {
-    int nsize = *mynsize;
-    int NCOV = *myNCOV;
-    int NCOMP = *myNCOMP;
-    int EM_maxiter = *myEMmaxiter;
-    int NR_maxiter = *myNRmaxiter;
-    int NRportion = *myNRportion;
-    int jar = *myPenaltyFamily;
-
-    double gamma1 = *tuneGam1;
-    double gamma2 = *tuneGam2;
-
-    double ridge1 = *myridgepen_prop;
-    double eps = *myeps;
-    double eps_conv = *myepsconv;
-    double GamMP = *gammixportion;
-
+SEXP FMR_Weibl_MPLE(SEXP myY,
+    SEXP myX,
+    SEXP myK,
+    SEXP myD,
+    SEXP myN,
+    SEXP mydelta,
+    SEXP myAlpha,
+    SEXP myBeta,
+    SEXP mySigma,
+    SEXP myPi,
+    SEXP myacs,
+    SEXP myridge,
+    SEXP myEMiter,
+    SEXP myeps,
+    SEXP myepsC,
+    SEXP myNRiter,
+    SEXP myPenalty,
+    SEXP mylambda,
+    SEXP myPiPor,
+    SEXP myMcpTun,
+    SEXP mySicaTun,
+    SEXP myTol,
+    SEXP myNRPor
+)
+{
     int i;
     int j;
     int j1;
@@ -2008,930 +1919,980 @@ extern "C" {
     int niter1;
     int niter2;
     int check1[1];
-    int SUM1;
 
-    int alp = 0;
+    int N = asInteger(myN);
+    int D = asInteger(myD);
+    int K = asInteger(myK);
+    int jar = asInteger(myPenalty);
+    double McpTun = asReal(myMcpTun);
+    double SicaTun = asReal(mySicaTun);
 
-    double multX[nsize][NCOV];
-    double one_X[nsize][NCOV + 1];
+    double Tol = asReal(myTol);
 
-    double optlam[NCOMP];
+    int EM_Miter = asInteger(myEMiter);
+    int NR_maxiter = asInteger(myNRiter);
 
-    double initbeta[NCOV][NCOMP];
-    double beta0[NCOV][NCOMP];
-    double new_beta0[NCOV][NCOMP];
-    double beta0hat[NCOV][NCOMP];
+    int OD[K];
+    for(k1=0; k1<K; k1++){
+    OD[k1]=0;
+    for(i=0; i<D+1; i++){
+    OD[k1] += accessAcsArr(myacs, i, k1, D);
+    }
+    }
 
-    double initalpha[NCOMP];
-    double alpha0[NCOMP];
-    double new_alpha0[NCOMP];
-    double alpha0hat[NCOMP];
+    double eps_conv = asReal(myepsC);
+    double eps = asReal(myeps);
+    double GamMP = asReal(myPiPor);
 
-    double initsigma[NCOMP];
-    double sigma0[NCOMP];
-    double new_sigma0[NCOMP];
-    double sigma0hat[NCOMP];
+    double ridge = asReal(myridge);
+    int NRportion = asReal(myNRPor);
+    int alp=0;
 
-    double initpi[NCOMP];
-    double pi0[NCOMP];
-    double new_pi0[NCOMP];
-    double pi0hat[NCOMP];
-
-    double W[nsize][NCOMP];
-    double phi[nsize][NCOMP];
-
-    double eps1[NCOMP];
-
-    double vecder[NCOV];
-    double vecsigma[NCOV + 1];
-    double En[NCOMP];
-
-    double oneXTWY[NCOV + 1];
-    double oneXTWX[NCOV + 1][NCOV + 1];
-    double selection[NCOV][NCOMP];
-
-    double oneComMat[NCOV + 2][NCOV + 2];
-    double onesolution1[NCOV + 2];
-    double oneComMatVec[(NCOV + 2) * (NCOV + 2)];
-
-    double sumwi[NCOMP];
-    double sumi3[NCOMP];
-    double sumi5[NCOMP];
+    double multX[N][D][K];
+    double OneX[N][D+1][K];
     double sumi;
     double mui;
     double deni;
 
-    char convg1 = 'n';
-    char convg2 = 'n';
+    double W[N][K];
+    double phi[N][K];
 
-    double jamconvg1;
+    double optlam[K];
+
+    double beta_ini[D][K];
+    double beta_old[D][K];
+    double beta_new[D][K];
+
+    double alpha_ini[K];
+    double alpha_old[K];
+    double alpha_new[K];
+
+    double sigma_ini[K];
+    double sigma_old[K];
+    double sigma_new[K];
+
+    double pi_ini[K];
+    double pi_old[K];
+    double pi_new[K];
+
+    double oneXTWY[D+1];
+    double oneXTWX[D+1][D+1];
+    double select[D][K];
+
+    double eps1[K];
+    double vecder[D];
+    double vecF[D+1];
+    double En[K];
+
+    double sumwi[K];
+    double sumi3[K];
+    double sumi5[K];
+
+    double SumDif;
+
+    double OneMat[D+2][D+2];
+    double OneSolv[D+2];
+    double OneMatVec[(D+2) * (D+2)];
     double loglike1;
     double oldloglike1;
     double newloglike1;
-    double sat_loglike1;
-    double sat_den;
 
-    double holdveccov[NCOV];
-    //    double holdveccom[NCOMP];
+    double Hcov[D];
 
-    for (k1 = 0; k1 < NCOMP; k1++) {
-      optlam[k1]= mylambda[k1];
+    for (k1=0; k1 < K; k1++) {
+    optlam[k1]= REAL(mylambda)[k1];
     }
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for(i = 0; i < NCOV; i++){
-        new_beta0[i][k1] = beta0hat[i][k1] = beta0[i][k1] = initbeta[i][k1] = myinitial_beta[NCOV * k1 + i];
-      }
-      new_alpha0[k1] = alpha0hat[k1] = alpha0[k1] = initalpha[k1] = myinitial_alpha[k1];
-      new_sigma0[k1] = sigma0hat[k1] = sigma0[k1] = initsigma[k1] = myinitial_sigma[k1];
-      new_pi0[k1] = pi0hat[k1] = pi0[k1] = initpi[k1] = myinitial_pi[k1];
+    double zZ = 0.0;
+    double eZ = 0.0;
+
+    char convg1 = 'n';
+    char convg2 = 'n';
+
+    for(k1=0; k1 < K; k1++){
+    for(i=0; i < D; i++){
+    beta_new[i][k1] = beta_old[i][k1] =
+    beta_ini[i][k1] = REAL(myBeta)[D*k1+i] * accessAcsArr(myacs, i+1, k1, D);
+    }
+    alpha_new[k1] = alpha_old[k1] = alpha_ini[k1] =
+    REAL(myAlpha)[k1] * accessAcsArr(myacs, 0, k1, D);
+    sigma_new[k1] = sigma_old[k1] = sigma_ini[k1] =
+    REAL(mySigma)[k1];
+    pi_new[k1] = pi_old[k1] = pi_ini[k1] = REAL(myPi)[k1];
     }
 
-    for (j = 0; j < NCOV; j++){
-      for (i = 0; i < nsize; i++){
-        multX[i][j] = myX[nsize * j + i];
-      }
+    for(k1=0; k1 < K; k1++){
+    l=0;
+    for (j=0; j < D; j++){
+    if(accessAcsArr(myacs, j+1, k1, D) == 1){
+    for (i=0; i < N; i++){
+    multX[i][l][k1] = REAL(myX)[N*j+i];
+    }
+    l++;
+    }
+    }
     }
 
-    for(i = 0; i < nsize; i++){
-      one_X[i][0] = 1.0;
-      for(j = 1; j < (NCOV + 1); j++){
-        one_X[i][j] = multX[i][j - 1];
-      }
+    for(k1=0; k1 < K; k1++){
+    l=0;
+    if(accessAcsArr(myacs, 0, k1, D) == 1){
+    for (i=0; i < N; i++){
+    OneX[i][l][k1] = 1.0;
+    }
+    l++;
     }
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for (i = 0; i < NCOV; i++) {
-        holdveccov[i] = initbeta[i][k1];
-      }
-      if((jar == 1) || (jar == 2))
-        eps1[k1] = eps * minimum(holdveccov, NCOV) / (2 * nsize * optlam[k1]);
-      else
-        eps1[k1] = eps * minimum(holdveccov, NCOV) / (4 * nsize * optlam[k1]);
+    for (j=0; j < D; j++){
+    if(accessAcsArr(myacs, j+1, k1, D) == 1){
+    for (i=0; i < N; i++){
+    OneX[i][l][k1] = REAL(myX)[N*j+i];
+    }
+    l++;
+    }
+    }
     }
 
-    niter1 = 0;
+    for(k1=0; k1 < K; k1++){
+    for (i=0; i < D; i++) {
+    Hcov[i] = beta_ini[i][k1];
+    }
+    if((jar == 1) || (jar == 2))
+    eps1[k1] = eps * minimum(Hcov, D) / (2 * N * optlam[k1]);
+    else
+    eps1[k1] = eps * minimum(Hcov, D) / (4 * N * optlam[k1]);
+    }
+
+    niter1=0;
     convg1 = 'n';
-    while((convg1 != 'y') && (niter1 < EM_maxiter)){
-
-      /******Beginning of each iteration******/
-
-      /****E-step of the EM algorithm************/
-
-      for(k1 = 0; k1 < NCOMP; k1++){
-        sumwi[k1] = 0.0;
-      }
-
-      for(i = 0; i < nsize; i++){
-        sumi = 0.0;
-        for(k1 = 0; k1 < NCOMP; k1++){
-          mui = 0.0;
-          for(j = 0; j < NCOV; j++)
-            mui += multX[i][j] * beta0[j][k1];
-          mui += alpha0[k1];
-          deni = pow((1 / sigma0[k1]) * exp((resp[i] - mui) / sigma0[k1]), delta[i]) * exp(- exp((resp[i] - mui) / sigma0[k1])) ;
-          //                    if (isnan(deni))
-          //                        cout << "NAN" << "\t";
-          //                    if (deni < eps2)
-          //                        deni = eps2;
-          phi[i][k1] = pi0[k1] * deni;
-          sumi += phi[i][k1];
-
-        }
-        for(k1 = 0; k1 < NCOMP; k1++){
-          W[i][k1] = phi[i][k1] / sumi;
-          sumwi[k1] += W[i][k1];
-        }
-      }
-
-      for(k1 = 0; k1 < NCOMP; k1++){
-        new_pi0[k1] = sumwi[k1] / nsize;
-      }
-
-      /*****End of the E-step of the EM algorithm*****/
-
-      for (k1 = 0; k1 < NCOMP; k1++) {
-        for (j1 = 0; j1 < NCOV; j1++) {
-          initbeta[j1][k1] = beta0[j1][k1];
-        }
-        initalpha[k1] = alpha0[k1];
-        initsigma[k1] = sigma0[k1];
-        initpi[k1] = pi0[k1];
-      }
-
-      /****M-step of the EM algorithm*************/
-
-      for(k1 = 0; k1 < NCOMP; k1++){
-        niter2 = 0;
-        convg2 = 'n';
-        while((convg2 != 'y') && (niter2 < NR_maxiter)){
-
-          oldloglike1 = 0.0;
-          for(i = 0; i < nsize; i++){
-            mui = 0.0;
-            for(j = 0; j < NCOV; j++)
-              mui += multX[i][j] * beta0[j][k1];
-            mui += alpha0[k1];
-            deni = pow((1 / sigma0[k1]) * exp((resp[i] - mui) / sigma0[k1]), delta[i]) * exp(- exp((resp[i] - mui) / sigma0[k1])) ;
-            //                    if (deni<eps2)
-            //                        deni=eps2;
-            oldloglike1 += W[i][k1] * log(deni);
-          }
-
-          En[k1] = nsize * pow(pi0[k1], GamMP);
-
-
-          for (j = 0; j < NCOV; j++) {
-            holdveccov[j] = beta0[j][k1];
-          }
-
-          if(jar == 1)
-            for(j = 0; j < NCOV; j++)
-              vecder[j] = optlam[k1];
-          else if (jar == 2)
-            scadpen(optlam[k1], vecder, holdveccov, NCOV);
-          else if (jar == 3)
-            mcppen(optlam[k1], vecder, holdveccov, NCOV, gamma1);
-          else if (jar == 4)
-            sicapen(optlam[k1], vecder, holdveccov, NCOV, gamma2);
-          else if (jar == 5){
-            for(j = 0; j < NCOV; j++)
-              vecder[j] = optlam[k1] / (fabs(initbeta[j][k1]) + eps);
-          }
-          else
-            hardpen(optlam[k1], vecder, holdveccov, NCOV);
-
-
-          for(j = 0; j < (NCOV + 1); j++)
-            if(j == 0)
-              vecsigma[j] = 0.0;
-            else
-              vecsigma[j] = vecder[j-1] / (fabs(beta0[j - 1][k1]) + eps1[k1]);
-
-            /******Constructing the Hessian matrix H ***/
-            for(i = 0; i < (NCOV + 1); i++){
-              for(j = i; j < (NCOV + 1); j++){
-                sumi = 0.0;
-                for(l = 0; l < nsize; l++){
-                  mui = 0.0;
-                  for(j1 = 0; j1 < NCOV; j1++)
-                    mui += multX[l][j1] * beta0[j1][k1];
-                  mui += alpha0[k1];
-                  sumi += - W[l][k1] * one_X[l][i] * one_X[l][j] / (sigma0[k1] * sigma0[k1]) * exp((resp[l] - mui) / sigma0[k1]);
-                }
-                if(i == j)
-                  oneXTWX[i][j] = sumi - En[k1] * vecsigma[j] + ridge1 * log(nsize);
-                else
-                  oneXTWX[j][i] = oneXTWX[i][j] = sumi;
-              }
-            }
-
-            oneXTWX[0][0] = oneXTWX[0][0] + (En[k1] * vecsigma[0]) - ridge1 * log(nsize);
-
-            /******Constructing the weigthed vector XTWY***/
-
-            for(j = 0; j < (NCOV + 1); j++){
-              sumi = 0.0;
-              for(i = 0; i < nsize; i++){
-                mui = 0.0;
-                for(l = 0; l < NCOV; l++)
-                  mui += multX[i][l] * beta0[l][k1];
-                mui += alpha0[k1];
-                sumi += W[i][k1] * (one_X[i][j] / sigma0[k1]) * (exp((resp[i] - mui) / sigma0[k1]) - delta[i]);
-              }
-              if (j == 0)
-                oneXTWY[j] =  sumi - En[k1] * vecsigma[j];
-              else
-                oneXTWY[j] =  sumi - En[k1] * vecsigma[j] * beta0[j-1][k1];
-            }
-
-            /***In a system Ax=b, adding b to A as its last column**/
-
-            for(i = 0; i < (NCOV + 1); i++)
-              for(j = 0; j < (NCOV + 2); j++)
-                if(j != (NCOV + 1))
-                  oneComMat[i][j] = - oneXTWX[i][j];
-                else
-                  oneComMat[i][j] = oneXTWY[i];
-
-                for (i = 0; i < (NCOV + 2); i++) {
-                  for (j = 0; j < (NCOV + 2); j++) {
-                    oneComMatVec[j + i * (NCOV + 2)] = oneComMat[i][j];
-                  }
-                }
-
-                /**************************************************************/
-                /*Solving the system Ax=y to get betahat in the k-th component*/
-                /**************************************************************/
-
-                sol( (NCOV + 1) , oneComMatVec, onesolution1, check1);
-
-                alp = 0;
-                do {
-                  for(j = 0; j < (NCOV + 1); j++)
-                    if(j == 0)
-                      new_alpha0[k1] = pow(0.5, alp) * onesolution1[j] + alpha0[k1];
-                    else
-                      new_beta0[j-1][k1] = pow(0.5, alp) * onesolution1[j] + beta0[j-1][k1];
-
-                    sumi5[k1] = 0.0;
-                    sumi3[k1] = 0.0;
-
-                    for(i = 0; i < nsize; i++){
-                      mui = 0.0;
-                      for(l = 0; l < NCOV; l++)
-                        mui += multX[i][l] * new_beta0[l][k1];
-                      mui += new_alpha0[k1];
-                      sumi3[k1] += W[i][k1] * (- delta[i] / sigma0[k1] + ((resp[i] - mui) / (sigma0[k1] * sigma0[k1])) * ( exp( (resp[i] - mui) / sigma0[k1]) - delta[i])   );
-                      sumi5[k1] += W[i][k1] * ( delta[i] / (sigma0[k1] * sigma0[k1]) +  ((resp[i] - mui) / (sigma0[k1] * sigma0[k1] * sigma0[k1])) * (2 * delta[i] - (2 + (resp[i] - mui) / sigma0[k1]) * exp( (resp[i] - mui) / sigma0[k1])  )) ;
-                    }
-                    //sumi5[k1]+=sigpennom;
-                    //sumi3[k1]+=sigpendenom;
-                    new_sigma0[k1] = sigma0[k1] - pow(0.5, alp) * (1 / sumi5[k1]) * sumi3[k1];
-                    //                    new_sigma0[k1] = (new_sigma0[k1] < 0.6)?0.6:new_sigma0[k1];
-                    //                    new_sigma0[k1] = (new_sigma0[k1] > 4)?2:new_sigma0[k1];
-                    //                    if (k1==0)
-                    //                        new_sigma0[k1] =  (new_sigma0[k1]>4)?2:(new_sigma0[k1]);
-                    //                    else
-                    //                        new_sigma0[k1] =  (new_sigma0[k1]>4)?2:(new_sigma0[k1]);
-
-                    newloglike1 = 0.0;
-                    for(i = 0; i < nsize; i++){
-                      mui = 0.0;
-                      for(j = 0; j < NCOV; j++)
-                        mui += multX[i][j] * new_beta0[j][k1];
-                      mui += new_alpha0[k1];
-                      deni = pow((1 / new_sigma0[k1]) * exp((resp[i] - mui) / new_sigma0[k1]), delta[i]) * exp(- exp((resp[i] - mui) / new_sigma0[k1])) ;
-                      //                        if (deni < eps2)
-                      //                            deni = eps2;
-                      newloglike1 += W[i][k1] * log(deni);
-                    }
-                    alp++;
-
-                } while ((oldloglike1 > newloglike1) & (alp < NRportion));
-
-                jamconvg1 = 0.0;
-                niter2++;
-
-                for(j = 0; j < NCOV; j++)
-                  jamconvg1 += pow(new_beta0[j][k1] - beta0[j][k1], 2);
-                jamconvg1 += pow(new_pi0[k1] - pi0[k1], 2);
-                jamconvg1 += pow(new_alpha0[k1] - alpha0[k1], 2);
-                jamconvg1 += pow(new_sigma0[k1] - sigma0[k1], 2);
-
-                convg2 = 'n';
-                if (jamconvg1 < eps)
-                  convg2 = 'y';
-
-                for(j = 0; j < NCOV; j++)
-                  beta0[j][k1] = new_beta0[j][k1];
-                alpha0[k1] = new_alpha0[k1];
-                sigma0[k1] = new_sigma0[k1];
-        }
-
-      }
-      /*****End of the M-step of the EM*****/
-
-      jamconvg1 = 0.0;
-      for(k1 = 0; k1 < NCOMP; k1++){
-        for(j = 0; j < NCOV; j++)
-          jamconvg1 += pow(new_beta0[j][k1] - initbeta[j][k1], 2);
-        jamconvg1 += pow(new_alpha0[k1] - initalpha[k1], 2);
-        jamconvg1 += pow(new_sigma0[k1] - initsigma[k1], 2);
-        jamconvg1 += pow(new_pi0[k1] - initpi[k1], 2);
-      }
-
-      convg1 = 'n';
-      if(jamconvg1 < eps_conv)
-        convg1 = 'y';
-      niter1++;
-
-      for(k1 = 0; k1 < NCOMP; k1++){
-        alpha0[k1] = new_alpha0[k1];
-        for(j = 0; j < NCOV; j++){
-          beta0[j][k1] = new_beta0[j][k1];
-        }
-        sigma0[k1] = new_sigma0[k1];
-        pi0[k1] = new_pi0[k1];
-      }
+    while((convg1 != 'y') && (niter1 < EM_Miter)){
+    /****Beginning of each iteration****/
+    /*******The E-step of the EM********/
+    for (k1=0; k1 < K; k1++) {
+    sumwi[k1] = 0.0;
     }
+
+    for(i=0; i < N; i++){
+    sumi = 0.0;
+    for(k1=0; k1 < K; k1++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_old[j][k1] *
+    accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_old[k1]);
+    deni = eps + pow((eZ / sigma_old[k1]), INTEGER(mydelta)[i]) * exp(-eZ);
+    phi[i][k1] = pi_old[k1] * deni;
+    sumi += phi[i][k1];
+    }
+    for(k1=0; k1 < K; k1++){
+    W[i][k1] = phi[i][k1] / sumi;
+    sumwi[k1] += W[i][k1];
+    }
+    }
+
+    for(k1=0; k1 < K; k1++){
+    pi_new[k1] = sumwi[k1] / N;
+    }
+
+    /**********End of the E-step*******/
+
+    for (k1=0; k1 < K; k1++) {
+    for (j1=0; j1 < D; j1++) {
+    beta_ini[j1][k1] = beta_old[j1][k1];
+    }
+    alpha_ini[k1] = alpha_old[k1];
+    sigma_ini[k1] = sigma_old[k1];
+    pi_ini[k1] = pi_old[k1];
+    }
+
+    /*********M-step of the EM*********/
+
+    for(k1=0; k1 < K; k1++){
+
+    En[k1] = N * pow(pi_old[k1], GamMP);
+
+    for (j=0; j < D; j++) {
+    Hcov[j] = beta_old[j][k1];
+    }
+
+    if(jar == 1)
+    for(j=0; j < D; j++)
+    vecder[j] = optlam[k1];
+    else if (jar == 2)
+    scadpen(optlam[k1], vecder, Hcov, D);
+    else if (jar == 3)
+    mcppen(optlam[k1], vecder, Hcov, D, McpTun);
+    else if (jar == 4)
+    sicapen(optlam[k1], vecder, Hcov, D, SicaTun);
+    else if (jar == 5){
+    for(j=0; j < D; j++)
+    vecder[j] = optlam[k1] / (fabs(beta_ini[j][k1]) + eps);
+    }
+    else
+    hardpen(optlam[k1], vecder, Hcov, D);
+
+
+    l=0;
+    if(accessAcsArr(myacs, l, k1, D) == 1)
+    vecF[l++] = 0.0;
+    for(j=0; j < D; j++){
+    if(accessAcsArr(myacs, j+1, k1, D) == 1)
+    vecF[l++] = vecder[j] / (fabs(beta_old[j][k1]) + eps1[k1]);
+    }
+
+    niter2=0;
+    convg2 = 'n';
+    while((convg2 != 'y') && (niter2 < NR_maxiter)){
+    /******Compute Likelihood***/
+    oldloglike1 = 0.0;
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_old[j][k1] * accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_old[k1]);
+    deni = eps + pow((eZ / sigma_old[k1]), INTEGER(mydelta)[i]) * exp(-eZ);
+    oldloglike1 += W[i][k1] * log(deni);
+    }
+
+    /*****Constructing the weighted oneXTWY matrix***/
+
+    j1=0;
+    for(j=0; j < (D+1); j++){
+    if(accessAcsArr(myacs, j, k1, D) == 1){
+    sumi = 0.0;
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(l=0; l < D; l++)
+    mui += REAL(myX)[N*l+i] * beta_old[l][k1] * accessAcsArr(myacs, l+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_old[k1]);
+    if(j==0){
+    sumi += W[i][k1] * (accessAcsArr(myacs, 0, k1, D) / sigma_old[k1]) *
+    (eZ - INTEGER(mydelta)[i]);
+    }
+    else{
+    sumi += W[i][k1] * (REAL(myX)[N*(j-1)+i] *
+    accessAcsArr(myacs, j, k1, D) /
+    sigma_old[k1]) * (eZ - INTEGER(mydelta)[i]);
+    }
+    }
+    oneXTWY[j1++] =  sumi;
+    }
+    }
+
+    /*****Constructing the weighted Hessian matrix***/
+
+    for(i=0; i < OD[k1]; i++){
+    for(j = i; j < OD[k1]; j++){
+    sumi = 0.0;
+    for(l=0; l < N; l++){
+    mui = 0.0;
+    for(j1=0; j1 < D; j1++)
+    mui += REAL(myX)[N*j1+l] * beta_old[j1][k1] *
+    accessAcsArr(myacs, j1+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[l] - mui) / sigma_old[k1]);
+    sumi += - W[l][k1] * OneX[l][i][k1] * OneX[l][j][k1] /
+    (sigma_old[k1] * sigma_old[k1]) * eZ;
+    }
+    if(i == j)
+    oneXTWX[i][j] = sumi - En[k1] * vecF[j] + ridge * log(N);
+    else
+    oneXTWX[j][i] = oneXTWX[i][j] = sumi;
+    }
+    }
+
+    if(accessAcsArr(myacs, 0, k1, D) == 1)
+    oneXTWX[0][0] = oneXTWX[0][0] + En[k1]* vecF[0] - ridge * log(N);
+
+    /***In a system Ax=b, adding b to A as its last column**/
+
+    for(i=0; i < OD[k1]; i++){
+    for(j=0; j < (OD[k1] + 1); j++){
+    if(j != OD[k1])
+    OneMat[i][j] = - oneXTWX[i][j];
+    else
+    OneMat[i][j] = oneXTWY[i];
+    }
+    }
+
+    for (i=0; i < (OD[k1] + 1); i++) {
+    for (j=0; j < (OD[k1] + 1); j++) {
+    OneMatVec[j+i*(OD[k1]+1)] = OneMat[i][j];
+    }
+    }
+
+    /**************************************************************/
+    /*Solving the system Ax=y to get betahat in the k-th component*/
+    /**************************************************************/
+    sol((OD[k1]), OneMatVec, OneSolv, check1);
+    alp=0;
+    do {
+    l=0;
+    if(accessAcsArr(myacs, 0, k1, D) == 1)
+    alpha_new[k1] = pow(0.5, alp) * OneSolv[l++] +
+    alpha_old[k1];
+    for(j=0; j < D; j++){
+    if(accessAcsArr(myacs, j+1, k1, D) == 1){
+    beta_new[j][k1] = pow(0.5, alp) *
+    OneSolv[l++] + beta_old[j][k1];
+    if(fabs(beta_new[j][k1]) <= Tol){
+    beta_new[j][k1] = 0.0;
+    }
+
+    }
+    }
+
+    sumi3[k1] = 0.0;
+    sumi5[k1] = 0.0;
+
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(l=0; l < D; l++)
+    mui += REAL(myX)[N*l+i] * beta_new[l][k1] *
+    accessAcsArr(myacs, l+1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    zZ = (REAL(myY)[i] - mui) / sigma_old[k1];
+    eZ = exp(zZ);
+    sumi3[k1] += W[i][k1] * (- INTEGER(mydelta)[i] / sigma_old[k1] +
+    (zZ / (sigma_old[k1])) * (eZ - INTEGER(mydelta)[i]));
+    sumi5[k1] += W[i][k1] * (INTEGER(mydelta)[i] / (sigma_old[k1] *
+    sigma_old[k1]) + (zZ / (sigma_old[k1] * sigma_old[k1])) *
+    (2 * INTEGER(mydelta)[i] - (2 + zZ) * eZ));
+    }
+    sigma_new[k1] = sigma_old[k1] - pow(0.5, alp) * (sumi3[k1] /
+    sumi5[k1]);
+
+    newloglike1 = 0.0;
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] *
+    accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_old[k1]);
+    deni = eps + pow((eZ / sigma_new[k1]), INTEGER(mydelta)[i]) * exp(-eZ);
+    newloglike1 += W[i][k1] * log(deni);
+    }
+    alp++;
+
+    } while ((oldloglike1 > newloglike1) & (alp < NRportion));
+
+    SumDif = 0.0;
+    niter2++;
+    for(j=0; j < D; j++)
+    SumDif += pow(beta_new[j][k1] - beta_old[j][k1], 2) *
+    accessAcsArr(myacs, j+1, k1, D);
+    SumDif += pow(alpha_new[k1] - alpha_old[k1], 2) *
+    accessAcsArr(myacs, 0, k1, D);
+    SumDif += pow(sigma_new[k1] - sigma_old[k1], 2);
+    SumDif += pow(pi_new[k1] - pi_old[k1], 2);
+
+    convg2 = 'n';
+    if(SumDif < eps_conv)
+    convg2 = 'y';
+
+    for(j=0; j < D; j++)
+    beta_old[j][k1] = beta_new[j][k1];
+    alpha_old[k1] = alpha_new[k1];
+    sigma_old[k1] = sigma_new[k1];
+    pi_old[k1] = pi_new[k1];
+    }
+    }
+
+    /*****End of the M-step of the EM*****/
+
+    SumDif = 0.0;
+    niter1++;
+    for(k1=0; k1 < K; k1++){
+    for(j=0; j < D; j++)
+    SumDif += pow(beta_new[j][k1] - beta_ini[j][k1], 2) *
+    accessAcsArr(myacs, j+1, k1, D);
+    SumDif += pow(alpha_new[k1] - alpha_ini[k1], 2) *
+    accessAcsArr(myacs, 0, k1, D);
+    SumDif += pow(sigma_new[k1] - sigma_ini[k1], 2);
+    SumDif += pow(pi_new[k1] - pi_ini[k1], 2);
+    }
+
+    convg1 = 'n';
+    if(SumDif < eps_conv)
+    convg1 = 'y';
+    for(k1=0; k1 < K; k1++){
+    alpha_old[k1] = alpha_new[k1];
+    for(j=0; j < D; j++){
+    beta_old[j][k1] = beta_new[j][k1];
+    }
+    sigma_old[k1] = sigma_new[k1];
+    pi_old[k1] = pi_new[k1];
+    }
+    }
+
     /*******End of each iteration *******/
 
+    loglike1 = 0.0;
+    for(i=0; i < N; i++){
+    sumi = 0.0;
+    for(k1=0; k1 < K; k1++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] * accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_new[k1]);
+    deni = eps + pow((eZ / sigma_new[k1]), INTEGER(mydelta)[i]) * exp(-eZ);
+    phi[i][k1] = pi_new[k1] * deni;
+    sumi += phi[i][k1];
+    }
+    loglike1 += log(sumi);
+    for(k1=0; k1 < K;  k1++){
+    W[i][k1] = phi[i][k1] / sumi;
+    }
+    }
 
     //*********************************************************************
-    //*Storing the estiamtes of the regression coefficients
+    //*Storing the estimates of the regression coefficients
     //*in a global variable called "Betahat".
     //*Selecting the finial model and storing
     //*********************************************************************
 
-    for(k1 = 0; k1 < NCOMP; k1++)
-      for(j = 0; j < NCOV; j++)
-        selection[j][k1] = 0;
-
-    for(k1 = 0; k1 < NCOMP; k1++){
-      alpha0hat[k1] = new_alpha0[k1];
-      sigma0hat[k1] = sigma0[k1];
-      pi0hat[k1] = pi0[k1];
-      pi0hat[k1] = new_pi0[k1];
-      for(j = 0; j < NCOV; j++){
-        beta0hat[j][k1] = new_beta0[j][k1];
-        if(fabs(beta0hat[j][k1]) <= 0.1)
-          selection[j][k1] = 0;
-        else
-          selection[j][k1] = 1;
-      }
+    for(k1=0; k1 < K; k1++){
+    for(j=0; j < D; j++)
+    select[j][k1] = 0;
     }
 
-    //        for (k1 = 0; k1 < NCOMP; k1++){
-    //            sumi5[k1] = 0.0;
-    //            sumi3[k1] = 0.0;
-    //
-    //            for(i = 0; i < nsize; i++){
-    //                mui = 0.0;
-    //                for(l = 0; l < NCOV; l++)
-    //                    mui += multX[i][l] * beta0hat[l][k1] * selection[j][k1];
-    //                mui += alpha0hat[k1];
-    //                sumi3[k1] += W[i][k1] * (- 1 / sigma0[k1] + ((resp[i] - mui) / (sigma0[k1] * new_sigma0[k1])) * ( exp( (resp[i] - mui) / sigma0[k1]) - delta[i])   );
-    //                sumi5[k1] += W[i][k1] * ( 1 / (sigma0[k1] * sigma0[k1]) +  ((resp[i] - mui) / (sigma0[k1] * sigma0[k1] * sigma0[k1])) * (2 * delta[i] - (2 + (resp[i] - mui) / sigma0[k1]) * exp( (resp[i] - mui) / sigma0[k1])  )) ;
-    //            }
-    //            //sumi5[k1] += sigpennom;
-    //            //sumi3[k1] += sigpendenom;
-    //            sigma0hat[k1] = sigma0[k1] - pow(0.5, 1) * (1 / sumi5[k1]) * sumi3[k1];
-    //        }
+    for(k1=0; k1 < K; k1++){
+    for(j=0; j < D; j++){
+    if(fabs(beta_new[j][k1]) <= Tol){
+    beta_new[j][k1] = 0.0;
+    select[j][k1]= 0;
+    }
+    else
+    select[j][k1] = 1;
+    }
+    }
 
     loglike1 = 0.0;
-    sat_loglike1 = 0.0;
-    for(i = 0; i < nsize; i++){
-      sumi = 0.0;
-      for(k1 = 0; k1 < NCOMP; k1++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += multX[i][j] * beta0hat[j][k1] * selection[j][k1];
-        mui += alpha0hat[k1];
-        deni = pow((1 / sigma0hat[k1]) * exp((resp[i] - mui) / sigma0hat[k1]), delta[i]) * exp(- exp((resp[i] - mui) / sigma0hat[k1])) ;
-        //                if (deni < eps2)
-        //                    deni = eps2;
-        sat_den = pow((1 / sigma0hat[k1]) * exp((resp[i] - 0.0) / sigma0hat[k1]), delta[i]) * exp(- exp((resp[i] - 0.0) / sigma0hat[k1])) ;
-        //                if (sat_den < eps2)
-        //                    sat_den = eps2;
-        phi[i][k1] = pi0hat[k1] * deni;
-        sumi += phi[i][k1];
-      }
-      loglike1 += log(sumi);
-      sat_loglike1 += log(sat_den);
+    for(i=0; i < N; i++){
+    sumi = 0.0;
+    for(k1=0; k1 < K; k1++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] * accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_new[k1]);
+    deni = eps + pow((eZ / sigma_new[k1]), INTEGER(mydelta)[i]) * exp(-eZ);
+    phi[i][k1] = pi_new[k1] * deni;
+    sumi += phi[i][k1];
+    }
+    loglike1 += log(sumi);
+    for(k1=0; k1 < K;  k1++){
+    W[i][k1] = phi[i][k1] / sumi;
+    }
     }
 
-    SUM1 = 0;
-    for(k1 = 0; k1 < NCOMP;  k1++)
-      for(j = 0; j < NCOV; j++)
-        SUM1 += selection[j][k1];
+    int SUM1 = 0;
+    for(k1=0; k1 < K;  k1++){
+    SUM1 += accessAcsArr(myacs, 0, k1, D);
+    for(j=0; j < D; j++){
+    SUM1 += select[j][k1];
+    }
+    }
 
-    *loglike = loglike1;
+    SUM1 += 2*K-1;
+    double BIC = 0.0;
+    double AIC = 0.0;
+    BIC = -(2 * loglike1) + SUM1 * log(N);
+    AIC = -(2 * loglike1) + 2* SUM1;
 
-    for (k1 = 0; k1 < NCOMP; k1++)
+    SEXP alpha = PROTECT(allocVector(REALSXP, K));
+    SEXP beta = PROTECT(allocVector(REALSXP, K*D));
+    SEXP sigma = PROTECT(allocVector(REALSXP, K));
+    SEXP pi = PROTECT(allocVector(REALSXP, K));
+    SEXP predict = PROTECT(allocVector(REALSXP, K*N));
+    SEXP residual = PROTECT(allocVector(REALSXP, K*N));
+    SEXP tau = PROTECT(allocVector(REALSXP, K*N));
+    SEXP SeL = PROTECT(allocVector(INTSXP, K*D));
+
+    for (k1=0; k1 < K; k1++){
+    for (j=0;  j < D;  j++)
+    INTEGER(SeL)[k1 * D + j] = select[j][k1];
+    }
+
+    for (k1=0; k1 < K; k1++){
+    for (j=0;  j < D;  j++)
     {
-      for (j = 0;  j < NCOV;  j++)
-      {
-        mybeta[k1 * NCOV + j] = beta0hat[j][k1];
-      }
-      myalpha[k1] = alpha0hat[k1];
-      mysigma[k1] = sigma0hat[k1];
-      mypi[k1] = pi0hat[k1];
+    REAL(beta)[k1 * D + j] = beta_new[j][k1];
     }
-
-    *BIC = loglike1 - 0.5 * SUM1 * log(nsize);
-    *EBIC5 = loglike1 - 0.5 * (SUM1) * log(nsize) - 0.5 * (SUM1) * log(NCOV);
-    *EBIC1 = loglike1 - 0.5 * (SUM1) * log(nsize) - (SUM1) * log(NCOV);
-    *AIC = loglike1 - (SUM1);
-    *GCV = (loglike1) / (nsize * pow(1 - SUM1 / nsize, 2));
-    *GIC = loglike1 - 0.5 * (SUM1) * log(nsize);
-    *MaxEMiter = niter1;
-    /*******The E-step of the EM********/
-
-    for(i = 0; i < nsize; i++){
-      sumi = 0.0;
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += multX[i][j] * beta0hat[j][k1];
-        mui += alpha0hat[k1];
-        deni = pow((1 / sigma0hat[k1])* exp((resp[i] - mui) / sigma0hat[k1]), delta[i]) * exp(-exp((resp[i] - mui) / sigma0hat[k1])) ;
-        phi[i][k1] = pi0hat[k1] * deni;
-        sumi += phi[i][k1];
-      }
-      for(k1 = 0; k1 < NCOMP;  k1++){
-        W[i][k1] = phi[i][k1] / sumi;
-      }
+    REAL(alpha)[k1] = alpha_new[k1];
+    REAL(sigma)[k1] = sigma_new[k1];
+    REAL(pi)[k1] = pi_new[k1];
     }
 
     /**********End of the E-step*******/
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for(i = 0; i < nsize; i++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += multX[i][j] * beta0hat[j][k1];
-        mui += alpha0hat[k1];
-        predict[k1 * nsize + i] = exp(mui);
-        residual[k1 * nsize + i] = exp(resp[i]) - exp(mui);
-        tau[k1 * nsize + i] = W[i][k1];
-      }
+    for(k1=0; k1 < K; k1++){
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += multX[i][j][k1] * beta_new[j][k1] * accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    REAL(predict)[k1*N+i] = exp(mui);
+    REAL(residual)[k1*N+i] = exp(REAL(myY)[i]) - exp(mui);
+    REAL(tau)[k1*N+i] = W[i][k1];
+    }
     }
 
-  }
-#ifdef __cplusplus
+    const char *names[] = {"alpha", "beta", "sigma", "pi", "LogLik", "BIC",
+       "AIC", "MaxIter", "tau", "predict", "residual",
+       "selection", ""};
+    SEXP res = PROTECT(mkNamed(VECSXP, names));
+    SET_VECTOR_ELT(res, 0, alpha);
+    SET_VECTOR_ELT(res, 1, beta);
+    SET_VECTOR_ELT(res, 2, sigma);
+    SET_VECTOR_ELT(res, 3, pi);
+    SET_VECTOR_ELT(res, 4, ScalarReal(loglike1));
+    SET_VECTOR_ELT(res, 5, ScalarReal(BIC));
+    SET_VECTOR_ELT(res, 6, ScalarReal(AIC));
+    SET_VECTOR_ELT(res, 7, ScalarInteger(niter1));
+    SET_VECTOR_ELT(res, 8, tau);
+    SET_VECTOR_ELT(res, 9, predict);
+    SET_VECTOR_ELT(res, 10, residual);
+    SET_VECTOR_ELT(res, 11, SeL);
+    UNPROTECT(9);
+    return res;
 }
-#endif
 
 /* *************************** Tuning Parameter Weibull ******************* */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-  void FMR_Weibl_Surv_CwTuneParSel(double *resp,
-                                   double *myX,
-                                   double *delta,
-                                   int *myPenaltyFamily,
-                                   double *myridgepen_prop,
-                                   int *myNCOMP,
-                                   int *myNCOV,
-                                   int *mynsize,
-                                   double *myinitial_alpha,
-                                   double *myinitial_beta,
-                                   double *myinitial_sigma,
-                                   double *myinitial_pi,
-                                   int *myNRmaxiter,
-                                   int *myNRportion,
-                                   double *myepsconv,
-                                   double *gammixportion,
-                                   double *optlambda,
-                                   int *actset,
-                                   double *tuneGam1,
-                                   double *tuneGam2
-  )
-  {
+SEXP FMR_Weibl_CTun(SEXP myY,
+    SEXP myX,
+    SEXP myK,
+    SEXP myD,
+    SEXP myN,
+    SEXP mydelta,
+    SEXP myAlpha,
+    SEXP myBeta,
+    SEXP mySigma,
+    SEXP myPi,
+    SEXP myacs,
+    SEXP myridge,
+    SEXP myEMiter,
+    SEXP myeps,
+    SEXP myNRiter,
+    SEXP myPenalty,
+    SEXP myPiPor,
+    SEXP myMcpTun,
+    SEXP mySicaTun,
+    SEXP myTol,
+    SEXP myLambMin,
+    SEXP myLambMax,
+    SEXP mynLamb,
+    SEXP myNRPor
+)
+{
     int i;
     int j;
     int j1;
     int k1;
     int l;
     int check1[1];
-
     int l1;
-    int MaxLim = 80;
+    int MaxLim = asInteger(mynLamb);
 
-    int nsize = *mynsize;
-    int NCOV = *myNCOV;
-    int NCOMP = *myNCOMP;
-    int jar = *myPenaltyFamily;
+    double eZ = 0.0;
 
-    double gamma1 = *tuneGam1;
-    double gamma2 = *tuneGam2;
+    int N = asInteger(myN);
+    int D = asInteger(myD);
+    int K = asInteger(myK);
+    int jar = asInteger(myPenalty);
 
-    int acs[NCOV+1][NCOMP];
+    double McpTun = asReal(myMcpTun);
+    double SicaTun = asReal(mySicaTun);
 
-    int ONCOV[NCOMP];
-    for(k1=0; k1<NCOMP; k1++){
-      ONCOV[k1] = 0;
-      for(i=0; i<NCOV+1; i++){
-        acs[i][k1] = actset[(NCOV+1) * k1 + i];
-        ONCOV[k1] += acs[i][k1];
-      }
+    double Tol = asReal(myTol);
+
+    double LambMax = asReal(myLambMax);
+    double LambMin = asReal(myLambMin);
+
+    int OD[K];
+    for(k1=0; k1<K; k1++){
+    OD[k1]=0;
+    for(i=0; i<D+1; i++){
+    OD[k1] += accessAcsArr(myacs, i, k1, D);
+    }
     }
 
-    double ridge1 = *myridgepen_prop;
+    double ridge = asReal(myridge);
     double gam = 0.0;
-    if(ridge1 != 0.0)
-      gam = 1;
+    if(ridge != 0.0)
+    gam = 1;
 
-    double eps = *myepsconv;
-    double GamMP = *gammixportion;
+    double eps = asReal(myeps);
+    double GamMP = asReal(myPiPor);
 
-    double NR_maxiter = *myNRmaxiter;
-    int NRportion = *myNRportion;
+    double NR_maxiter = asReal(myNRiter);
+    int NRportion = asReal(myNRPor);
     int alp;
 
-    double multX[nsize][NCOV][k1];
-    double one_X[nsize][NCOV + 1][k1];
+    double multX[N][D][k1];
+    double OneX[N][D+1][k1];
 
-    double optlam[NCOMP];
+    double optlam[K];
 
-    double initbeta[NCOV][NCOMP];
-    double beta0[NCOV][NCOMP];
-    double new_beta0[NCOV][NCOMP];
+    double beta_ini[D][K];
+    double beta_old[D][K];
+    double beta_new[D][K];
 
-    double initalpha[NCOMP];
-    double alpha0[NCOMP];
-    double new_alpha0[NCOMP];
+    double alpha_ini[K];
+    double alpha_old[K];
+    double alpha_new[K];
 
-    double initsigma[NCOMP];
-    double sigma0[NCOMP];
-    double new_sigma0[NCOMP];
+    double sigma_ini[K];
+    double sigma_old[K];
+    double sigma_new[K];
 
-    //        double sigpennom = 0.0;
-    //        double sigpendenom = 0.0;
+    double pi_ini[K];
+    double pi_old[K];
+    double pi_new[K];
 
-    double initpi[NCOMP];
-    double pi0[NCOMP];
-    double new_pi0[NCOMP];
+    double W[N][K];
+    double phi[N][K];
 
-    double W[nsize][NCOMP];
-    double phi[nsize][NCOMP];
+    double eps1[K];
 
-    double eps1[NCOMP];
+    double vecder[D];
+    double vecF[D+1];
+    double En[K];
 
-    double vecder[NCOV];
-    double vecsigma[NCOV + 1];
-    double En[NCOMP];
+    double oneXTWY[D+1];
+    double oneXTWX[D+1][D+1];
+    double select[D][K];
 
-    double oneXTWY[NCOV + 1];
-    double oneXTWX[NCOV + 1][NCOV + 1];
-    double selection[NCOV][NCOMP];
-
-    double oneComMat[NCOV + 2][NCOV + 2];
-    double onesolution1[NCOV + 2];
-    double oneComMatVec[(NCOV + 2) * (NCOV + 2)];
+    double OneMat[D+2][D+2];
+    double OneSolv[D+2];
+    double OneMatVec[(D+2) * (D+2)];
 
     double sumi;
     double mui;
     double deni;
 
-    double n1[NCOMP];
-    double BIC[MaxLim][NCOMP];
-    double Max_BIC[NCOMP];
+    double n1[K];
+    double BIC[MaxLim][K];
+    double Max_BIC[K];
     double lambda1[MaxLim];
     double newloglike1;
     double oldloglike1;
-    double jamconvg1;
+    double SumDif;
 
-    double sumi3[NCOMP];
-    double sumi5[NCOMP];
-
-    int count1[NCOMP][MaxLim];
-    int indx1[NCOMP];
+    int count1[K][MaxLim];
+    int indx1[K];
 
     int niter2;
     char convg2;
 
-    for(l1 = 0; l1 < MaxLim; l1++)
-      lambda1[l1] = 0.01 + l1 * 0.01;
+    double hl = (LambMax - LambMin) / MaxLim;
+    for(l1=0; l1 < MaxLim; l1++)
+    lambda1[l1] = LambMin + l1 * (hl);
 
     double loglike1;
 
-    double holdveccov[NCOV];
-    //    double holdveccom[NCOMP];
+    double Hcov[D];
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for(i = 0; i < NCOV; i++){
-        new_beta0[i][k1] = beta0[i][k1] = initbeta[i][k1] = myinitial_beta[NCOV * k1 + i] * acs[i+1][k1];
-      }
-      new_alpha0[k1] = alpha0[k1] = initalpha[k1] = myinitial_alpha[k1] * acs[0][k1];
-      new_sigma0[k1] = sigma0[k1] = initsigma[k1] = myinitial_sigma[k1];
-      new_pi0[k1] = pi0[k1] = initpi[k1] = myinitial_pi[k1];
+    for(k1=0; k1 < K; k1++){
+    for(i=0; i < D; i++){
+    beta_new[i][k1] = beta_old[i][k1] = beta_ini[i][k1] =
+    REAL(myBeta)[D*k1+i] * accessAcsArr(myacs, i+1, k1, D);
+    }
+    alpha_new[k1] = alpha_old[k1] = alpha_ini[k1] =
+    REAL(myAlpha)[k1] * accessAcsArr(myacs, 0, k1, D);
+    sigma_new[k1] = sigma_old[k1] = sigma_ini[k1] =
+    REAL(mySigma)[k1];
+    pi_new[k1] = pi_old[k1] = pi_ini[k1] = REAL(myPi)[k1];
     }
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      l=0;
-      for (j = 0; j < NCOV; j++){
-        if(acs[j+1][k1] == 1){
-          for (i = 0; i < nsize; i++){
-            multX[i][l][k1] = myX[nsize * j + i];
-          }
-          l++;
-        }
-      }
+    for(k1=0; k1 < K; k1++){
+    l=0;
+    for (j=0; j < D; j++){
+    if(accessAcsArr(myacs, j+1, k1, D) == 1){
+    for (i=0; i < N; i++){
+    multX[i][l][k1] = REAL(myX)[N*j+i];
+    }
+    l++;
+    }
+    }
     }
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      l=0;
-      if(acs[0][k1] == 1){
-        for (i = 0; i < nsize; i++){
-          one_X[i][l][k1] = 1.0;
-        }
-        l++;
-      }
-
-      for (j = 0; j < NCOV; j++){
-        if(acs[j+1][k1] == 1){
-          for (i = 0; i < nsize; i++){
-            one_X[i][l][k1] = myX[nsize * j + i];
-          }
-          l++;
-        }
-      }
+    for(k1=0; k1 < K; k1++){
+    l=0;
+    if(accessAcsArr(myacs, 0, k1, D) == 1){
+    for (i=0; i < N; i++){
+    OneX[i][l][k1] = 1.0;
+    }
+    l++;
     }
 
-    for(k1 = 0; k1 < NCOMP; k1++){
-      for (i = 0; i < NCOV; i++) {
-        holdveccov[i] = initbeta[i][k1];
-      }
-      if((jar == 1) || (jar == 2))
-        eps1[k1] = eps * minimum(holdveccov, NCOV) / (2 * nsize * optlam[k1]);
-      else
-        eps1[k1] = eps * minimum(holdveccov, NCOV) / (4 * nsize * optlam[k1]);
+    for (j=0; j < D; j++){
+    if(accessAcsArr(myacs, j+1, k1, D) == 1){
+    for (i=0; i < N; i++){
+    OneX[i][l][k1] = REAL(myX)[N*j+i];
+    }
+    l++;
+    }
+    }
+    }
+
+    for(k1=0; k1 < K; k1++){
+    for (i=0; i < D; i++) {
+    Hcov[i] = beta_ini[i][k1];
+    }
+    if((jar == 1) || (jar == 2))
+    eps1[k1] = eps * minimum(Hcov, D) / (2 * N * 0.1);
+    else
+    eps1[k1] = eps * minimum(Hcov, D) / (4 * N * 0.1);
     }
 
 
-    for(k1 = 0; k1 < NCOMP; k1++)
-      n1[k1] = 0.0;
+    for(k1=0; k1 < K; k1++)
+    n1[k1] = 0.0;
 
-    for(i = 0; i < nsize; i++){
-      sumi = 0.0;
-      for(k1 = 0; k1 < NCOMP; k1++){
-        mui = 0.0;
-        for(j = 0; j < NCOV; j++)
-          mui += myX[nsize * j + i] * beta0[j][k1] * acs[j+1][k1];
-        mui += alpha0[k1] * acs[0][k1];
-        deni = pow((1 / sigma0[k1]) * exp((resp[i] - mui) / sigma0[k1]), delta[i]) * exp(- exp((resp[i] - mui) / sigma0[k1])) ;
-        //                    if (isnan(deni))
-        //                        cout << "NAN" << "\t";
-        //                    if (deni < eps2)
-        //                        deni = eps2;
-        phi[i][k1] = pi0[k1] * deni;
-        sumi += phi[i][k1];
-
-      }
-      for(k1 = 0; k1 < NCOMP; k1++){
-        W[i][k1] = phi[i][k1] / sumi;
-      }
+    for(i=0; i < N; i++){
+    sumi = 0.0;
+    for(k1=0; k1 < K; k1++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_old[j][k1] * accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_old[k1]);
+    deni = eps + pow((eZ / sigma_old[k1]), INTEGER(mydelta)[i]) * exp(-eZ);
+    phi[i][k1] = pi_old[k1] * deni;
+    sumi += phi[i][k1];
+    }
+    for(k1=0; k1 < K; k1++){
+    W[i][k1] = phi[i][k1] / sumi;
+    }
     }
 
-    //*Start of choosing lambda for each component of the mixture
+    for(k1=0; k1 < K; k1++){
 
-    for(k1 = 0; k1 < NCOMP; k1++){
+    En[k1] = N * pow(pi_old[k1], GamMP);
 
-      En[k1] = nsize * pow(pi0[k1], GamMP);
+    for(l1=0; l1 < MaxLim; l1++){
 
-      for(l1 = 0; l1 < MaxLim; l1++){
+    niter2=0;
+    convg2 = 'n';
+    while((convg2 != 'y') && (niter2 < NR_maxiter)){
 
-        niter2 = 0;
-        convg2 = 'n';
-        while((convg2 != 'y') && (niter2 < NR_maxiter)){
-
-          oldloglike1 = 0.0;
-          for(i = 0; i < nsize; i++){
-            mui = 0.0;
-            for(j = 0; j < NCOV; j++)
-              mui += myX[nsize * j + i] * beta0[j][k1] * acs[j+1][k1];
-            mui += alpha0[k1] * acs[0][k1];
-            deni = pow((1 / sigma0[k1]) * exp((resp[i] - mui) / sigma0[k1]), delta[i]) * exp(- exp((resp[i] - mui) / sigma0[k1])) ;
-            //                    if (deni<eps2)
-            //                        deni=eps2;
-            oldloglike1 += W[i][k1] * log(deni);
-          }
-
-          for (j = 0; j < NCOV; j++) {
-            holdveccov[j] = beta0[j][k1];
-          }
-
-          if(jar == 1)
-            for(j = 0; j < NCOV; j++)
-              vecder[j] = lambda1[l1];
-          else if (jar == 2)
-            scadpen(lambda1[l1], vecder, holdveccov, NCOV);
-          else if (jar == 3)
-            mcppen(lambda1[l1], vecder, holdveccov, NCOV, gamma1);
-          else if (jar == 4)
-            sicapen(lambda1[l1], vecder, holdveccov, NCOV, gamma2);
-          else if (jar == 5){
-            for(j = 0; j < NCOV; j++)
-              vecder[j] = optlam[k1] / (fabs(initbeta[j][k1]) + eps);
-          }
-          else
-            hardpen(optlam[k1], vecder, holdveccov, NCOV);
-
-          l = 0;
-          if(acs[l][k1]==1)
-            vecsigma[l++] = 0.0;
-          for(j = 0; j < NCOV; j++)
-            if(acs[j+1][k1] == 1)
-              vecsigma[l++] = vecder[j] / (fabs(beta0[j][k1]) + eps1[k1]);
-
-            /******Constructing the Hessian matrix H ***/
-            for(i = 0; i < ONCOV[k1]; i++){
-              for(j = i; j < ONCOV[k1]; j++){
-                sumi = 0.0;
-                for(l = 0; l < nsize; l++){
-                  mui = 0.0;
-                  for(j1 = 0; j1 < NCOV; j1++)
-                    mui += myX[nsize * j1 + l] * beta0[j1][k1] * acs[j1+1][k1];
-                  mui += alpha0[k1] * acs[0][k1];
-                  sumi += - W[l][k1] * one_X[l][i][k1] * one_X[l][j][k1] / (sigma0[k1] * sigma0[k1]) * exp((resp[l] - mui) / sigma0[k1]);
-                }
-                if(i == j)
-                  oneXTWX[i][j] = sumi - En[k1] * vecsigma[j] + ridge1 * log(nsize);
-                else
-                  oneXTWX[j][i] = oneXTWX[i][j] = sumi;
-              }
-            }
-
-            if(acs[0][k1] == 1)
-              oneXTWX[0][0] = oneXTWX[0][0] + (En[k1] * vecsigma[0]) - ridge1 * log(nsize);
-
-            /******Constructing the weigthed vector XTWY***/
-
-            j1 = 0;
-            for(j = 0; j < (NCOV + 1); j++){
-              if(acs[j][k1] == 1){
-                sumi = 0.0;
-                for(i = 0; i < nsize; i++){
-                  mui = 0.0;
-                  for(l = 0; l < NCOV; l++)
-                    mui += myX[nsize * l + i] * beta0[l+1][k1] * acs[l+1][k1];
-                  mui += alpha0[k1];
-                  if(j == 0){
-                    sumi += W[i][k1] * (acs[j][k1] / sigma0[k1]) * (exp((resp[i] - mui) / sigma0[k1]) - delta[i]);
-                  }else{
-                    sumi += W[i][k1] * (myX[nsize * (j-1) + i] * acs[j][k1] / sigma0[k1]) * (exp((resp[i] - mui) / sigma0[k1]) - delta[i]);
-                  }
-                }
-                if( j != 0){
-                  oneXTWY[j1] =  sumi - En[k1] * vecsigma[j1] * beta0[j-1][k1];
-                  j1 = j1 +1;
-                }
-                else{
-                  oneXTWY[j1] =  sumi;
-                  j1 = j1 +1;
-                }
-              }
-            }
-
-            /***In a system Ax=b, adding b to A as its last column**/
-
-            for(i = 0; i < ONCOV[k1]; i++){
-              for(j = 0; j < (ONCOV[k1] + 1); j++)
-                if(j != ONCOV[k1])
-                  oneComMat[i][j] = - oneXTWX[i][j];
-                else
-                  oneComMat[i][j] = oneXTWY[i];
-            }
-
-            for (i = 0; i < (ONCOV[k1] + 1); i++) {
-              for (j = 0; j < (ONCOV[k1] + 1); j++) {
-                oneComMatVec[j + i * (ONCOV[k1] + 1)] = oneComMat[i][j];
-              }
-            }
-
-            /**************************************************************/
-            /*Solving the system Ax=y to get betahat in the k-th component*/
-            /**************************************************************/
-
-            count1[k1][l1] = 0;
-            sol(ONCOV[k1] , oneComMatVec, onesolution1, check1);
-
-            alp = 0;
-            do {
-              l = 0;
-              if(acs[0][k1] == 1)
-                new_alpha0[k1] = pow(0.5, alp) * onesolution1[l++] + alpha0[k1];
-              for(j = 0; j < NCOV; j++){
-                if(acs[j+1][k1] == 1){
-                  new_beta0[j][k1] = pow(0.5, alp) * onesolution1[l++] + beta0[j][k1];
-                }
-              }
-
-              sumi5[k1] = 0.0;
-              sumi3[k1] = 0.0;
-
-              for(i = 0; i < nsize; i++){
-                mui = 0.0;
-                for(l = 0; l < NCOV; l++)
-                  mui += myX[nsize * l + i] * new_beta0[l][k1] * acs[l+1][k1];
-                mui += new_alpha0[k1] * acs[0][k1];
-                sumi3[k1] += W[i][k1] * (- delta[i] / sigma0[k1] + ((resp[i] - mui) / (sigma0[k1] * sigma0[k1])) * ( exp( (resp[i] - mui) / sigma0[k1]) - delta[i])   );
-                sumi5[k1] += W[i][k1] * ( delta[i] / (sigma0[k1] * sigma0[k1]) +  ((resp[i] - mui) / (sigma0[k1] * sigma0[k1] * sigma0[k1])) * (2 * delta[i] - (2 + (resp[i] - mui) / sigma0[k1]) * exp( (resp[i] - mui) / sigma0[k1])  )) ;
-              }
-              //sumi5[k1]+=sigpennom;
-              //sumi3[k1]+=sigpendenom;
-              new_sigma0[k1] = sigma0[k1] - pow(0.5, alp) * (1 / sumi5[k1]) * sumi3[k1];
-              //                    new_sigma0[k1] = (new_sigma0[k1] < 0.6)?0.6:new_sigma0[k1];
-              //                    new_sigma0[k1] = (new_sigma0[k1] > 4)?2:new_sigma0[k1];
-              //                    if (k1==0)
-              //                        new_sigma0[k1] =  (new_sigma0[k1]>4)?2:(new_sigma0[k1]);
-              //                    else
-              //                        new_sigma0[k1] =  (new_sigma0[k1]>4)?2:(new_sigma0[k1]);
-
-              newloglike1 = 0.0;
-              for(i = 0; i < nsize; i++){
-                mui = 0.0;
-                for(j = 0; j < NCOV; j++)
-                  mui +=  myX[nsize * j + i] * new_beta0[j][k1] * acs[j+1][k1];
-                mui += new_alpha0[k1] * acs[0][k1];
-                deni = pow((1 / new_sigma0[k1]) * exp((resp[i] - mui) / new_sigma0[k1]), delta[i]) * exp(- exp((resp[i] - mui) / new_sigma0[k1])) ;
-                //                        if (deni < eps2)
-                //                            deni = eps2;
-                newloglike1 += W[i][k1] * log(deni);
-              }
-              alp++;
-
-            } while ((oldloglike1 > newloglike1) & (alp < NRportion));
-
-            jamconvg1 = 0.0;
-            niter2++;
-
-            for(j = 0; j < NCOV; j++)
-              jamconvg1 += pow(new_beta0[j][k1] - beta0[j][k1], 2) * acs[j+1][k1];
-            jamconvg1 += pow(new_alpha0[k1] - alpha0[k1], 2) * acs[0][k1];
-            jamconvg1 += pow(new_pi0[k1] - pi0[k1], 2);
-            jamconvg1 += pow(new_sigma0[k1] - sigma0[k1], 2);
-
-            convg2 = 'n';
-            if (jamconvg1 < eps)
-              convg2 = 'y';
-
-            count1[k1][l1] = 0;
-            for(j = 0; j < NCOV; j++){
-              if(acs[j+1][k1] == 1){
-                if(fabs(new_beta0[j][k1]) < 0.2)
-                  selection[j][k1] = 0;
-                else{
-                  selection[j][k1] = 1;
-                  count1[k1][l1] += 1;
-                }
-              }else{
-                selection[j][k1] = 0;
-              }
-            }
-
-            for(j = 0; j < NCOV; j++)
-              beta0[j][k1] = new_beta0[j][k1];
-            alpha0[k1] = new_alpha0[k1];
-            sigma0[k1] = new_sigma0[k1];
-        }
-
-        loglike1 = 0.0;
-        n1[k1] = 0.0;
-
-        for(i = 0; i < nsize; i++){
-          mui = 0.0;
-          for(j = 0; j < NCOV; j++)
-            mui += myX[nsize * j + i] * new_beta0[j][k1] * selection[j][k1] * acs[j+1][k1];
-          mui += alpha0[k1] * acs[0][k1];
-          deni = pow((1 / sigma0[k1]) * exp((resp[i] - mui) / sigma0[k1]), delta[i]) * exp(- exp((resp[i] - mui) / sigma0[k1])) ;
-          loglike1 += W[i][k1] * log(deni);
-          n1[k1] += W[i][k1];
-        }
-
-        BIC[l1][k1] = loglike1 - 0.5 * (count1[k1][l1]) * log(n1[k1]) - gam * (count1[k1][l1]) * log(ONCOV[k1]);
-
-        if(l1 == 0){
-          Max_BIC[k1] = BIC[l1][k1];
-          indx1[k1] = l1;
-        }
-        else if(BIC[l1][k1] > Max_BIC[k1])
-        {
-          Max_BIC[k1] = BIC[l1][k1];
-          indx1[k1] = l1;
-        }
-      }//*End of choosing lambda for each component
-    }//*End of choosing lambda for both components of the mixture
-
-    for(k1 = 0; k1 < NCOMP; k1++){
-      optlambda[k1] = lambda1[indx1[k1]];
+    oldloglike1 = 0.0;
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_old[j][k1] * accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_old[k1]);
+    deni = eps + pow((eZ / sigma_old[k1]), INTEGER(mydelta)[i]) * exp(-eZ);
+    oldloglike1 += W[i][k1] * log(deni);
     }
 
-  }
-#ifdef __cplusplus
+    for (j=0; j < D; j++) {
+    Hcov[j] = beta_old[j][k1];
+    }
+
+    if(jar == 1)
+    for(j=0; j < D; j++)
+    vecder[j] = lambda1[l1];
+    else if (jar == 2)
+    scadpen(lambda1[l1], vecder, Hcov, D);
+    else if (jar == 3)
+    mcppen(lambda1[l1], vecder, Hcov, D, McpTun);
+    else if (jar == 4)
+    sicapen(lambda1[l1], vecder, Hcov, D, SicaTun);
+    else if (jar == 5){
+    for(j=0; j < D; j++)
+    vecder[j] = optlam[k1] / (fabs(beta_ini[j][k1]) + eps);
+    }
+    else
+    hardpen(optlam[k1], vecder, Hcov, D);
+
+    l=0;
+    if(accessAcsArr(myacs, l, k1, D)==1)
+    vecF[l++] = 0.0;
+    for(j=0; j < D; j++){
+    if(accessAcsArr(myacs, j+1, k1, D) == 1)
+    vecF[l++] = vecder[j] / (fabs(beta_old[j][k1]) +
+    eps1[k1]);
+    }
+
+    /******Constructing the Hessian matrix H ***/
+    for(i=0; i < OD[k1]; i++){
+    for(j = i; j < OD[k1]; j++){
+    sumi = 0.0;
+    for(l=0; l < N; l++){
+    mui = 0.0;
+    for(j1=0; j1 < D; j1++)
+    mui += REAL(myX)[N*j1+l] * beta_old[j1][k1] *
+    accessAcsArr(myacs, j1+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[l] - mui) / sigma_old[k1]);
+    sumi += - W[l][k1] * OneX[l][i][k1] * OneX[l][j][k1] /
+    (sigma_old[k1] * sigma_old[k1]) * eZ;
+    }
+    if(i == j)
+    oneXTWX[i][j] = sumi - En[k1] * vecF[j] + ridge * log(N);
+    else
+    oneXTWX[j][i] = oneXTWX[i][j] = sumi;
+    }
+    }
+
+    if(accessAcsArr(myacs, 0, k1, D) == 1)
+    oneXTWX[0][0] = oneXTWX[0][0] + En[k1] * vecF[0] - ridge * log(N);
+
+    /******Constructing the weighted vector XTWY***/
+
+    j1=0;
+    for(j=0; j < (D+1); j++){
+    if(accessAcsArr(myacs, j, k1, D) == 1){
+    sumi = 0.0;
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(l=0; l < D; l++)
+    mui += REAL(myX)[N*l+i] * beta_old[l][k1] * accessAcsArr(myacs, l+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_old[k1]);
+    if(j==0){
+    sumi += W[i][k1] * (accessAcsArr(myacs, 0, k1, D) / sigma_old[k1]) *
+    (eZ - INTEGER(mydelta)[i]);
+    }
+    else{
+    sumi += W[i][k1] * (REAL(myX)[N*(j-1)+i] *
+    accessAcsArr(myacs, j, k1, D) /
+    sigma_old[k1]) * (eZ - INTEGER(mydelta)[i]) -
+    En[k1] * vecF[j1] * beta_old[j-1][k1];
+    }
+    }
+    oneXTWY[j1++] =  sumi;
+    }
+    }
+
+    /***In a system Ax=b, adding b to A as its last column**/
+
+    for(i=0; i < OD[k1]; i++){
+    for(j=0; j < (OD[k1] + 1); j++){
+    if(j != OD[k1])
+    OneMat[i][j] = - oneXTWX[i][j];
+    else
+    OneMat[i][j] = oneXTWY[i];
+    }
+    }
+
+    for (i=0; i < (OD[k1] + 1); i++) {
+    for (j=0; j < (OD[k1] + 1); j++) {
+    OneMatVec[j+i*(OD[k1]+1)] = OneMat[i][j];
+    }
+    }
+
+    /**************************************************************/
+    /*Solving the system Ax=y to get betahat in the k-th component*/
+    /**************************************************************/
+    count1[k1][l1]=0;
+    sol(OD[k1] , OneMatVec, OneSolv, check1);
+
+    alp=0;
+    do {
+    l=0;
+    if(accessAcsArr(myacs, 0, k1, D) == 1)
+    alpha_new[k1] = pow(0.5, alp) * OneSolv[l++] +
+    alpha_old[k1];
+    for(j=0; j < D; j++){
+    if(accessAcsArr(myacs, j+1, k1, D) == 1){
+    beta_new[j][k1] = pow(0.5, alp) *
+    OneSolv[l++] + beta_old[j][k1];
+    }
+    }
+
+    newloglike1 = 0.0;
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] *
+    accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_new[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_old[k1]);
+    deni = eps + pow((eZ / sigma_new[k1]), INTEGER(mydelta)[i]) * exp(-eZ);
+    newloglike1 += W[i][k1] * log(deni);
+    }
+    alp++;
+
+    } while ((oldloglike1 > newloglike1) & (alp < NRportion));
+
+    SumDif = 0.0;
+    niter2++;
+
+    for(j=0; j < D; j++)
+    SumDif += pow(beta_new[j][k1] - beta_old[j][k1], 2) *
+    accessAcsArr(myacs, j+1, k1, D);
+    SumDif +=pow(alpha_new[k1] - alpha_old[k1], 2) *
+    accessAcsArr(myacs, 0, k1, D);
+
+    convg2 = 'n';
+    if (SumDif < eps)
+    convg2 = 'y';
+
+    count1[k1][l1]=0;
+    for(j=0; j < D; j++){
+    if(accessAcsArr(myacs, j+1, k1, D) == 1){
+    if(fabs(beta_new[j][k1]) < Tol)
+    select[j][k1]=0;
+    else{
+    select[j][k1] = 1;
+    count1[k1][l1] += 1;
+    }
+    }else{
+    select[j][k1]=0;
+    }
+    }
+
+    for(j=0; j < D; j++)
+    beta_old[j][k1] = beta_new[j][k1];
+    alpha_old[k1] = alpha_new[k1];
+    sigma_old[k1] = sigma_new[k1];
+    }
+
+    loglike1 = 0.0;
+    n1[k1] = 0.0;
+
+    for(i=0; i < N; i++){
+    mui = 0.0;
+    for(j=0; j < D; j++)
+    mui += REAL(myX)[N*j+i] * beta_new[j][k1] *
+    select[j][k1] * accessAcsArr(myacs, j+1, k1, D);
+    mui += alpha_old[k1] * accessAcsArr(myacs, 0, k1, D);
+    eZ = exp((REAL(myY)[i] - mui) / sigma_old[k1]);
+    deni = eps + pow((eZ / sigma_old[k1]), INTEGER(mydelta)[i]) * exp(-eZ);
+    loglike1 += W[i][k1] * log(deni);
+    n1[k1] += W[i][k1];
+    }
+
+    BIC[l1][k1] = loglike1 - 0.5 * (count1[k1][l1]) * log(n1[k1]) -
+    gam * (count1[k1][l1]) * log(OD[k1]);
+
+    if(l1 == 0){
+    Max_BIC[k1] = BIC[l1][k1];
+    indx1[k1] = l1;
+    }
+    else if(BIC[l1][k1] > Max_BIC[k1])
+    {
+    Max_BIC[k1] = BIC[l1][k1];
+    indx1[k1] = l1;
+    }
+    }
+    }
+
+    SEXP OptLam = PROTECT(allocVector(REALSXP, K));
+    for(k1=0; k1 < K; k1++){
+    REAL(OptLam)[k1] = lambda1[indx1[k1]];
+    }
+
+    const char *names[] = {"OptLam", ""};
+    SEXP res = PROTECT(mkNamed(VECSXP, names));
+    SET_VECTOR_ELT(res, 0, OptLam);
+    UNPROTECT(2);
+    return res;
 }
-#endif
-
-

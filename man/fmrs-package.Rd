@@ -4,15 +4,24 @@
 \name{fmrs-package}
 \alias{fmrs-package}
 \alias{fmrs}
-\title{Variable Selection in Finite Mixture of AFT Regression and
-    FMR}
+\title{Variable Selection in Finite Mixture of AFT Regression and FMR Models}
 \description{
-Provides parameter estimation and variable selection in
-    FMRs models. The
-    \code{\link{fmrs.mle}} method provides Maximum Likelihood Estimation
-    for FMRs models. The \code{\link{fmrs.tunsel}} method provides
-    component-wise tuning parameters. The \code{\link{fmrs.varsel}}
-    method provides variable selection for FMRs models.
+The package obtains parameter estimation, i.e., maximum
+likelihood estimators (MLE), via the Expectation-Maximization (EM)
+algorithm for the Finite Mixture of Regression (FMR) models with Normal
+distribution, and MLE for the Finite Mixture of Accelerated Failure Time
+Regression (FMAFTR) subject to right censoring with Log-Normal and Weibull
+distributions via the EM algorithm and the Newton-Raphson algorithm (for
+Weibull distribution).
+More importantly, the package obtains the maximum penalized likelihood
+(MPLE) for both FMR and FMAFTR models (collectively called FMRs).
+A component-wise tuning parameter selection based on a component-wise BIC is
+implemented in the package.
+Furthermore, this package provides Ridge Regression and Elastic Net.
+The \code{\link{fmrs.mle}} method provides MLE for FMRs models.
+The \code{\link{fmrs.tunsel}} method provides component-wise tuning
+parameters. The \code{\link{fmrs.varsel}} method provides variable selection
+for FMRs models.
 }
 \section{\code{fmrs} methods}{
 

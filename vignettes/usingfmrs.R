@@ -23,9 +23,7 @@ res.mle <- fmrs.mle(y = dat$y, x = dat$x, delta = dat$delta,
                    initCoeff = rnorm(nComp*nCov+nComp),
                    initDispersion = rep(1, nComp),
                    initmixProp = rep(1/nComp, nComp))
-coefficients(res.mle)
-dispersion(res.mle)
-mixProp(res.mle)
+summary(res.mle)
 
 ## -----------------------------------------------------------------------------
 res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
@@ -34,7 +32,7 @@ res.lam <- fmrs.tunsel(y = dat$y, x = dat$x, delta = dat$delta,
                       initDispersion = dispersion(res.mle),
                       initmixProp = mixProp(res.mle),
                       penFamily = "adplasso")
-show(res.lam)
+summary(res.lam)
 
 ## -----------------------------------------------------------------------------
 res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
@@ -44,12 +42,10 @@ res.var <- fmrs.varsel(y = dat$y, x = dat$x, delta = dat$delta,
                       initmixProp = mixProp(res.mle),
                       penFamily = "adplasso",
                       lambPen = slot(res.lam, "lambPen"))
-coefficients(res.var)
-dispersion(res.var)
-mixProp(res.var)
+summary(res.var)
 
 ## -----------------------------------------------------------------------------
-round(coefficients(res.var)[-1,],3)
+slot(res.var, "selectedset")
 
 ## -----------------------------------------------------------------------------
 sessionInfo()
